@@ -2,7 +2,7 @@
 
 Start with [README.md](../README.md). Operator notes: [GUIDE.md](GUIDE.md). Feature folders: [features/README.md](features/README.md).
 
-This file is the control plane: four jobs, one folder, one order. `feature-harness` runs the last three for one lock.
+This file is the control plane: four jobs, one folder, one order. `feature-harness` runs the last three for one feature specification.
 
 ## Picture
 
@@ -15,17 +15,17 @@ You describe work
           -> Next skill, retry, or stop
 ```
 
-A skill is a recipe card. The agent is the cook. Your git repo is the kitchen. `what-to-build.md` is the dish you ordered; later skills may not serve something else.
+A skill is a recipe card. The agent is the cook. Your git repo is the kitchen. `what-to-build.md` is the feature specification; later skills may not build a different product.
 
 ## The skills
 
 | Skill | Job | Input | Output |
 | --- | --- | --- | --- |
-| `feature-specifier` | Understand the idea. Ask landmine questions. Lock the product. | A fuzzy request | `what-to-build.md` |
-| `feature-developer` | Implement the lock. Nothing else. | `what-to-build.md` | Feature branch, code, `what-was-implemented.md` |
-| `feature-code-reviewer` | Strict clean-code review. Safe internals only. | Lock + diff | Refactors if needed, `what-was-reviewed.md` |
-| `feature-verifier` | Tests that match the lock. Run this repo's existing commands. | Lock + code | Tests, `what-was-verified.md` |
-| `feature-harness` | Run developer, reviewer, verifier for one lock. One verify-fail retry. Classify later feedback. | Lock (or feedback on a folder) | Inner files + `what-was-run.md` |
+| `feature-specifier` | Understand the idea. Ask landmine questions. Write the feature specification. | A fuzzy request | `what-to-build.md` |
+| `feature-developer` | Implement the specification. Nothing else. | `what-to-build.md` | Feature branch, code, `what-was-implemented.md` |
+| `feature-code-reviewer` | Strict clean-code review. Safe internals only. | Spec + diff | Refactors if needed, `what-was-reviewed.md` |
+| `feature-verifier` | Tests that match the specification. Run this repo's existing commands. | Spec + code | Tests, `what-was-verified.md` |
+| `feature-harness` | Run developer, reviewer, verifier for one specification. One verify-fail retry. Classify later feedback. | Spec (or feedback on a folder) | Inner files + `what-was-run.md` |
 
 Daily path:
 
@@ -42,10 +42,10 @@ You can still name an inner skill alone. Harness does not skip review.
 
 Rules:
 
-1. The output of an earlier skill is the input of the next. The feature name in the lock is the folder name.
-2. Do not start `feature-developer` or `feature-harness` while the lock is missing or still fuzzy.
+1. The output of an earlier skill is the input of the next. The feature name in the specification is the folder name.
+2. Do not start `feature-developer` or `feature-harness` while the specification is missing or still fuzzy.
 3. Do not skip `feature-code-reviewer` on the daily path unless the user said to skip review.
-4. Do not rerun an earlier skill unless a later one finds a hole (ambiguous lock, product change, failed tests).
+4. Do not rerun an earlier skill unless a later one finds a hole (ambiguous spec, product change, failed tests).
 5. If a later skill would change what the user gets, stop and go back to `feature-specifier`.
 
 ## Feature folder
@@ -54,7 +54,7 @@ One folder per feature, kebab-case:
 
 ```text
 docs/features/<feature-name>/
-  what-to-build.md           Lock. Specifier writes. Developer does not rewrite it.
+  what-to-build.md           Feature specification. Specifier writes. Developer does not rewrite it.
   what-was-implemented.md    Developer write-up
   what-was-reviewed.md       Review findings and refactors
   what-was-verified.md       Tests, runs, slop check
@@ -71,7 +71,7 @@ Cursor: `.cursor/rules/agent-engineer-skills.mdc` always applies. The agent must
 
 Gemini: each Gem pastes `SKILL.md`. Gems do not share chat memory. The feature folder is the handoff.
 
-When the user wants the whole path and a lock exists, run `feature-harness`. Announce `Using skill: <id>` before each skill, including inner ones.
+When the user wants the whole path and a specification exists, run `feature-harness`. Announce `Using skill: <id>` before each skill, including inner ones.
 
 ## Contracts
 
@@ -99,7 +99,7 @@ Required fields in a run must appear in the Markdown write-up (heading or table)
 
 Security on the daily path is a **negative test** in `feature-verifier` (unauthorized caller, no new public route, no secrets in source) when the change has a who/auth or a new entry point. It is not a threat-model pack.
 
-Technical forks (which library, which store) that the lock did not name: **stop and ask**. Do not pick silently. Do not stand up a scoring matrix skill.
+Technical forks (which library, which store) that the specification did not name: **stop and ask**. Do not pick silently. Do not stand up a scoring matrix skill.
 
 ## Waiting for a human
 
@@ -108,10 +108,10 @@ There is no `APPROVED: <skill> Phase <n>` machine on this path.
 The agent waits when:
 
 - Specifier needs landmine answers (clickable `AskQuestion` when the host has it)
-- Developer finds a lock hole or a new landmine
+- Developer finds a hole in the specification or a new landmine
 - Reviewer would have to change the product to fix a finding
 - Verifier needs a human to run a manual check it cannot run
-- Harness: missing lock, empty kitchen, verify still fail after one retry, review blocked-specifier, classify-unsure, or cancel
+- Harness: missing specification, empty kitchen, verify still fail after one retry, review blocked-specifier, classify-unsure, or cancel
 
 `ok` / `lgtm` does not skip specifier questions or turn a fail into a pass.
 
@@ -132,7 +132,7 @@ Windows PowerShell: do not join commands with `&&`.
 
 | Problem | What to do |
 | --- | --- |
-| Lock missing or fuzzy | `feature-specifier` |
+| Specification missing or fuzzy | `feature-specifier` |
 | New product landmine mid-build | Stop. Ask. Do not squeeze it into the open folder. |
 | Review must-fix remains | Stay in `feature-code-reviewer` until it is gone or blocked for specifier |
 | Tests fail | `feature-harness` retries develop → review → verify once, then stops. Alone, stay in `feature-verifier` (or send a product miss back to developer). Do not delete tests to get green. |
@@ -172,9 +172,9 @@ Windows PowerShell: do not join commands with `&&`.
 | Term | Meaning |
 | --- | --- |
 | Skill | Job plus required outputs (`SKILL.md`, schema, template) |
-| Lock | `what-to-build.md` — the product the later skills must not change |
+| Feature specification | `what-to-build.md` — what to build; later skills must not change the product |
 | Feature directory | `docs/features/<feature-name>/` for one change |
 | Wall | Out-of-scope item. Hard reject if code builds it |
 | Landmine | A question whose wrong guess would waste implementation time |
-| Slop | Tests or code that do not match the lock, or hollow asserts |
-| Harness | `feature-harness` running developer, reviewer, verifier for one lock |
+| Slop | Tests or code that do not match the specification, or hollow asserts |
+| Harness | `feature-harness` running developer, reviewer, verifier for one specification |

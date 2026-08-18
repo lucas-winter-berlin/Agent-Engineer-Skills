@@ -12,19 +12,19 @@ A skill is a structured instruction set and execution contract, not optional sty
 | User intent | Skill |
 | --- | --- |
 | Vague idea, problem, feature concept, spec before code | `feature-specifier` |
-| Implement a locked what-to-build, build the feature | `feature-developer` |
+| Implement a feature specification, build the feature | `feature-developer` |
 | Code review, refactor, clean code, maintainability | `feature-code-reviewer` |
 | Verify, test, integration, security tests, not slop | `feature-verifier` |
-| Run the path, harness, end to end after a lock | `feature-harness` |
+| Run the path, harness, end to end after a specification | `feature-harness` |
 
-If the lock is missing or the idea is fuzzy, run `feature-specifier` first. If a lock exists and the user wants the whole path, run `feature-harness` (it runs developer, reviewer, verifier). If they named one inner skill, run only that skill.
+If the specification is missing or the idea is fuzzy, run `feature-specifier` first. If a specification exists and the user wants the whole path, run `feature-harness` (it runs developer, reviewer, verifier). If they named one inner skill, run only that skill.
 
 ## Global contract
 
 1. Follow the steps in that skill's `SKILL.md` in order. Do not skip, merge, or reorder.
 2. Instantiate templates under `skills/<id>/templates/`. Do not invent alternate structures.
 3. Cover every required field in `skills/<id>/schema.json`.
-4. Stop when the skill says to wait (questions, missing lock, product landmine). `ok` / `lgtm` is not a skip.
+4. Stop when the skill says to wait (questions, missing specification, product landmine). `ok` / `lgtm` is not a skip.
 5. Capability claims require evidence paths. Unknown tools are `unknown` or `absent`, never implied.
 6. No icons or emojis in artifacts.
 7. Consuming-project security and secrets policy wins. This framework wins on skill order and templates for skill-bound work. Code style of the consuming project wins for source.

@@ -2,14 +2,14 @@
 name: feature-harness
 description: >-
   Runs the feature path in one go: developer, then code-reviewer, then verifier.
-  One verify-fail retry. Classifies later user feedback (lock-mismatch vs new
+  One verify-fail retry. Classifies later user feedback (spec-mismatch vs new
   product). Use when the operator wants the path run, a harness, or end-to-end
-  after a lock exists.
+  after a feature specification exists.
 ---
 
 # feature-harness
 
-Core job: run the other feature skills in order for one locked folder. Do not replace them. Do not invent product.
+Core job: run the other feature skills in order for one specified feature. Do not replace them. Do not invent product.
 
 Input: `docs/features/<feature-name>/what-to-build.md` (or older `concept.md`).
 
@@ -19,7 +19,7 @@ Output: those skills' files, plus `docs/features/<feature-name>/what-was-run.md`
 
 The operator wants the path run: "harness", "end to end", "run the path", or `Use skill: feature-harness`.
 
-Do not use when the idea is still fuzzy and there is no lock (`feature-specifier` first). Do not use to rewrite the four skills.
+Do not use when the idea is still fuzzy and there is no specification (`feature-specifier` first). Do not use to rewrite the four skills.
 
 ## How (mandatory order)
 
@@ -39,8 +39,8 @@ Classify. Retry budget resets to one verify-fail retry.
 
 | Feedback looks like | Do |
 | --- | --- |
-| Bug or behavior that misses the lock | Develop → review → verify |
-| New product, extra scope, extra surface | Run `feature-specifier` (questions + lock), then develop → review → verify |
+| Bug or behavior that misses the specification | Develop → review → verify |
+| New product, extra scope, extra surface | Run `feature-specifier` (questions + spec), then develop → review → verify |
 | Unsure | Ask. Do not pick |
 
 Do not send extra product to developer as a "fix".
@@ -48,7 +48,7 @@ Do not send extra product to developer as a "fix".
 ## Classify (keep it dumb)
 
 - **Specifier:** new screens, routes, roles, fields, in-scope expansion, "also add…", walls they now want dropped.
-- **Developer:** wrong vs lock, crash, test fail, review leftover, "it doesn't do what what-to-build says".
+- **Developer:** wrong vs the specification, crash, test fail, review leftover, "it doesn't do what what-to-build says".
 - **Ask:** both readings are reasonable.
 
 ## Guardrails
@@ -65,7 +65,7 @@ MUST NOT:
 1. Automation, SDK, CLI daemon, CI, or a queue UI.
 2. Scaffold a stack.
 3. Skip review on the way to verify.
-4. Auto-start specifier when there is no lock and no product-feedback message.
+4. Auto-start specifier when there is no specification and no product-feedback message.
 5. Write a sixth feature file besides `what-was-run.md`.
 
 ## Handoff

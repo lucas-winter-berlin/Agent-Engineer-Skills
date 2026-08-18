@@ -17,12 +17,12 @@
 
 ## Feedback
 
-- Classified as: {{none | lock-mismatch | new-product | asked}}
+- Classified as: {{none | spec-mismatch | new-product | asked}}
 - Then: {{n/a or what ran next}}
 
 ## Stopped because
 
-{{pass | verify-fail | cancelled | missing-lock | empty-kitchen | review-blocked-specifier | classify-unsure}} -- {{one line}}
+{{pass | verify-fail | cancelled | missing-spec | empty-kitchen | review-blocked-specifier | classify-unsure}} -- {{one line}}
 
 ## Next
 
