@@ -1,32 +1,32 @@
 ---
-description: End-to-end adaptive feature implementation pipeline (discovery, blueprint, human gate, TDD, security audit, docs freeze, CI or manual QA). Apply when implementing a feature or delivering TDD changes after an approved spec.
+description: Implement what-to-build.md on a feature branch, then write what-was-implemented.md. No planning pack, CI, or threat-model essay in this skill.
 alwaysApply: false
 ---
 
 # Skill: feature-developer
 
-Read and follow `skills/feature-developer/SKILL.md`. Use templates in `skills/feature-developer/templates/` and fields in `skills/feature-developer/schema.json`.
+Read and follow `skills/feature-developer/SKILL.md`. Fill `skills/feature-developer/templates/what-was-implemented.md` only.
 
 Announce: `Using skill: feature-developer`.
 
-## Phases (mandatory order)
+## Job
 
-1. Capability Discovery -- tests, CI, linters, docs layout; evidence paths only.
-2. Spec and architecture blueprint -- `docs/features/<kebab-name>/`.
-3. Human review gate -- STOP. No code until `APPROVED: feature-developer Phase 3`.
-4. TDD implementation -- failing test, minimum code, refactor; do not expand scope.
-5. Security and edge-case audit -- STRIDE on touched boundaries; high/critical accept-risk needs a human owner.
-6. Docs freeze and global sync -- spec/architecture become immutable.
-7. CI verification if present, else structured manual QA with evidence.
+Build what `what-to-build.md` locked. Nothing else.
 
-## Adaptive flags
+## Must (order)
 
-- `tests.automated`: runner and command evidenced. Still write tests if false.
-- `ci.present`: CI config evidenced. Do not claim CI passed if absent.
-- `lint.blocking`: lint in CI or documented hook. Clean touched files before freeze.
+1. Create and check out a feature branch. Do not push or commit unless asked. On Windows PowerShell, do not use `&&`.
+2. Add only the structure this repo already uses.
+3. Implement in-scope behavior. Obey walls. Match local style. Run existing tests if a command exists; do not invent a runner.
+4. Write `docs/features/<name>/what-was-implemented.md` (what, why, where, how to try).
 
-## Do not use
+If `what-to-build.md` is missing, use `concept.md` if present. If still fuzzy, stop and use `feature-specifier`. If a new landmine appears, stop and ask.
 
-When the request is still ambiguous (use `feature-specifier`), when the user only wants an ADR or threat model, or for trivial non-behavioral edits.
+Next daily skill after this one: `feature-code-reviewer`.
 
-On `REJECTED: feature-developer Phase 3`, revise planning artifacts and resubmit the gate. Do not code.
+## Must not
+
+- Planning packs, CI, threat-model essays
+- New CI, new test framework, extra product
+- Silent scope
+- Icons or emojis in the write-up

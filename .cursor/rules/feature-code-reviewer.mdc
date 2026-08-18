@@ -1,0 +1,33 @@
+---
+description: Strict code review for clean code, repo conventions, and long-term maintainability. After implement, before verify. Refactor internals only; no product changes.
+alwaysApply: false
+---
+
+# Skill: feature-code-reviewer
+
+Read and follow `skills/feature-code-reviewer/SKILL.md`. Fill `skills/feature-code-reviewer/templates/what-was-reviewed.md` only.
+
+Announce: `Using skill: feature-code-reviewer`.
+
+## Job
+
+Be strict. The change must stay usable for a long time. Match this repo. No polite rubber-stamp.
+
+## When
+
+After `feature-developer`, before `feature-verifier`.
+
+## Must (order)
+
+1. Read `what-to-build.md` and the diff. Review every touched file.
+2. Compare to existing patterns in this repo.
+3. Record findings (`must-fix` / `should-fix` / `nit`). Empty "looks fine" is a fail of this skill.
+4. Fix must-fix and should-fix without changing product or walls. Re-run existing tests if a command exists. No `&&` on Windows PowerShell.
+5. Write `docs/features/<name>/what-was-reviewed.md`. Verdict `fail` until must-fix is gone or blocked for specifier.
+
+## Must not
+
+- New product, screens, endpoints, or dependencies
+- Unrelated rewrites
+- Skip must-fix because tests passed
+- Icons or emojis

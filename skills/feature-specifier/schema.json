@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://agent-engineer-skills.dev/skills/feature-specifier/schema.json",
   "title": "FeatureSpecifierIO",
-  "description": "Input and output contract for the feature-specifier skill.",
+  "description": "Input and output for feature-specifier: one what-to-build file the developer must follow.",
   "type": "object",
   "additionalProperties": false,
   "required": ["input", "output"],
@@ -12,21 +12,7 @@
       "additionalProperties": false,
       "required": ["request"],
       "properties": {
-        "request": {
-          "type": "string",
-          "minLength": 1
-        },
-        "stakeholders": {
-          "type": "array",
-          "items": { "type": "string" }
-        },
-        "knownConstraints": {
-          "type": "array",
-          "items": { "type": "string" }
-        },
-        "existingSpecPath": {
-          "type": "string"
-        }
+        "request": { "type": "string", "minLength": 1 }
       }
     },
     "output": {
@@ -36,200 +22,58 @@
         "skillId",
         "featureName",
         "status",
-        "clarificationQuestions",
-        "assumptions",
+        "whatToBuildPath",
         "inScope",
         "outOfScope",
-        "functionalRequirements",
-        "nonFunctionalRequirements",
-        "acceptanceCriteria",
-        "artifacts"
+        "lockedDecisions",
+        "doneWhen"
       ],
       "properties": {
-        "skillId": {
-          "type": "string",
-          "const": "feature-specifier"
-        },
+        "skillId": { "type": "string", "const": "feature-specifier" },
         "featureName": {
           "type": "string",
           "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
           "maxLength": 64
         },
-        "title": { "type": "string" },
         "status": {
           "type": "string",
-          "enum": ["draft", "awaiting-clarification", "ready-for-review", "approved"]
+          "enum": ["awaiting-questions", "draft", "ready-for-developer"]
         },
-        "clarificationQuestions": {
-          "type": "array",
-          "maxItems": 5,
-          "items": {
-            "type": "object",
-            "required": ["id", "question", "status"],
-            "properties": {
-              "id": { "type": "string" },
-              "question": { "type": "string" },
-              "options": {
-                "type": "array",
-                "items": { "type": "string" }
-              },
-              "answer": { "type": "string" },
-              "status": {
-                "type": "string",
-                "enum": ["asked", "answered", "converted-to-assumption", "skipped-unambiguous"]
-              }
-            }
-          }
-        },
-        "assumptions": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "required": ["id", "statement", "risk"],
-            "properties": {
-              "id": { "type": "string" },
-              "statement": { "type": "string" },
-              "risk": {
-                "type": "string",
-                "enum": ["low", "medium", "high"]
-              },
-              "owner": { "type": "string" },
-              "defaultIfTrue": { "type": "string" }
-            }
-          }
+        "whatToBuildPath": {
+          "type": "string",
+          "pattern": "^docs/features/[a-z0-9-]+/what-to-build.md$"
         },
         "inScope": {
           "type": "array",
           "minItems": 1,
-          "items": {
-            "type": "object",
-            "required": ["id", "item"],
-            "properties": {
-              "id": { "type": "string" },
-              "item": { "type": "string" }
-            }
-          }
+          "items": { "type": "string" }
         },
         "outOfScope": {
           "type": "array",
           "minItems": 1,
-          "items": {
-            "type": "object",
-            "required": ["id", "item"],
-            "properties": {
-              "id": { "type": "string" },
-              "item": { "type": "string" },
-              "handling": {
-                "type": "string",
-                "enum": ["defer", "reject", "separate-change-request"]
-              }
-            }
-          }
+          "items": { "type": "string" }
         },
-        "functionalRequirements": {
+        "lockedDecisions": {
           "type": "array",
           "minItems": 1,
           "items": {
             "type": "object",
-            "required": ["id", "statement", "acceptanceIds"],
+            "required": ["decision", "lock"],
             "properties": {
-              "id": { "type": "string", "pattern": "^FR-[0-9]{3}$" },
-              "statement": { "type": "string" },
-              "acceptanceIds": {
-                "type": "array",
-                "minItems": 1,
-                "items": { "type": "string" }
-              }
-            }
-          }
-        },
-        "nonFunctionalRequirements": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "required": ["id", "category", "statement", "measurement"],
-            "properties": {
-              "id": { "type": "string", "pattern": "^NFR-[0-9]{3}$" },
-              "category": {
+              "question": { "type": "string" },
+              "decision": { "type": "string" },
+              "lock": { "type": "string" },
+              "source": {
                 "type": "string",
-                "enum": [
-                  "latency",
-                  "throughput",
-                  "availability",
-                  "security",
-                  "privacy",
-                  "observability",
-                  "accessibility",
-                  "compatibility",
-                  "maintainability",
-                  "cost",
-                  "other"
-                ]
-              },
-              "statement": { "type": "string" },
-              "measurement": { "type": "string" }
-            }
-          }
-        },
-        "dataModel": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "required": ["entity", "fields"],
-            "properties": {
-              "entity": { "type": "string" },
-              "fields": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "required": ["name", "type", "sensitivity"],
-                  "properties": {
-                    "name": { "type": "string" },
-                    "type": { "type": "string" },
-                    "sensitivity": {
-                      "type": "string",
-                      "enum": ["public", "internal", "confidential", "restricted"]
-                    },
-                    "required": { "type": "boolean" }
-                  }
-                }
+                "enum": ["user", "repo", "locked-default"]
               }
             }
           }
         },
-        "acceptanceCriteria": {
+        "doneWhen": {
           "type": "array",
           "minItems": 1,
-          "items": {
-            "type": "object",
-            "required": ["id", "title", "given", "when", "then"],
-            "properties": {
-              "id": { "type": "string", "pattern": "^AC-[0-9]{3}$" },
-              "title": { "type": "string" },
-              "tags": {
-                "type": "array",
-                "items": { "type": "string" }
-              },
-              "given": { "type": "string" },
-              "when": { "type": "string" },
-              "then": { "type": "string" }
-            }
-          }
-        },
-        "artifacts": {
-          "type": "array",
-          "minItems": 1,
-          "items": {
-            "type": "object",
-            "required": ["path", "kind"],
-            "properties": {
-              "path": { "type": "string" },
-              "kind": {
-                "type": "string",
-                "enum": ["prd", "clarification-log", "acceptance-criteria"]
-              }
-            }
-          }
+          "items": { "type": "string" }
         }
       }
     }

@@ -1,27 +1,23 @@
 # Feature folders
 
-When the agent implements a feature, it creates one folder per feature. The name is lowercase with hyphens, for example `invoice-csv-export`.
+One folder per feature, lowercase with hyphens, for example `invoice-csv-export`.
 
 ```
 docs/features/<feature-name>/
-  README.md                 Short index of the feature
-  spec.md                   What we are building
-  architecture.md           How we are building it
-  decisions.md              Linked decisions (ADRs)
-  capability-report.md      What the agent found in the repo (tests, CI, linters)
-  review-gate.md            Your approve / reject record
-  implementation-log.md     Test-then-code history
-  security-audit.md         Security and edge-case notes
-  verification.md           CI results or a filled QA checklist
+  what-to-build.md           Locked product: specifier output
+  what-was-implemented.md    What the developer changed and why
+  what-was-reviewed.md       Review findings and refactors
+  what-was-verified.md       Test cases, runs, slop check
+  what-was-run.md            Harness log (only if feature-harness ran)
 ```
+
+Do not add extra spec files in this folder.
 
 ## Naming
 
-1. Derive the folder name from the spec title. Use lowercase and hyphens.
-2. Do not reuse a folder for a different feature. Start a new name.
-3. After docs freeze, do not quietly edit `spec.md` or `architecture.md`. Open a new change request instead.
-4. Shared docs (app README, API catalog) are updated only during freeze, and only with a listed reason.
+1. Folder name comes from the feature title (kebab-case).
+2. Do not reuse a folder for a different feature.
+3. `what-to-build.md` is the lock. The developer does not rewrite it while coding.
+4. Daily order of write-ups: lock, implemented, reviewed, verified. Harness adds `what-was-run.md`.
 
-## For the agent
-
-Do not invent a new folder name after coding has started. The name is chosen at the end of the plan step and confirmed when the human approves Phase 3.
+Older fallbacks: `concept.md` counts as `what-to-build.md`. `notes.md` counts as `what-was-implemented.md`.

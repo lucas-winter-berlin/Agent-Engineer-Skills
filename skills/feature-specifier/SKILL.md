@@ -1,130 +1,115 @@
 ---
 name: feature-specifier
 description: >-
-  Transforms ambiguous ideas or user requests into unambiguous PRDs with
-  in-scope and out-of-scope boundaries, at most five clarification questions,
-  logged assumptions, functional and non-functional requirements, data models,
-  and Gherkin acceptance criteria. Use when the user asks to specify a feature,
-  write a PRD, define scope, or produce Given-When-Then criteria before
-  implementation.
+  Understands an idea, problem, or feature in any kind of software project by
+  asking critical questions, then writes docs/features/<name>/what-to-build.md that
+  feature-developer can implement without guessing. Use when the request is
+  fuzzy or "done" is not locked, for UI, API, CLI, jobs, libraries, or mixed work.
 ---
 
 # feature-specifier
 
-Transform ambiguous ideas or user requests into unambiguous product requirement documents. This file is an execution contract. Do not implement code. Do not skip clarification when the request is underspecified. Do not invent stakeholder intent.
+Core job: understand the idea, problem, or feature. Ask the questions whose wrong answers would waste implementation time. Hand `feature-developer` one concept so the developer cannot invent a different product.
 
-Canonical schema: [schema.json](schema.json). Framework: [docs/ARCHITECTURE.md](../../docs/ARCHITECTURE.md).
+This skill is **universal**: same job in a website, API, CLI, worker, library, game, or mixed repo. It is **not** vague: only landmine questions, then hard locks and walls.
+
+Do not write code. Do not produce a multi-file PRD pack.
+
+Output: `docs/features/<feature-name>/what-to-build.md` from [templates/what-to-build.md](templates/what-to-build.md).
 
 ## When to use
 
-Use when the request is ambiguous, scope is unset, "done" is undefined, or the user asks for a PRD, spec, scope boundary, or acceptance criteria.
+The request is an idea, a problem, or a feature, and "done" is not locked.
 
-Do not use when a PRD is already approved and the user wants code (`feature-developer`), a trade-off (`decision-matrix-architect`), or only a threat model (`sec-analyzer-tester`). Do not re-specify as a delay tactic.
+Do not use when the change is already exact (known bug, one-line fix), or the user only wants code, review, tests, or the path run on an existing lock.
+
+## How
+
+1. **Restate** the request in a few lines. Add nothing. Name the kind of work (UI, API, CLI, job, library, mixed) from the request and the repo, not from habit.
+2. **Find landmines** using the types below. Ask only the types that would cause rework **on this request**.
+3. **Ask** those questions in one batch, as clickable choices. Do not ask what the user or the repo already answered. Do not ask two questions that are the same decision.
+4. **Write the concept.** Locked decisions, in/out, behavior, done-when, walls.
+5. **Check** that a developer who follows only `what-to-build.md` cannot reasonably ship the wrong thing.
+
+If a leftover decision is still easy to get wrong, ask another round. Do not leave it for the developer. If the user will not answer, write `locked-default` in `what-to-build.md`. That default is then mandatory.
+
+## Landmine types (pick what applies)
+
+Do not walk this list as a questionnaire. Skip any type the request or repo already locks.
+
+| Type | Wrong guess wastes time on... | Ask about this when |
+| --- | --- | --- |
+| Who | Auth, roles, public vs signed-in | It is unclear who may use or trigger it |
+| Where it lives | Building the wrong entry point | It is unclear which screens, routes, commands, jobs, or packages |
+| Data | Files vs compute, schema, payload | It is unclear what is stored, computed, or sent |
+| Lifecycle | State after leave, retry, cancel, switch | Work continues, can be cancelled, or spans steps |
+| Failure | Empty UI, 500, silent drop | The user or caller can hit a no-path |
+| Extra product | SDK, extra screens, extra endpoints | The idea is easy to over-build |
+
+**Where it lives** means the real entry points for this repo, not "always a modal":
+
+- UI: pages, modals, drawers, mobile, CLI screens
+- API: routes, events, consumers
+- CLI: commands and flags
+- Job / worker: trigger and what happens if it is killed
+- Library: public functions or types the caller sees
+
+For UI or other interaction, `what-to-build.md` MUST list each relevant entry as in-scope or out, and MUST say what happens on close, navigation, cancel, or equivalent leave. If the user can wait or fail, say the visible or returned failure.
+
+For non-UI work, do not invent page/modal questions. Use routes, commands, jobs, or APIs instead.
+
+## Questions
+
+Ask only if a wrong guess would cause rework.
+
+- Typical load is 3-7. Penalty for leaving a landmine unasked, not for asking fewer than five.
+- Drop overlapping options.
+- Stop when leftovers are harmless (copy, spacing, log wording) or a `locked-default`.
+- Record Q and A inside `what-to-build.md`. No second questions file.
+
+### How to ask (binding)
+
+If the host has clickable multiple choice (Cursor `AskQuestion` or equivalent), MUST use it for the whole batch. One call, lettered options, optional Other.
+
+MUST NOT print the questionnaire only as chat prose when that UI exists.
+
+If the click UI is missing or failed, print letters and one line: `Choice UI unavailable; answer with letters.`
+
+## what-to-build.md rules
+
+MUST include:
+
+- Problem (who, what hurts, why)
+- Locked decisions
+- In scope / out of scope (walls)
+- Behavior (what happens; entry points in or out; leave/cancel; failure)
+- Done when: observable checks. Happy path, important no-path, leave/cancel
+- Do not implement: the extra product a developer might invent
+
+MUST NOT include:
+
+- Extra PRD / clarification / acceptance files
+- FR/NFR/AC ID factories and traceability matrices
+- Data-model tables unless this change persists or exposes a new contract
+- Essays. Bullets, tables, short fences. Usually under 120 lines. Cut repetition, not walls
+- Template coaching lines (for example “If the user did not answer…”)
 
 ## Guardrails
 
-Must:
+MUST:
 
 1. Announce `Using skill: feature-specifier`.
-2. Ask at most three to five clarification questions, batched in one turn, only for information that changes scope, risk, or acceptance.
-3. Log remaining unknowns as numbered assumptions with risk and owner.
-4. Produce explicit In-Scope and Out-of-Scope lists.
-5. Write functional and non-functional requirements with stable ids.
-6. Include a data model when state is persisted or exchanged.
-7. Express acceptance as Gherkin (`Given` / `When` / `Then`), including negative paths.
-8. Instantiate templates. Do not replace them with an essay.
-9. Write in English. No icons or emojis.
+2. Write `docs/features/<kebab-name>/what-to-build.md`.
+3. Treat out-of-scope as hard walls.
+4. English. No icons or emojis.
 
-Must not:
+MUST NOT:
 
-1. Implement source code, refactors, or CI changes.
-2. Ask more than five questions in the clarification round.
-3. Ask questions whose answers are already in the repository or the user message.
-4. Hide uncertainty inside vague requirements ("handle this appropriately").
-5. Treat out-of-scope items as stretch goals to be coded later without a new specifier run.
-6. Produce Gherkin that restates implementation details instead of observable behavior.
-
-## Clarification policy
-
-Ask a question only if all of the following are true:
-
-1. The answer would change In-Scope, Out-of-Scope, a requirement, or an acceptance scenario.
-2. The answer cannot be evidenced from the workspace.
-3. The question is not already answered in the user request.
-
-Batch 3-5 questions. Prefer closed or enumerated options. If the user declines to answer, convert each unanswered question into `ASM-###` with risk `high` unless the item is dropped to Out-of-Scope.
-
-Do not wait indefinitely. After one clarification round, produce the PRD with assumptions. A second round is allowed only if the user contradicts the first answers.
-
-## Phases
-
-### Phase 1. Intake and ambiguity scan
-
-**Objective.** Extract what is known and what is blocking an unambiguous spec.
-
-**Steps.**
-
-1. Restate the request in one paragraph without adding features.
-2. List known actors, systems, and constraints from the user and from a lightweight workspace scan (existing product docs, domain terms).
-3. Classify gaps: actor, problem, success metric, constraints, data, channels, non-functionals, exclusions.
-4. If no blocking gaps exist, skip to Phase 3 and record "clarification round skipped: request already unambiguous."
-5. Otherwise draft 3-5 questions using [templates/clarification-log.md](templates/clarification-log.md).
-
-### Phase 2. Clarification round
-
-**Objective.** Resolve blocking gaps or convert them into assumptions.
-
-**Steps.**
-
-1. Present the questions. Stop implementation-oriented discussion.
-2. Record answers verbatim in the clarification log.
-3. Unanswered items become assumptions (`ASM-###`) with risk and a proposed default.
-4. If an answer expands scope beyond the original request, call it out and require the user to confirm the expansion before it enters In-Scope.
-
-### Phase 3. PRD synthesis
-
-**Objective.** Write the PRD.
-
-**Steps.**
-
-1. Instantiate [templates/prd.md](templates/prd.md).
-2. Fill metadata: title, kebab-case `featureName`, status `draft`, authors, date.
-3. Write problem statement, goals, non-goals.
-4. Write In-Scope and Out-of-Scope as tables with ids.
-5. Write `FR-###` and `NFR-###`. Each FR is testable. Each NFR has a measurement.
-6. Write the data model: entities, fields, identities, lifetimes, retention, sensitivity.
-7. Write interfaces at the product level (who does what, through which channel), not class names unless the user mandated them.
-8. Write Gherkin in [templates/acceptance-criteria.md](templates/acceptance-criteria.md) and embed or link it from the PRD.
-9. Map every `FR-###` to at least one scenario. Include unauthorized, invalid, and empty-state scenarios where applicable.
-10. List assumptions, risks, and open questions that survived.
-11. Define `Definition of Done` as: all AC scenarios pass, NFRs measured, out-of-scope untouched.
-
-### Phase 4. Consistency check
-
-**Objective.** Catch internal contradictions before handoff.
-
-**Steps.**
-
-1. Every In-Scope item has a requirement or is explicitly a constraint.
-2. No Out-of-Scope item appears in Gherkin as required behavior.
-3. No requirement lacks an acceptance scenario.
-4. Data entities used in scenarios exist in the data model.
-5. Assumptions do not silently override hard constraints stated by the user.
-6. Set status to `ready-for-review` or keep `draft` if high-risk assumptions remain.
-7. If high-risk assumptions remain, recommend a human review before `feature-developer` Phase 3. This skill's own gate is optional; questions and assumption logging are not.
-
-## Output formatting
-
-- Feature name: lowercase kebab-case, max 64 characters.
-- Requirement ids: `FR-001`, `NFR-001`, `AC-001`, `SCOPE-001`, `XSCOPE-001`, `ASM-001`, `RISK-001`.
-- Gherkin: one `Feature` block, multiple `Scenario` or `Scenario Outline` blocks. No UI-emoji. Tags optional (`@negative`, `@security`, `@nfr`).
-- Sensitivity labels for data fields: `public`, `internal`, `confidential`, `restricted`.
+1. Implement source, refactors, or CI.
+2. Leave "handle it appropriately".
+3. Treat out-of-scope as stretch goals.
+4. Specify class names unless the user required them.
 
 ## Handoff
 
-When the user next asks to implement, instruct them (and the next agent) to run `feature-developer` with `specPath` pointing at the PRD. If more than one architectural option is still open, run `decision-matrix-architect` first.
-
-## Composition
-
-- Downstream: `decision-matrix-architect`, `feature-developer`.
-- Peer: `sec-analyzer-tester` may consume the PRD as the system description for threat modeling before code exists.
+Point `feature-developer` at `what-to-build.md`. If two real technical options remain (libraries, stores), ask. Do not leave the developer to pick. Product choices stay in this skill.
