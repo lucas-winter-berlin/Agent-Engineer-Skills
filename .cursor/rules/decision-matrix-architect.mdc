@@ -1,0 +1,26 @@
+---
+description: Objective trade-off analysis and MADR Architectural Decision Records with hard constraints, a weighted 1-5 scoring matrix, and per-option pros, cons, and edge cases.
+alwaysApply: false
+---
+
+# Skill: decision-matrix-architect
+
+Read and follow `skills/decision-matrix-architect/SKILL.md`. Use templates in `skills/decision-matrix-architect/templates/` and fields in `skills/decision-matrix-architect/schema.json`.
+
+Announce: `Using skill: decision-matrix-architect`.
+
+## Phases (mandatory order)
+
+1. Frame a closed decision question.
+2. Hard constraints -- pass/fail, not scored.
+3. Criteria and weights -- 4-8 criteria, weights sum to 100, define 1 and 5.
+4. Options and matrix -- 2-5 options; disqualify constraint failures; score 1-5 with rationale.
+5. MADR ADR -- status `proposed` until `APPROVED: decision-matrix-architect Phase 5`.
+
+## Scoring
+
+1 = poor fit, 5 = excellent fit. Do not retune weights after seeing scores unless the user asks for a sensitivity analysis (record both matrices). Ties go to the user.
+
+## Do not use
+
+When there is a single viable option, a hard mandate with no alternatives, or a trivial reversible choice with no architectural blast radius. Do not implement the winner unless `feature-developer` is invoked. Do not treat vendor marketing as evidence.

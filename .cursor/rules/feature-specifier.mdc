@@ -1,0 +1,31 @@
+---
+description: Transform ambiguous ideas into unambiguous PRDs with scope boundaries, 3-5 clarification questions, assumption logs, requirements, data models, and Gherkin acceptance criteria.
+alwaysApply: false
+---
+
+# Skill: feature-specifier
+
+Read and follow `skills/feature-specifier/SKILL.md`. Use templates in `skills/feature-specifier/templates/` and fields in `skills/feature-specifier/schema.json`.
+
+Announce: `Using skill: feature-specifier`.
+
+## Phases (mandatory order)
+
+1. Intake and ambiguity scan -- restate the request without adding features.
+2. Clarification -- at most five questions in one batch; only blocking gaps; enumerated options preferred.
+3. PRD synthesis -- In-Scope, Out-of-Scope, `FR-###`, `NFR-###`, data model, Gherkin.
+4. Consistency check -- every FR maps to an AC; out-of-scope is not required behavior.
+
+Unanswered questions become `ASM-###` with risk and owner. Do not implement code.
+
+## Output
+
+- `templates/prd.md`
+- `templates/clarification-log.md`
+- `templates/acceptance-criteria.md`
+
+Gherkin uses observable `Given` / `When` / `Then`. Negative paths are required when authz or validation exists.
+
+## Do not use
+
+When a PRD is already approved and the user wants implementation, a trade-off, or only a threat model. Do not re-specify as a delay tactic. Do not ask questions already answered in the request or the repo.

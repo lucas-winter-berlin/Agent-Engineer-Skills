@@ -1,0 +1,39 @@
+---
+description: Dispatcher for Agent Engineer Skills. Maps user intent to feature-specifier, decision-matrix-architect, feature-developer, or sec-analyzer-tester and enforces global execution contracts.
+alwaysApply: true
+---
+
+# Agent Engineer Skills dispatcher
+
+A skill is a structured instruction set and execution contract, not optional style advice. When the user intent matches the table below, announce `Using skill: <id>`, read `skills/<id>/SKILL.md`, and execute that contract. `SKILL.md` is authoritative if this rule and the skill file diverge.
+
+## Decision mapping
+
+| User intent | Skill |
+| --- | --- |
+| Vague idea, PRD, scope, acceptance criteria, Gherkin | `feature-specifier` |
+| Choose between options, trade-off, ADR, weighted scoring | `decision-matrix-architect` |
+| Implement a feature end to end, TDD delivery, plan then wait for approval | `feature-developer` |
+| Threat model, STRIDE, security tests, security QA checklist | `sec-analyzer-tester` |
+
+If several apply, run in order: specifier, decision-matrix, feature-developer, sec-analyzer (sec-analyzer is Phase 5 when already inside feature-developer).
+
+## Global contract
+
+1. Follow skill phases in order. Do not skip, merge, or reorder.
+2. Instantiate templates under `skills/<id>/templates/`. Do not invent alternate structures.
+3. Cover every required field in `skills/<id>/schema.json`.
+4. Stop at human gates until `APPROVED: <skill> Phase <n>`. `ok` / `lgtm` is not a token.
+5. Capability claims require evidence paths. Unknown tools are `unknown` or `absent`, never implied.
+6. No icons or emojis in artifacts.
+7. Consuming-project security and secrets policy wins. This framework wins on phase order and gates for skill-bound work. Code style of the consuming project wins for source.
+
+## Do not
+
+- Run `feature-developer` while the requirement is ambiguous.
+- Start implementation before `APPROVED: feature-developer Phase 3`.
+- Produce an ADR matrix for a trivial reversible choice unless asked.
+- Perform STRIDE theater when no trust boundary is crossed, unless the user still requests a local check.
+- Log secrets in skill artifacts.
+
+Full operator guide: `README.md`. Control plane: `docs/ARCHITECTURE.md`.

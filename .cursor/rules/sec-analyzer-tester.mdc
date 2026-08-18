@@ -1,0 +1,27 @@
+---
+description: Threat modeling with trust boundaries and STRIDE, mitigation dispositions, and adaptive tests (automated if a framework exists, otherwise a structured manual QA checklist).
+alwaysApply: false
+---
+
+# Skill: sec-analyzer-tester
+
+Read and follow `skills/sec-analyzer-tester/SKILL.md`. Use templates in `skills/sec-analyzer-tester/templates/` and fields in `skills/sec-analyzer-tester/schema.json`.
+
+Announce: `Using skill: sec-analyzer-tester`.
+
+## Phases (mandatory order)
+
+1. Capability discovery -- test runner, CI, scanners, identity surfaces. No secret dumps.
+2. Trust boundaries and data-flow diagram (Mermaid, no icons).
+3. STRIDE on every boundary and changed interface. Blank cells invalid; use `N/A` with reason.
+4. Mitigations -- `fix`, `accept-risk`, or `out-of-scope`. High/critical `accept-risk` needs `APPROVED: sec-analyzer-tester Phase 4` and a named human owner.
+5. Adaptive tests -- write framework tests if `tests.automated`; otherwise `templates/manual-qa-checklist.md`.
+6. Report freeze -- residual risks first. Do not claim the system is "secure."
+
+## Adaptive output
+
+If a test framework exists, generate unit/integration tests that assert deny/validate/expire/fail-closed behavior. If not, produce the manual checklist. Never skip both. Scanners inform findings; they do not replace STRIDE.
+
+## Do not use
+
+For copy edits, comment-only changes, or docs with no exposure. Do not emit exploit payloads, weaponized PoCs, or attack playbooks. Do not log secrets.

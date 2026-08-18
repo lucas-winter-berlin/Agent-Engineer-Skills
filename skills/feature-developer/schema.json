@@ -1,0 +1,186 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-engineer-skills.dev/skills/feature-developer/schema.json",
+  "title": "FeatureDeveloperIO",
+  "description": "Input and output contract for the feature-developer skill.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["input", "output"],
+  "properties": {
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["request", "workspaceRoot"],
+      "properties": {
+        "request": {
+          "type": "string",
+          "minLength": 1,
+          "description": "User implementation request or pointer to an approved spec."
+        },
+        "workspaceRoot": {
+          "type": "string",
+          "description": "Repository root path or logical name when the tree is provided as excerpts."
+        },
+        "specPath": {
+          "type": "string",
+          "description": "Optional path to an existing PRD or feature spec."
+        },
+        "adrPaths": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "featureNameHint": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        }
+      }
+    },
+    "output": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "skillId",
+        "featureName",
+        "featureDirectory",
+        "status",
+        "capabilityReport",
+        "phasesCompleted"
+      ],
+      "properties": {
+        "skillId": {
+          "type": "string",
+          "const": "feature-developer"
+        },
+        "featureName": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "featureDirectory": {
+          "type": "string",
+          "pattern": "^docs/features/[a-z0-9-]+/$"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "draft",
+            "in-review",
+            "approved",
+            "implementing",
+            "auditing",
+            "frozen",
+            "verified",
+            "failed",
+            "awaiting-human-gate"
+          ]
+        },
+        "capabilityReport": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["confidence", "tests", "ci", "lint"],
+          "properties": {
+            "confidence": {
+              "type": "string",
+              "enum": ["high", "medium", "low"]
+            },
+            "tests": {
+              "type": "object",
+              "required": ["status", "automated"],
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "enum": ["present", "absent", "unknown"]
+                },
+                "automated": { "type": "boolean" },
+                "framework": { "type": "string" },
+                "command": { "type": "string" },
+                "evidence": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
+              }
+            },
+            "ci": {
+              "type": "object",
+              "required": ["status", "present"],
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "enum": ["present", "absent", "unknown"]
+                },
+                "present": { "type": "boolean" },
+                "vendor": { "type": "string" },
+                "evidence": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
+              }
+            },
+            "lint": {
+              "type": "object",
+              "required": ["status", "blocking"],
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "enum": ["present", "absent", "unknown"]
+                },
+                "blocking": { "type": "boolean" },
+                "tools": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
+              }
+            }
+          }
+        },
+        "phasesCompleted": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 7
+          }
+        },
+        "gate": {
+          "type": "object",
+          "properties": {
+            "phase": { "type": "integer" },
+            "state": {
+              "type": "string",
+              "enum": ["pending", "approved", "rejected", "invalid-token"]
+            },
+            "token": { "type": "string" }
+          }
+        },
+        "artifacts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["path", "kind"],
+            "properties": {
+              "path": { "type": "string" },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "capability-report",
+                  "spec",
+                  "architecture",
+                  "review-gate",
+                  "implementation-log",
+                  "security-audit",
+                  "docs-freeze",
+                  "verification",
+                  "source",
+                  "test"
+                ]
+              }
+            }
+          }
+        },
+        "verificationMode": {
+          "type": "string",
+          "enum": ["ci", "manual-qa", "unverified-local", "blocked"]
+        }
+      }
+    }
+  }
+}
