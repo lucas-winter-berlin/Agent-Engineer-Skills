@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://agent-engineer-skills.dev/skills/feature-developer/schema.json",
-  "title": "FeatureDeveloperIO",
-  "description": "Implement what-to-build.md: branch, structure, code, what-was-implemented.md.",
+  "$id": "https://agent-engineer-skills.dev/skills/feature-code-reviewer/schema.json",
+  "title": "FeatureCodeReviewerIO",
+  "description": "Strict code review and safe internal refactor. Verdict fail until must-fix is gone.",
   "type": "object",
   "additionalProperties": false,
   "required": ["input", "output"],
@@ -13,10 +13,7 @@
       "required": ["request"],
       "properties": {
         "request": { "type": "string", "minLength": 1 },
-        "whatToBuildPath": {
-          "type": "string",
-          "description": "Path to what-to-build.md when known."
-        }
+        "whatToBuildPath": { "type": "string" }
       }
     },
     "output": {
@@ -25,24 +22,22 @@
       "required": [
         "skillId",
         "featureName",
-        "branch",
-        "whatWasImplementedPath",
-        "status"
+        "whatWasReviewedPath",
+        "verdict"
       ],
       "properties": {
-        "skillId": { "type": "string", "const": "feature-developer" },
+        "skillId": { "type": "string", "const": "feature-code-reviewer" },
         "featureName": {
           "type": "string",
           "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
         },
-        "branch": { "type": "string" },
-        "whatWasImplementedPath": {
+        "whatWasReviewedPath": {
           "type": "string",
-          "pattern": "^docs/features/[a-z0-9-]+/what-was-implemented.md$"
+          "pattern": "^docs/features/[a-z0-9-]+/what-was-reviewed.md$"
         },
-        "status": {
+        "verdict": {
           "type": "string",
-          "enum": ["implemented", "blocked-need-concept", "blocked-need-ask"]
+          "enum": ["pass", "fail"]
         }
       }
     }

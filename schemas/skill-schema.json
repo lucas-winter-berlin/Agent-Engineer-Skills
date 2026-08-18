@@ -1,111 +1,24 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://agent-engineer-skills.dev/schemas/skill-schema.json",
-  "title": "AgentEngineerSkillDefinition",
-  "description": "Canonical schema for Agent Engineer Skills. Validates metadata, phase definitions, input/output contracts, adaptive rules, and human-in-the-loop gates.",
+  "title": "AgentEngineerSkillPackage",
+  "description": "Package shape for a feature skill. Each skill is a folder: SKILL.md (contract), schema.json (run fields), templates/*.md (the only allowed write-up).",
   "type": "object",
   "additionalProperties": false,
-  "required": [
-    "metadata",
-    "purpose",
-    "triggers",
-    "nonTriggers",
-    "phases",
-    "inputContract",
-    "outputContract",
-    "adaptiveRules",
-    "guardrails",
-    "templates"
-  ],
+  "required": ["id", "contract", "ioSchema", "templates"],
   "properties": {
-    "metadata": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["id", "name", "version", "status", "owners"],
-      "properties": {
-        "id": {
-          "type": "string",
-          "pattern": "^[a-z][a-z0-9-]{1,62}[a-z0-9]$",
-          "description": "Stable skill identifier used in approval tokens and Decision Mapping."
-        },
-        "name": {
-          "type": "string",
-          "minLength": 3,
-          "maxLength": 128
-        },
-        "version": {
-          "type": "string",
-          "pattern": "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z.-]+)?$"
-        },
-        "status": {
-          "type": "string",
-          "enum": ["draft", "active", "deprecated"]
-        },
-        "owners": {
-          "type": "array",
-          "minItems": 1,
-          "items": { "type": "string", "minLength": 1 }
-        },
-        "license": { "type": "string" },
-        "tags": {
-          "type": "array",
-          "items": { "type": "string" }
-        }
-      }
-    },
-    "purpose": {
+    "id": {
       "type": "string",
-      "minLength": 20,
-      "description": "One-paragraph statement of what the skill produces and why it exists."
+      "pattern": "^feature-[a-z0-9-]+$",
+      "description": "Stable skill id. Must match the folder name under skills/."
     },
-    "triggers": {
-      "type": "array",
-      "minItems": 1,
-      "items": { "type": "string", "minLength": 8 },
-      "description": "User-intent patterns that select this skill."
+    "contract": {
+      "type": "string",
+      "const": "SKILL.md"
     },
-    "nonTriggers": {
-      "type": "array",
-      "minItems": 1,
-      "items": { "type": "string", "minLength": 8 },
-      "description": "User-intent patterns that must not select this skill."
-    },
-    "phases": {
-      "type": "array",
-      "minItems": 1,
-      "items": { "$ref": "#/$defs/phase" }
-    },
-    "inputContract": {
-      "$ref": "#/$defs/ioContract"
-    },
-    "outputContract": {
-      "$ref": "#/$defs/ioContract"
-    },
-    "adaptiveRules": {
-      "type": "array",
-      "minItems": 1,
-      "items": { "$ref": "#/$defs/adaptiveRule" }
-    },
-    "guardrails": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["must", "mustNot"],
-      "properties": {
-        "must": {
-          "type": "array",
-          "minItems": 1,
-          "items": { "type": "string" }
-        },
-        "mustNot": {
-          "type": "array",
-          "minItems": 1,
-          "items": { "type": "string" }
-        }
-      }
-    },
-    "humanGates": {
-      "type": "array",
-      "items": { "$ref": "#/$defs/humanGate" }
+    "ioSchema": {
+      "type": "string",
+      "const": "schema.json"
     },
     "templates": {
       "type": "array",
@@ -115,142 +28,18 @@
         "additionalProperties": false,
         "required": ["id", "path", "required"],
         "properties": {
-          "id": { "type": "string" },
+          "id": { "type": "string", "minLength": 1 },
           "path": {
             "type": "string",
             "pattern": "^templates/[A-Za-z0-9._/-]+\\.md$"
           },
-          "required": { "type": "boolean" },
-          "phaseId": { "type": "string" }
+          "required": { "type": "boolean" }
         }
       }
     },
-    "composesWith": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": ["skillId", "relation"],
-        "properties": {
-          "skillId": { "type": "string" },
-          "relation": {
-            "type": "string",
-            "enum": ["upstream", "downstream", "embedded-phase", "optional-peer"]
-          },
-          "notes": { "type": "string" }
-        }
-      }
-    }
-  },
-  "$defs": {
-    "phase": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["id", "order", "name", "objective", "entryCriteria", "exitCriteria", "steps"],
-      "properties": {
-        "id": {
-          "type": "string",
-          "pattern": "^[a-z][a-z0-9-]*$"
-        },
-        "order": {
-          "type": "integer",
-          "minimum": 1
-        },
-        "name": { "type": "string" },
-        "objective": { "type": "string" },
-        "entryCriteria": {
-          "type": "array",
-          "minItems": 1,
-          "items": { "type": "string" }
-        },
-        "exitCriteria": {
-          "type": "array",
-          "minItems": 1,
-          "items": { "type": "string" }
-        },
-        "steps": {
-          "type": "array",
-          "minItems": 1,
-          "items": { "type": "string" }
-        },
-        "humanGate": { "type": "boolean" },
-        "adaptive": { "type": "boolean" }
-      }
-    },
-    "ioContract": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["contentType", "requiredFields"],
-      "properties": {
-        "contentType": {
-          "type": "string",
-          "enum": ["application/json", "text/markdown", "multipart"]
-        },
-        "requiredFields": {
-          "type": "array",
-          "minItems": 1,
-          "items": { "$ref": "#/$defs/field" }
-        },
-        "optionalFields": {
-          "type": "array",
-          "items": { "$ref": "#/$defs/field" }
-        }
-      }
-    },
-    "field": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["name", "type", "description"],
-      "properties": {
-        "name": { "type": "string" },
-        "type": {
-          "type": "string",
-          "enum": [
-            "string",
-            "integer",
-            "boolean",
-            "array",
-            "object",
-            "enum",
-            "markdown",
-            "path"
-          ]
-        },
-        "description": { "type": "string" },
-        "enum": {
-          "type": "array",
-          "items": { "type": "string" }
-        }
-      }
-    },
-    "adaptiveRule": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["id", "when", "then"],
-      "properties": {
-        "id": { "type": "string" },
-        "when": { "type": "string" },
-        "then": { "type": "string" },
-        "otherwise": { "type": "string" }
-      }
-    },
-    "humanGate": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["phaseId", "severity", "approvalToken", "waivable"],
-      "properties": {
-        "phaseId": { "type": "string" },
-        "severity": {
-          "type": "string",
-          "enum": ["mandatory", "recommended", "optional"]
-        },
-        "approvalToken": { "type": "string" },
-        "waivable": { "type": "boolean" },
-        "package": {
-          "type": "array",
-          "items": { "type": "string" }
-        }
-      }
+    "writesUnder": {
+      "type": "string",
+      "const": "docs/features/<feature-name>/"
     }
   }
 }

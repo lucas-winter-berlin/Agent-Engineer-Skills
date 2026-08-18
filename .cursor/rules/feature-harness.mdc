@@ -1,0 +1,35 @@
+---
+description: Run develop, then review, then verify for one locked feature. One verify-fail retry. Classify later user feedback. Not an SDK or Automation.
+alwaysApply: false
+---
+
+# Skill: feature-harness
+
+Read and follow `skills/feature-harness/SKILL.md`. Fill `skills/feature-harness/templates/what-was-run.md` only (inner skills fill their own files).
+
+Announce: `Using skill: feature-harness`. Then announce each inner skill.
+
+## Job
+
+Run `feature-developer`, `feature-code-reviewer`, `feature-verifier` in order for one lock. One verify-fail retry. Stop after that. Classify later feedback; new product goes to specifier first.
+
+## When
+
+Operator wants the path, a harness, or end-to-end, and a lock exists (or they are sending feedback on a folder that already ran).
+
+## Must (order)
+
+1. Resolve the feature folder. No lock → stop, name `feature-specifier`. Empty kitchen → stop, no scaffold.
+2. Execute each inner `SKILL.md`. Do not skip review. Wait on inner questions.
+3. Verify fail → one more develop → review → verify, then stop if still fail.
+4. Cancel → halt, write the log.
+5. Feedback: lock-mismatch → path. New product → specifier then path. Unsure → ask.
+6. Write `docs/features/<name>/what-was-run.md`.
+
+## Must not
+
+- Automation, SDK, CLI daemon, CI, queue UI
+- Scaffold a stack
+- Skip review
+- Auto-specifier when there is no lock and no product-feedback message
+- Recode extra product as a developer fix

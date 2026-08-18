@@ -1,5 +1,5 @@
 ---
-description: Dispatcher for Agent Engineer Skills. Maps user intent to feature-specifier, decision-matrix-architect, feature-developer, or sec-analyzer-tester and enforces global execution contracts.
+description: Dispatcher for Agent Engineer Skills. Maps user intent to feature-specifier, feature-developer, feature-code-reviewer, feature-verifier, or feature-harness and enforces the daily path.
 alwaysApply: true
 ---
 
@@ -11,29 +11,29 @@ A skill is a structured instruction set and execution contract, not optional sty
 
 | User intent | Skill |
 | --- | --- |
-| Vague idea, PRD, scope, acceptance criteria, Gherkin | `feature-specifier` |
-| Choose between options, trade-off, ADR, weighted scoring | `decision-matrix-architect` |
-| Implement a feature end to end, TDD delivery, plan then wait for approval | `feature-developer` |
-| Threat model, STRIDE, security tests, security QA checklist | `sec-analyzer-tester` |
+| Vague idea, problem, feature concept, spec before code | `feature-specifier` |
+| Implement a locked what-to-build, build the feature | `feature-developer` |
+| Code review, refactor, clean code, maintainability | `feature-code-reviewer` |
+| Verify, test, integration, security tests, not slop | `feature-verifier` |
+| Run the path, harness, end to end after a lock | `feature-harness` |
 
-If several apply, run in order: specifier, decision-matrix, feature-developer, sec-analyzer (sec-analyzer is Phase 5 when already inside feature-developer).
+If the lock is missing or the idea is fuzzy, run `feature-specifier` first. If a lock exists and the user wants the whole path, run `feature-harness` (it runs developer, reviewer, verifier). If they named one inner skill, run only that skill.
 
 ## Global contract
 
-1. Follow skill phases in order. Do not skip, merge, or reorder.
+1. Follow the steps in that skill's `SKILL.md` in order. Do not skip, merge, or reorder.
 2. Instantiate templates under `skills/<id>/templates/`. Do not invent alternate structures.
 3. Cover every required field in `skills/<id>/schema.json`.
-4. Stop at human gates until `APPROVED: <skill> Phase <n>`. `ok` / `lgtm` is not a token.
+4. Stop when the skill says to wait (questions, missing lock, product landmine). `ok` / `lgtm` is not a skip.
 5. Capability claims require evidence paths. Unknown tools are `unknown` or `absent`, never implied.
 6. No icons or emojis in artifacts.
-7. Consuming-project security and secrets policy wins. This framework wins on phase order and gates for skill-bound work. Code style of the consuming project wins for source.
+7. Consuming-project security and secrets policy wins. This framework wins on skill order and templates for skill-bound work. Code style of the consuming project wins for source.
 
 ## Do not
 
-- Run `feature-developer` while the requirement is ambiguous.
-- Start implementation before `APPROVED: feature-developer Phase 3`.
-- Produce an ADR matrix for a trivial reversible choice unless asked.
-- Perform STRIDE theater when no trust boundary is crossed, unless the user still requests a local check.
+- Run `feature-developer` or `feature-harness` while the requirement is ambiguous.
+- Skip `feature-code-reviewer` on the daily path to jump straight to verify unless the user asked to skip review.
+- Invent extra spec packs, CI, or a threat-model essay as part of these skills.
 - Log secrets in skill artifacts.
 
-Full operator guide: `README.md`. Control plane: `docs/ARCHITECTURE.md`.
+Quick start: `README.md`. Operator guide: `docs/GUIDE.md`. Control plane: `docs/ARCHITECTURE.md`.
