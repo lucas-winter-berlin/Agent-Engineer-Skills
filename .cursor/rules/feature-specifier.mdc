@@ -17,7 +17,7 @@ Understand the idea, problem, or feature. Ask questions whose wrong answers woul
 
 1. Restate the request. Add nothing. Name the kind of work from the request and the repo.
 2. Ask only landmine questions that apply to this request (who, where it lives, data, lifecycle, failure, extra product). Where it lives is screens, routes, commands, jobs, or packages -- not always a modal. Batch in `AskQuestion`. Do not only print A/B/C in the chat. Drop overlapping questions.
-3. Lock every such decision. If the user will not answer, write `locked-default`. The developer may not pick another default.
+3. Write every such decision into the specification. If the user will not answer, write `locked-default`. The developer may not pick another default.
 4. Include in-scope, out-of-scope walls, behavior, done-when, and a do-not list.
 5. Name real entry points as in or out. Say what happens on leave/cancel and on failure. Do not invent UI questions for non-UI work.
 
@@ -31,4 +31,4 @@ Understand the idea, problem, or feature. Ask questions whose wrong answers woul
 
 ## Do not use
 
-When what to build is already locked and the user wants code, review, or tests.
+When a feature specification already exists and the user wants code, review, or tests.

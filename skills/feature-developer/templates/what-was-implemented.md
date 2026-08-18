@@ -11,7 +11,7 @@
 
 ## Why
 
-- {{why this approach, tied to a lock or to existing code in the repo}}
+- {{why this approach, tied to the specification or to existing code in the repo}}
 
 ## Where
 

@@ -1,6 +1,6 @@
 # Agent Engineer Skills
 
-Four jobs for an agent building a feature in any kind of repo (UI, API, CLI, worker, library). After the lock exists, `feature-harness` can run implement → review → verify for you.
+Four jobs for an agent building a feature in any kind of repo (UI, API, CLI, worker, library), plus a runner that chains three of them after a feature specification exists.
 
 ```text
 specify  ->  implement  ->  review  ->  verify
@@ -8,17 +8,15 @@ specify  ->  implement  ->  review  ->  verify
                      feature-harness
 ```
 
-| You want | Skill | File you get |
-| --- | --- | --- |
-| Lock what to build | `feature-specifier` | `docs/features/<name>/what-to-build.md` |
-| Write the code | `feature-developer` | feature branch + `what-was-implemented.md` |
-| Keep the code clean | `feature-code-reviewer` | `what-was-reviewed.md` |
-| Prove it is not slop | `feature-verifier` | tests + `what-was-verified.md` |
-| Run implement → review → verify | `feature-harness` | those files plus `what-was-run.md` |
+| Skill | What it does |
+| --- | --- |
+| `feature-specifier` | Helps you turn your idea into a feature specification. Writes `what-to-build.md`. |
+| `feature-developer` | Builds a feature based on a given feature specification. Writes `what-was-implemented.md`. |
+| `feature-code-reviewer` | Checks the new code is clean and will stay easy to change. Writes `what-was-reviewed.md`. |
+| `feature-verifier` | Tests a given build against the feature specification. Writes `what-was-verified.md`. |
+| `feature-harness` | Runs implement -> review -> verify in one go. Writes `what-was-run.md`. |
 
-Do not rename the skill ids.
-
-## Install
+## How to Install
 
 Copy these folders into the project, same names:
 
@@ -33,7 +31,7 @@ Create `docs/features/` if it is missing.
 
 **Gemini:** one Custom Gem per skill. Paste the preamble in [docs/GUIDE.md](docs/GUIDE.md), then that skill's `SKILL.md`. Attach `schema.json` and `templates/`.
 
-## Run a feature
+## How to create a feature
 
 ```text
 Use skill: feature-specifier

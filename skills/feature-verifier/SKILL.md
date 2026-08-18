@@ -9,7 +9,7 @@ description: >-
 
 # feature-verifier
 
-Core job: make sure the new work is not AI slop. That means: test cases that match the locked product, then actually run this repo's tests (unit, integration, security) and say what passed, failed, or could not be run.
+Core job: make sure the new work is not AI slop. That means: test cases that match the feature specification, then actually run this repo's tests (unit, integration, security) and say what passed, failed, or could not be run.
 
 Input: `docs/features/<feature-name>/what-to-build.md` and the implementation (and `what-was-implemented.md` / `what-was-reviewed.md` if they exist).
 
@@ -23,8 +23,8 @@ Do not use to invent the product (`feature-specifier`), to write the feature (`f
 
 ## How (mandatory order)
 
-1. **Read the lock.** `what-to-build.md` (or older `concept.md`). Done-when, walls, who, leave/cancel, failure.
-2. **Read what shipped.** `what-was-implemented.md` and the diff. Look for extras the lock forbade (new routes, new deps, extra UI).
+1. **Read the specification.** `what-to-build.md` (or older `concept.md`). Done-when, walls, who, leave/cancel, failure.
+2. **Read what shipped.** `what-was-implemented.md` and the diff. Look for extras the specification forbade (new routes, new deps, extra UI).
 3. **Write test cases.** In this repo's existing test folders and runner. Cover: happy path, important no-path, leave/cancel, and at least one check that a wall was not built. Tests must fail on wrong behavior. `expect(true).toBe(true)` is slop.
 4. **Run what exists.** Use the project's commands only. Typical names: unit, integration, e2e, security. On Windows PowerShell, do not join with `&&`. If a layer does not exist, write `absent` and do not invent Playwright, CI, or a scanner. If `test:e2e` or Playwright already exists, MUST run it for UI work. Do not skip e2e because unit passed.
 5. **Record.** Fill [templates/what-was-verified.md](templates/what-was-verified.md).

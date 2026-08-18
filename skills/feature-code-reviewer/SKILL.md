@@ -2,7 +2,7 @@
 name: feature-code-reviewer
 description: >-
   Strict code review of a feature diff for clean code, project conventions, and
-  long-term maintainability. Refactors internals only when behavior stays locked.
+  long-term maintainability. Refactors internals only when behavior stays as specified.
   Use after feature-developer and before feature-verifier.
 ---
 
@@ -26,7 +26,7 @@ Do not use to invent product (`feature-specifier`), to write the first implement
 
 ## How (mandatory order)
 
-1. **Read the lock and the diff.** Product walls stay closed. Review code, not the idea.
+1. **Read the specification and the diff.** Product walls stay closed. Review code, not the idea.
 2. **Read how this repo already does the same kind of work.** The local pattern is the standard. Do not import a generic textbook style that fights the codebase.
 3. **Review every touched file** against the bar below. Record findings. "Looks fine" with no file list is a fail of this skill.
 4. **Fix must-fix and should-fix** when the fix does not change user-visible behavior or walls. Then re-run the existing test command if one exists. On Windows PowerShell, no `&&`.
@@ -41,7 +41,7 @@ A change fails review if any of these is true and unfixed:
 - **Wrong home:** new helper/module that duplicates something this repo already has
 - **Unreadable later:** names that do not say what they are; a function or module that does several jobs; dead code; commented-out leftovers; magic values with no name
 - **Hidden control flow:** swallowed errors; ignored promises; surprising globals; copy-paste with one line different
-- **Hard to change:** tight coupling that will break the next feature; a new dependency that is not required by the lock
+- **Hard to change:** tight coupling that will break the next feature; a new dependency that is not required by the specification
 - **Project fit:** fights existing folder layout, naming, i18n, or error style
 - **Hygiene:** secrets, debug leftovers, unrelated drive-by edits
 

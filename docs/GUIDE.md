@@ -18,12 +18,12 @@ A skill is a job, not a persona. The agent announces `Using skill: <id>`, reads 
 | You say | Skill |
 | --- | --- |
 | "I have an idea." / "Write a spec." | `feature-specifier` |
-| "Build this." / "Implement the lock." | `feature-developer` |
+| "Build this." / "Implement the spec." | `feature-developer` |
 | "Review the code." / "Clean this up." | `feature-code-reviewer` |
 | "Test it." / "Is this slop?" | `feature-verifier` |
-| "Run the path." / "Harness." / "End to end." | `feature-harness` (lock must exist) |
+| "Run the path." / "Harness." / "End to end." | `feature-harness` (specification must exist) |
 
-If the idea is fuzzy, specify first. If a lock exists and they want the whole path, use `feature-harness` instead of naming the three inner skills. Skip review only if the user said to skip it. The harness does not skip review.
+If the idea is fuzzy, specify first. If a specification exists and they want the whole path, use `feature-harness` instead of naming the three inner skills. Skip review only if the user said to skip it. The harness does not skip review.
 
 ## Install
 
@@ -69,7 +69,7 @@ Rules:
 1. Follow the steps in SKILL.md in order. Do not skip, merge, or reorder them.
 2. Fill only the templates that skill names. Do not invent extra documents.
 3. Cover every required field in that skill's schema.json.
-4. Stop when SKILL.md says to wait for the user (questions, a missing lock, a product landmine).
+4. Stop when SKILL.md says to wait for the user (questions, a missing specification, a product landmine).
 5. Do not use icons or emojis in any artifact.
 6. If this request belongs to a different skill, refuse and name the correct one: feature-specifier, feature-developer, feature-code-reviewer, feature-verifier, or feature-harness.
 ```
@@ -92,7 +92,7 @@ Rules:
 ## Guardrails
 
 1. Fill the template. Do not invent a new document shape.
-2. Match the consuming repo. Do not add a test runner, CI, or library the lock did not require.
+2. Match the consuming repo. Do not add a test runner, CI, or library the specification did not require.
 3. Out-of-scope in `what-to-build.md` is a wall, not a stretch goal.
 4. Unknown tools are `unknown` or `absent`. Do not imply them.
 5. No icons or emojis in skill files.

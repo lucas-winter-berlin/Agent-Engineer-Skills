@@ -4,14 +4,14 @@ description: >-
   Understands an idea, problem, or feature in any kind of software project by
   asking critical questions, then writes docs/features/<name>/what-to-build.md that
   feature-developer can implement without guessing. Use when the request is
-  fuzzy or "done" is not locked, for UI, API, CLI, jobs, libraries, or mixed work.
+  fuzzy or "done" is not specified, for UI, API, CLI, jobs, libraries, or mixed work.
 ---
 
 # feature-specifier
 
 Core job: understand the idea, problem, or feature. Ask the questions whose wrong answers would waste implementation time. Hand `feature-developer` one concept so the developer cannot invent a different product.
 
-This skill is **universal**: same job in a website, API, CLI, worker, library, game, or mixed repo. It is **not** vague: only landmine questions, then hard locks and walls.
+This skill is **universal**: same job in a website, API, CLI, worker, library, game, or mixed repo. It is **not** vague: only landmine questions, then a feature specification with walls.
 
 Do not write code. Do not produce a multi-file PRD pack.
 
@@ -19,23 +19,23 @@ Output: `docs/features/<feature-name>/what-to-build.md` from [templates/what-to-
 
 ## When to use
 
-The request is an idea, a problem, or a feature, and "done" is not locked.
+The request is an idea, a problem, or a feature, and "done" is not specified.
 
-Do not use when the change is already exact (known bug, one-line fix), or the user only wants code, review, tests, or the path run on an existing lock.
+Do not use when the change is already exact (known bug, one-line fix), or the user only wants code, review, tests, or the path run on an existing specification.
 
 ## How
 
 1. **Restate** the request in a few lines. Add nothing. Name the kind of work (UI, API, CLI, job, library, mixed) from the request and the repo, not from habit.
 2. **Find landmines** using the types below. Ask only the types that would cause rework **on this request**.
 3. **Ask** those questions in one batch, as clickable choices. Do not ask what the user or the repo already answered. Do not ask two questions that are the same decision.
-4. **Write the concept.** Locked decisions, in/out, behavior, done-when, walls.
+4. **Write the specification.** Decisions, in/out, behavior, done-when, walls.
 5. **Check** that a developer who follows only `what-to-build.md` cannot reasonably ship the wrong thing.
 
 If a leftover decision is still easy to get wrong, ask another round. Do not leave it for the developer. If the user will not answer, write `locked-default` in `what-to-build.md`. That default is then mandatory.
 
 ## Landmine types (pick what applies)
 
-Do not walk this list as a questionnaire. Skip any type the request or repo already locks.
+Do not walk this list as a questionnaire. Skip any type the request or repo already decided.
 
 | Type | Wrong guess wastes time on... | Ask about this when |
 | --- | --- | --- |
@@ -80,7 +80,7 @@ If the click UI is missing or failed, print letters and one line: `Choice UI una
 MUST include:
 
 - Problem (who, what hurts, why)
-- Locked decisions
+- Decisions
 - In scope / out of scope (walls)
 - Behavior (what happens; entry points in or out; leave/cancel; failure)
 - Done when: observable checks. Happy path, important no-path, leave/cancel

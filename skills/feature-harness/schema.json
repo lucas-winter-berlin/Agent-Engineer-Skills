@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://agent-engineer-skills.dev/skills/feature-harness/schema.json",
   "title": "FeatureHarnessIO",
-  "description": "Run developer, reviewer, verifier for one lock. One verify-fail retry. Classify later feedback.",
+  "description": "Run developer, reviewer, verifier for one feature specification. One verify-fail retry. Classify later feedback.",
   "type": "object",
   "additionalProperties": false,
   "required": ["input", "output"],
@@ -43,7 +43,7 @@
             "pass",
             "verify-fail",
             "cancelled",
-            "missing-lock",
+            "missing-spec",
             "empty-kitchen",
             "review-blocked-specifier",
             "classify-unsure"

@@ -13,13 +13,13 @@
 - What is wrong or missing: {{hurt}}
 - Why it matters: {{why}}
 
-## Questions and locked decisions
+## Questions and decisions
 
-| Q | Asked because a wrong guess would... | Answer | Lock |
+| Q | Asked because a wrong guess would... | Answer | Spec |
 | --- | --- | --- | --- |
 | {{question}} | {{waste}} | {{verbatim or locked-default}} | {{what the developer must do}} |
 
-If the user did not answer: write `locked-default` and still fill Lock. The developer may not pick a different lock.
+If the user did not answer: write `locked-default` and still fill Spec. The developer may not pick a different spec.
 
 Do not copy this coaching sentence into the output file.
 

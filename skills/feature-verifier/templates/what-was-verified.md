@@ -6,7 +6,7 @@
 
 ## Test cases added or updated
 
-| Case | From lock | Path |
+| Case | From spec | Path |
 | --- | --- | --- |
 | {{name}} | {{done-when or wall}} | {{test file}} |
 
