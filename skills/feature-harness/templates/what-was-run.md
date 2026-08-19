@@ -1,7 +1,7 @@
 # What was run
 
 - Feature: `{{FEATURE_NAME}}`
-- Lock: `docs/features/{{FEATURE_NAME}}/what-to-build.md`
+- Specification: `docs/features/{{FEATURE_NAME}}/what-to-build.md`
 - Date: {{DATE}}
 
 ## Steps

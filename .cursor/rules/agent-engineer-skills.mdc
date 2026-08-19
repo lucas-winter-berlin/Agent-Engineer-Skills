@@ -1,5 +1,5 @@
 ---
-description: Dispatcher for Agent Engineer Skills. Maps user intent to feature-specifier, feature-developer, feature-code-reviewer, feature-verifier, or feature-harness and enforces the daily path.
+description: Dispatcher for Agent Engineer Skills. Maps feature-shaped work to feature-specifier, feature-developer, feature-code-reviewer, feature-verifier, or feature-harness and enforces the daily path.
 alwaysApply: true
 ---
 
@@ -7,17 +7,25 @@ alwaysApply: true
 
 A skill is a structured instruction set and execution contract, not optional style advice. When the user intent matches the table below, announce `Using skill: <id>`, read `skills/<id>/SKILL.md`, and execute that contract. `SKILL.md` is authoritative if this rule and the skill file diverge.
 
+`Use skill: <id>` always selects that skill.
+
 ## Decision mapping
+
+Only feature-shaped work, a feature folder, `what-to-build.md`, or a named skill id.
 
 | User intent | Skill |
 | --- | --- |
-| Vague idea, problem, feature concept, spec before code | `feature-specifier` |
-| Implement a feature specification, build the feature | `feature-developer` |
-| Code review, refactor, clean code, maintainability | `feature-code-reviewer` |
-| Verify, test, integration, security tests, not slop | `feature-verifier` |
+| Vague idea, problem, or feature; spec before code | `feature-specifier` |
+| Implement this specification / this feature folder | `feature-developer` |
+| Review this feature folder, or review against `what-to-build.md` | `feature-code-reviewer` |
+| Verify this feature folder, or verify against `what-to-build.md` | `feature-verifier` |
 | Run the path, harness, end to end after a specification | `feature-harness` |
 
+Do not map generic "review this", "refactor", "clean this up", "test it", or "is this slop?" to a feature skill unless a feature folder, `what-to-build.md`, or skill id is in play.
+
 If the specification is missing or the idea is fuzzy, run `feature-specifier` first. If a specification exists and the user wants the whole path, run `feature-harness` (it runs developer, reviewer, verifier). If they named one inner skill, run only that skill.
+
+If a human says "lock" meaning the spec file, treat it as `what-to-build.md`. Do not rename `locked-default`.
 
 ## Global contract
 

@@ -62,7 +62,10 @@
             "properties": {
               "question": { "type": "string" },
               "decision": { "type": "string" },
-              "lock": { "type": "string" },
+              "lock": {
+                "type": "string",
+                "description": "What the developer must do (template Spec column). Not the specification file name."
+              },
               "source": {
                 "type": "string",
                 "enum": ["user", "repo", "locked-default"]

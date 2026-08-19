@@ -20,4 +20,4 @@ Do not add extra spec files in this folder.
 3. `what-to-build.md` is the feature specification. The developer does not rewrite it while coding.
 4. Daily order of write-ups: specification, implemented, reviewed, verified. Harness adds `what-was-run.md`.
 
-Older fallbacks: `concept.md` counts as `what-to-build.md`. `notes.md` counts as `what-was-implemented.md`.
+Compatibility: if only `concept.md` exists, it counts as `what-to-build.md`. If only `notes.md` exists, it counts as `what-was-implemented.md`. If a human says "lock" meaning the spec file, they mean `what-to-build.md`.
