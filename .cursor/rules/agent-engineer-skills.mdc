@@ -1,47 +1,60 @@
 ---
-description: Dispatcher for Agent Engineer Skills. Maps feature-shaped work to feature-specifier, feature-developer, feature-code-reviewer, feature-verifier, or feature-harness and enforces the daily path.
+description: Dispatcher for Agent Engineer Skills. Maps feature-development work to one skill. Use skill: <id> runs only that skill. Lookup is skills/<family>/<id>/SKILL.md.
 alwaysApply: true
 ---
 
 # Agent Engineer Skills dispatcher
 
-A skill is a structured instruction set and execution contract, not optional style advice. When the user intent matches the table below, announce `Using skill: <id>`, read `skills/<id>/SKILL.md`, and execute that contract. `SKILL.md` is authoritative if this rule and the skill file diverge.
+This repo is a collection of skills for developing features. A skill is a structured instruction set and execution contract, not optional style advice.
 
-`Use skill: <id>` always selects that skill.
+`Use skill: <id>` always selects that skill and **only** that skill. The **id** is the leaf folder name. The **family** (`feature-builder` or `mvp-builder`) is only where the files live. Read `skills/<family>/<id>/SKILL.md` and execute that contract. Do not start the next skill unless the user named it. `SKILL.md` is authoritative if this rule and the skill file diverge.
+
+There is no composer / harness skill in this collection. If the user asks for a harness, end-to-end path runner, or `feature-harness`, do not invent one. Tell them to name each skill they want (`feature-developer`, `feature-code-reviewer`, `feature-tester`).
+
+## Where SKILL.md lives
+
+| id | Path |
+| --- | --- |
+| `feature-specifier` | `skills/feature-builder/feature-specifier/SKILL.md` |
+| `feature-developer` | `skills/feature-builder/feature-developer/SKILL.md` |
+| `feature-code-reviewer` | `skills/feature-builder/feature-code-reviewer/SKILL.md` |
+| `feature-tester` | `skills/feature-builder/feature-tester/SKILL.md` |
+| `pitch-to-spec` | `skills/mvp-builder/pitch-to-spec/SKILL.md` |
+
+Templates and `schema.json` sit next to that `SKILL.md`. Feature-builder write-ups live under `agent-engineer-skills/<name>/`.
 
 ## Decision mapping
 
-Only feature-shaped work, a feature folder, `what-to-build.md`, or a named skill id.
+When the user did not name a skill id:
 
 | User intent | Skill |
 | --- | --- |
-| Vague idea, problem, or feature; spec before code | `feature-specifier` |
+| Vague idea, problem, or feature; spec before code (feature in an existing repo) | `feature-specifier` |
 | Implement this specification / this feature folder | `feature-developer` |
 | Review this feature folder, or review against `what-to-build.md` | `feature-code-reviewer` |
-| Verify this feature folder, or verify against `what-to-build.md` | `feature-verifier` |
-| Run the path, harness, end to end after a specification | `feature-harness` |
+| Test or verify this feature folder against `what-to-build.md` | `feature-tester` |
 
-Do not map generic "review this", "refactor", "clean this up", "test it", or "is this slop?" to a feature skill unless a feature folder, `what-to-build.md`, or skill id is in play.
+If they named one skill, run only that skill. `Use skill: feature-verifier` is the old name for `feature-tester`.
 
-If the specification is missing or the idea is fuzzy, run `feature-specifier` first. If a specification exists and the user wants the whole path, run `feature-harness` (it runs developer, reviewer, verifier). If they named one inner skill, run only that skill.
-
-If a human says "lock" meaning the spec file, treat it as `what-to-build.md`. Do not rename `locked-default`.
+If the specification is missing or the idea is fuzzy, run `feature-specifier` first. Do **not** map a generic idea, "MVP", or "new project" to `pitch-to-spec`. That skill runs only when they name `Use skill: pitch-to-spec` (today it is a stub and must stop). If they named implement, review, or test alone, stop after that skill.
 
 ## Global contract
 
 1. Follow the steps in that skill's `SKILL.md` in order. Do not skip, merge, or reorder.
-2. Instantiate templates under `skills/<id>/templates/`. Do not invent alternate structures.
-3. Cover every required field in `skills/<id>/schema.json`.
-4. Stop when the skill says to wait (questions, missing specification, product landmine). `ok` / `lgtm` is not a skip.
+2. Instantiate templates under that skill's `templates/` folder. Do not invent alternate structures.
+3. Cover every required field in that skill's `schema.json`.
+4. Stop when the skill says to wait (questions, missing specification, product landmine, stub not-implemented). `ok` / `lgtm` is not a skip.
 5. Capability claims require evidence paths. Unknown tools are `unknown` or `absent`, never implied.
 6. No icons or emojis in artifacts.
-7. Consuming-project security and secrets policy wins. This framework wins on skill order and templates for skill-bound work. Code style of the consuming project wins for source.
+7. Consuming-project security and secrets policy wins. This framework wins on templates and required fields for the named skill. Skill order wins only when the user named the next skill. Code style of the consuming project wins for source.
 
 ## Do not
 
-- Run `feature-developer` or `feature-harness` while the requirement is ambiguous.
-- Skip `feature-code-reviewer` on the daily path to jump straight to verify unless the user asked to skip review.
+- Chain specifier → developer → reviewer → tester unless the user named each skill.
+- Run `feature-developer` while the requirement is ambiguous.
+- Invent or restore `feature-harness` / a path runner.
+- Run `pitch-to-spec` unless the user named that id. If they did, follow its stub and stop.
 - Invent extra spec packs, CI, or a threat-model essay as part of these skills.
 - Log secrets in skill artifacts.
 
-Quick start: `README.md`. Operator guide: `docs/GUIDE.md`. Control plane: `docs/ARCHITECTURE.md`.
+Quick start: `README.md`. Operator guide: `docs/GUIDE.md`. Control plane: `docs/ARCHITECTURE.md`. Feature folders: `agent-engineer-skills/README.md`. Add a skill: `docs/GUIDE.md` (Add a skill).

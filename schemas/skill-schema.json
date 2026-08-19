@@ -2,15 +2,15 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://agent-engineer-skills.dev/schemas/skill-schema.json",
   "title": "AgentEngineerSkillPackage",
-  "description": "Package shape for a feature skill. Each skill is a folder: SKILL.md (contract), schema.json (run fields), templates/*.md (the only allowed write-up).",
+  "description": "Package shape for one skill in the collection. Each skill is a leaf folder under skills/<family>/: SKILL.md (contract), schema.json (run fields), templates/*.md (the only allowed write-up). The skill id matches the leaf folder. The skill must be runnable alone via Use skill: <id>.",
   "type": "object",
   "additionalProperties": false,
   "required": ["id", "contract", "ioSchema", "templates"],
   "properties": {
     "id": {
       "type": "string",
-      "pattern": "^feature-[a-z0-9-]+$",
-      "description": "Stable skill id. Must match the folder name under skills/."
+      "pattern": "^[a-z][a-z0-9]*(-[a-z0-9]+)*$",
+      "description": "Stable skill id. Must match the leaf folder name under skills/<family>/ (feature-builder or mvp-builder). New skills are additive; do not rename existing ids."
     },
     "contract": {
       "type": "string",
@@ -39,7 +39,7 @@
     },
     "writesUnder": {
       "type": "string",
-      "const": "docs/features/<feature-name>/"
+      "description": "Where this skill writes artifacts. Feature-path skills use agent-engineer-skills/<feature-name>/. Omit or vary if this skill does not write there."
     }
   }
 }

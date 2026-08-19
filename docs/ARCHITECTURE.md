@@ -1,169 +1,89 @@
 # How Agent Engineer Skills work
 
-Start with [README.md](../README.md). Operator notes: [GUIDE.md](GUIDE.md). Feature folders: [features/README.md](features/README.md).
+Start with [README.md](../README.md). Operator notes: [GUIDE.md](GUIDE.md). Feature folders: [../agent-engineer-skills/README.md](../agent-engineer-skills/README.md).
 
-This file is the control plane: four separable skills, one folder, one order. `feature-harness` runs implement, review, and verify for one feature specification so the operator does not have to name the next job.
+This file is the internals for authors of this pack. Skill list and install live in the README. Gemini and adding a skill live in the GUIDE.
 
 ## Picture
 
 ```text
-You describe work
-  -> Agent names one skill (or feature-harness)
-    -> Agent reads skills/<id>/SKILL.md
-      -> Agent does that job (harness runs three inner jobs)
-        -> Writes files under docs/features/<name>/
-          -> Next skill, retry, or stop
+You name one skill (or describe feature work)
+  -> Agent runs only that skill
+    -> Agent reads skills/<family>/<id>/SKILL.md
+      -> Agent does that job
+        -> Writes that skill's files (often under agent-engineer-skills/<name>/)
+          -> Stop. Do not start the next skill unless they named it.
 ```
+
+`family` is `feature-builder` or `mvp-builder`. The **id** is what you type (`Use skill: feature-specifier`).
 
 A skill is a recipe card. The agent is the cook. Your git repo is the kitchen. `what-to-build.md` is the feature specification; later skills may not build a different product.
 
-## The skills
+## Rules
 
-| Skill | Job | Input | Output |
-| --- | --- | --- | --- |
-| `feature-specifier` | Understand the idea. Ask landmine questions. Write the feature specification. | A fuzzy request | `what-to-build.md` |
-| `feature-developer` | Implement the specification. Nothing else. | `what-to-build.md` | Feature branch, code, `what-was-implemented.md` |
-| `feature-code-reviewer` | Strict clean-code review. Safe internals only. | Spec + diff | Refactors if needed, `what-was-reviewed.md` |
-| `feature-verifier` | Tests that match the specification. Run this repo's existing commands. | Spec + code | Tests, `what-was-verified.md` |
-| `feature-harness` | Run developer, reviewer, verifier for one specification. One verify-fail retry. Classify later feedback. | Spec (or feedback on a folder) | Inner files + `what-was-run.md` |
+1. `Use skill: <id>` runs only that skill. Do not chain the next job unless they named it.
+2. When the operator names skills in sequence, the output of an earlier skill is the input of the next. The feature name in the specification is the folder name.
+3. Do not start `feature-developer` while the specification is missing or still fuzzy.
+4. Do not skip `feature-code-reviewer` when the operator asked for implement then test unless they said to skip review.
+5. Do not rerun an earlier skill unless a later one finds a hole (ambiguous spec, product change, failed tests).
+6. If a later skill would change what the user gets, stop and go back to `feature-specifier`.
 
-Daily path:
-
-```text
-feature-specifier
-  -> feature-harness
-       -> feature-developer
-       -> feature-code-reviewer
-       -> feature-verifier
-       -> if verify fail: those three once more, then stop
-```
-
-You can still name an inner skill alone. Harness does not skip review.
-
-Rules:
-
-1. The output of an earlier skill is the input of the next. The feature name in the specification is the folder name.
-2. Do not start `feature-developer` or `feature-harness` while the specification is missing or still fuzzy.
-3. Do not skip `feature-code-reviewer` on the daily path unless the user said to skip review.
-4. Do not rerun an earlier skill unless a later one finds a hole (ambiguous spec, product change, failed tests).
-5. If a later skill would change what the user gets, stop and go back to `feature-specifier`.
-
-## Feature folder
-
-One folder per feature, kebab-case:
-
-```text
-docs/features/<feature-name>/
-  what-to-build.md           Feature specification. Specifier writes. Developer does not rewrite it.
-  what-was-implemented.md    Developer write-up
-  what-was-reviewed.md       Review findings and refactors
-  what-was-verified.md       Tests, runs, slop check
-  what-was-run.md            Harness log (only if feature-harness ran)
-```
-
-Compatibility: if only `concept.md` exists, treat it as `what-to-build.md`. If only `notes.md` exists, treat it as `what-was-implemented.md`. Do not invent extra spec files. If a human says "lock" meaning the spec file, treat it as `what-to-build.md`.
-
-Templates live under `skills/<id>/templates/`. The agent fills them. It does not invent a parallel pack (PRD, architecture plan, capability report, STRIDE, CI freeze).
-
-## Dispatcher
-
-Cursor: `.cursor/rules/agent-engineer-skills.mdc` always applies. The agent must still open `skills/<id>/SKILL.md`. If the short rule and `SKILL.md` disagree, `SKILL.md` wins.
-
-The dispatcher picks a skill for feature-shaped work, a feature folder, `what-to-build.md`, or `Use skill: <id>`. It does not map generic "review this", "refactor", or "test it" when no feature folder and no skill id is in play.
-
-Gemini: each Gem pastes `SKILL.md`. Gems do not share chat memory. The feature folder is the handoff.
-
-When the user wants the whole path and a specification exists, run `feature-harness`. Announce `Using skill: <id>` before each skill, including inner ones.
+There is no composer / harness skill. Do not invent one.
 
 ## Contracts
 
-Each skill folder has:
+Each skill is a leaf folder `skills/<family>/<id>/`: `SKILL.md`, `schema.json`, `templates/*.md`. Shared package shape (this repo only): [`schemas/skill-schema.json`](../schemas/skill-schema.json). Required fields must appear in the write-up. Missing test layers are `absent`, not invented.
 
-| File | Role |
-| --- | --- |
-| `SKILL.md` | Steps, when to use, must / must not |
-| `schema.json` | Required run fields |
-| `templates/*.md` | The only allowed write-up shape |
-
-Shared package shape: [`schemas/skill-schema.json`](../schemas/skill-schema.json).
-
-Required fields in a run must appear in the Markdown write-up (heading or table). Do not leave holes. If a test layer does not exist, write `absent` and a reason. Do not claim a tool that has no evidence path.
+Cursor: `.cursor/rules/agent-engineer-skills.mdc` always applies. If the short rule and `SKILL.md` disagree, `SKILL.md` wins.
 
 ## What each skill must not swallow
 
 | Skill | Not this skill |
 | --- | --- |
 | Specifier | Code, extra PRD files, class names the user did not require |
+| pitch-to-spec (stub) | Any specification file, scaffold, chaining |
 | Developer | Product invention, CI, new test frameworks, review essays, STRIDE |
 | Reviewer | New product, new dependencies, unrelated rewrites |
-| Verifier | New product, new CI, new scanners, a threat-model essay |
-| Harness | SDK, Automation, scaffold, skipping review, extra product as a "fix" |
+| Tester | New product, new CI, new scanners, a threat-model essay |
 
-Security on the daily path is a **negative test** in `feature-verifier` (unauthorized caller, no new public route, no secrets in source) when the change has a who/auth or a new entry point. It is not a threat-model pack.
+Security on the daily path is a **negative test** in `feature-tester` when the change has a who/auth or a new entry point. It is not a threat-model pack.
 
-Technical forks (which library, which store) that the specification did not name: **stop and ask**. Do not pick silently. Do not stand up a scoring matrix skill.
+Technical forks the specification did not name: **stop and ask**.
 
 ## Waiting for a human
 
-There is no `APPROVED: <skill> Phase <n>` machine on this path.
-
-The agent waits when:
-
-- Specifier needs landmine answers (clickable `AskQuestion` when the host has it)
-- Developer finds a hole in the specification or a new landmine
-- Reviewer would have to change the product to fix a finding
-- Verifier needs a human to run a manual check it cannot run
-- Harness: missing specification, empty kitchen, verify still fail after one retry, review blocked-specifier, classify-unsure, or cancel
-
-`ok` / `lgtm` does not skip specifier questions or turn a fail into a pass.
-
-## Looking at the repo
-
-Quiet and read-only until the skill says to write.
-
-- Specifier: enough to name the kind of work and the real entry points
-- Developer: language, layout, how similar features are built
-- Reviewer: local patterns are the standard, not a textbook style
-- Verifier: existing test folders and commands only
-
-Do not write a capability report. Do not install packages "to see what works." Do not add Playwright, CI, or a scanner because another repo had them.
-
-Windows PowerShell: do not join commands with `&&`.
+The agent waits when specifier needs landmine answers, developer finds a hole, reviewer would have to change the product, or tester needs a manual check. `ok` / `lgtm` does not skip questions or turn a fail into a pass.
 
 ## Failures
 
 | Problem | What to do |
 | --- | --- |
 | Specification missing or fuzzy | `feature-specifier` |
-| New product landmine mid-build | Stop. Ask. Do not squeeze it into the open folder. |
+| New product landmine mid-build | Stop. Ask. |
 | Review must-fix remains | Stay in `feature-code-reviewer` until it is gone or blocked for specifier |
-| Tests fail | `feature-harness` retries develop → review → verify once, then stops. Alone, stay in `feature-verifier` (or send a product miss back to developer). Do not delete tests to get green. |
-| Harness classify unsure | Ask. Do not pick specifier vs developer. |
+| Tests fail | Stay in `feature-tester`. Do not delete tests to get green. |
 | A test layer does not exist | Write `absent`. Do not invent the layer. |
 
-## Cursor, Gemini, mixed teams
+Quiet and read-only until the skill says to write. Do not add Playwright, CI, or a scanner because another repo had them. Windows PowerShell: do not join commands with `&&`.
 
-**Cursor.** Dispatcher always on. New Agent chat after copy so rules load.
-
-**Gemini Custom Gems.** Preamble + `SKILL.md` + schema + templates. Pass feature-folder paths from Gem to Gem.
-
-**Both on one team.** Share git files, not chat logs. The feature folder is the record.
-
-**Conflicts with the consuming project:**
+## Conflicts with the consuming project
 
 1. That project's security, secrets, and legal rules win.
-2. For skill-bound work, skill order, templates, and required fields from this framework win.
+2. For skill-bound work, that skill's templates and required fields from this framework win. Skill order wins only when the user named the next skill.
 3. That project's code style wins for source.
+
+Share the app's git files (`skills/`, the AES `.mdc` files, `agent-engineer-skills/`), not chat logs. Do not copy this pack's `docs/` or `schemas/` into the app.
 
 ## Versioning
 
-- Skill ids stay stable (`feature-specifier`, `feature-developer`, `feature-code-reviewer`, `feature-verifier`, `feature-harness`).
-- Adding an optional template section is a minor change.
+- Skill ids stay stable except `feature-verifier`, now `feature-tester`. `pitch-to-spec` is a stub. There is no `feature-harness`.
+- Adding a new skill id is a minor change. Place it under `feature-builder` or `mvp-builder`. It must run alone via `Use skill: <id>`.
 - Removing or renaming a required write-up or a skill id is a major change.
 
 ## This framework does not
 
 - Replace the team's product process outside `what-to-build.md`
+- Copy this pack's `docs/` or `schemas/` into an app, or replace that app's `.cursor/rules/` folder
 - Set up CI or cloud accounts
 - Guarantee tests are enough without a human look
 - Let the agent ignore the consuming project's security policy
@@ -173,10 +93,11 @@ Windows PowerShell: do not join commands with `&&`.
 
 | Term | Meaning |
 | --- | --- |
-| Skill | Job plus required outputs (`SKILL.md`, schema, template) |
-| Feature specification | `what-to-build.md` — what to build; later skills must not change the product. Not called a lock. |
-| Feature directory | `docs/features/<feature-name>/` for one change |
-| Wall | Out-of-scope item. Hard reject if code builds it |
+| Skill | Job plus required outputs. Runnable alone. Id is the leaf folder. |
+| Family | `feature-builder` or `mvp-builder`. Browse path only. |
+| Feature specification | `what-to-build.md` for a feature in an existing repo |
+| Feature directory | `agent-engineer-skills/<feature-name>/` for one change |
+| pitch-to-spec | Rough idea to MVP / new project. Stub. Not `feature-specifier`. |
+| Wall | Out-of-scope. Hard reject if code builds it |
 | Landmine | A question whose wrong guess would waste implementation time |
 | Slop | Tests or code that do not match the specification, or hollow asserts |
-| Harness | `feature-harness` running developer, reviewer, verifier for one specification |

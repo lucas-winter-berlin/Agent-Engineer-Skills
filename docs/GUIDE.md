@@ -1,63 +1,51 @@
 # Guide
 
-Short operator notes. Start with [README.md](../README.md). Internals: [ARCHITECTURE.md](ARCHITECTURE.md).
+Short operator notes. Start with [README.md](../README.md). Internals: [ARCHITECTURE.md](ARCHITECTURE.md). Feature-folder layout: [../agent-engineer-skills/README.md](../agent-engineer-skills/README.md).
 
-A skill is a job, not a persona. The agent announces `Using skill: <id>`, reads `skills/<id>/SKILL.md`, fills that skill's template, and covers `schema.json`. `SKILL.md` wins if a short Cursor rule disagrees.
+This repo is a **collection of skills for developing features**. Each skill is a job, not a persona. Name one skill to run only that job.
 
-Four skills are separable (`feature-specifier`, `feature-developer`, `feature-code-reviewer`, `feature-verifier`). `feature-harness` runs implement, review, and verify for one specification so you do not have to name the next job.
+The agent announces `Using skill: <id>`, reads `skills/<family>/<id>/SKILL.md` (family is `feature-builder` or `mvp-builder`), fills that skill's template, and covers `schema.json`. `SKILL.md` wins if a short Cursor rule disagrees.
 
 | Piece | Where |
 | --- | --- |
-| Job | `skills/<id>/SKILL.md` |
-| Required fields | `skills/<id>/schema.json` |
-| Write-up shape | `skills/<id>/templates/` |
-| Shared package shape | `schemas/skill-schema.json` |
+| Job | `skills/<family>/<id>/SKILL.md` |
+| Required fields | `skills/<family>/<id>/schema.json` |
+| Write-up shape | `skills/<family>/<id>/templates/` |
+| Shared package shape | `schemas/skill-schema.json` in **this** repo (authors). Not copied into the app. |
 | Cursor | `.cursor/rules/` |
 | Gemini | Custom Gem or system prompt |
 
 ## Which skill
 
-`Use skill: <id>` always selects that skill.
+`Use skill: <id>` always runs **only** that skill. Do not start the next job unless they named it. There is no harness / path-runner skill.
 
 | You say | Skill |
 | --- | --- |
-| "I have an idea." / "Write a spec." | `feature-specifier` |
-| "Implement this spec." / "Build docs/features/<name>/" | `feature-developer` |
-| "Review this feature folder." / "Review against what-to-build.md" | `feature-code-reviewer` |
-| "Verify docs/features/<name>/" / "Verify against what-to-build.md" | `feature-verifier` |
-| "Run the path." / "Harness." / "End to end." | `feature-harness` (specification must exist) |
+| `Use skill: <id>` | That skill only |
+| "I have an idea." / "Write a spec." (feature in an existing repo) | `feature-specifier` |
+| `Use skill: pitch-to-spec` | `pitch-to-spec` only (stub; stops; not a feature spec) |
+| "Build this spec." / "Implement what-to-build.md." | `feature-developer` |
+| "Review this feature folder." | `feature-code-reviewer` |
+| "Test this feature folder against what-to-build.md." | `feature-tester` |
 
-Do not map generic "review this", "refactor", or "test it" to these skills unless a feature folder or a skill id is in play.
-
-If the idea is fuzzy, specify first. If a specification exists and they want the whole path, use `feature-harness` instead of naming the three inner skills. Skip review only if the user said to skip it. The harness does not skip review.
+If the idea is fuzzy, specify first with `feature-specifier` (feature in an existing repo). Do not send a generic idea to `pitch-to-spec`. To implement, review, and test, name those skills one at a time.
 
 ## Install
 
-1. Copy `skills/`, `schemas/`, `docs/`, and `.cursor/rules/` into the consuming project. Keep the same folder names.
-2. Confirm these exist:
-   - `skills/feature-specifier/SKILL.md`
-   - `skills/feature-developer/SKILL.md`
-   - `skills/feature-code-reviewer/SKILL.md`
-   - `skills/feature-verifier/SKILL.md`
-   - `skills/feature-harness/SKILL.md`
-   - `.cursor/rules/agent-engineer-skills.mdc` (Cursor)
-3. Do not rename skill ids.
-4. Create `docs/features/` if it is missing.
+Same contract as [README.md](../README.md) (How to install). Cursor and Gemini notes below. Then start a **new Agent chat** in the app.
 
 ### Cursor
 
-1. Copy `.cursor/rules/`. `agent-engineer-skills.mdc` always applies. Skill rules apply when that skill is selected.
-2. Copy `skills/` and `schemas/` so rules can open `SKILL.md`.
-3. Reload Cursor or start a new Agent chat.
+`agent-engineer-skills.mdc` always applies. The other skill rules apply when that skill is selected. Rules open `SKILL.md` under `skills/<family>/<id>/`.
 
 | File | When | Role |
 | --- | --- | --- |
-| `.cursor/rules/agent-engineer-skills.mdc` | Always | Dispatcher (feature-shaped work, or a named skill id) |
-| `.cursor/rules/feature-specifier.mdc` | Selected | Specify |
+| `.cursor/rules/agent-engineer-skills.mdc` | Always | Dispatcher |
+| `.cursor/rules/feature-specifier.mdc` | Selected | Specify (existing repo) |
 | `.cursor/rules/feature-developer.mdc` | Selected | Implement |
 | `.cursor/rules/feature-code-reviewer.mdc` | Selected | Review |
-| `.cursor/rules/feature-verifier.mdc` | Selected | Verify |
-| `.cursor/rules/feature-harness.mdc` | Selected | Path runner |
+| `.cursor/rules/feature-tester.mdc` | Selected | Test |
+| `.cursor/rules/pitch-to-spec.mdc` | Selected | MVP spec stub (stops) |
 
 ### Gemini Custom Gems
 
@@ -77,24 +65,36 @@ Rules:
 3. Cover every required field in that skill's schema.json.
 4. Stop when SKILL.md says to wait for the user (questions, a missing specification, a product landmine).
 5. Do not use icons or emojis in any artifact.
-6. If this request belongs to a different skill, refuse and name the correct one: feature-specifier, feature-developer, feature-code-reviewer, feature-verifier, or feature-harness.
-7. Generic "review this", "refactor", or "test it" is not a reason to run a feature skill unless the user named a skill id or a docs/features/<name>/ folder (or what-to-build.md).
+6. If this request belongs to a different skill in the collection, refuse and name that skill. Do not start a second skill unless the user named it.
 ```
 
-3. Attach that skill's `schema.json` and every file in `templates/`.
+3. Attach that skill's `schema.json` (from `skills/<family>/<id>/`) and every file in `templates/`.
 4. Start a chat. Point at the feature folder and the repo.
 
 **One dispatcher Gem (optional)**
 
 1. Gem name: `agent-engineer-skills`.
-2. Tell it to pick one primary skill for feature-shaped work (or a named skill id), announce it, then follow that `SKILL.md`. Do not map generic review/test/refactor with no feature folder.
-3. Attach the five `SKILL.md` files and the five `schema.json` files.
+2. Tell it to pick one primary skill, announce it, then follow that `SKILL.md`. Do not chain other skills unless the user named each skill.
+3. Attach every `SKILL.md` and `schema.json` in `skills/`.
 
 **Gemini API**
 
 1. System instruction = `SKILL.md`.
 2. Send the feature folder paths and repo facts first, then the user request.
 3. Do not start coding if `what-to-build.md` is missing or still fuzzy.
+
+## Add a skill
+
+New skills are additive. Each one must work alone via `Use skill: <id>`.
+
+1. Create `skills/<family>/<id>/` with kebab-case leaf `id` matching the skill id. Family is `feature-builder` or `mvp-builder`.
+2. Add `SKILL.md` (YAML `name` + `description` that says what it does and when to use it, including when not to use it), `schema.json`, and `templates/`.
+3. Match [`schemas/skill-schema.json`](../schemas/skill-schema.json).
+4. Add `.cursor/rules/<id>.mdc` that points at that `SKILL.md` (Cursor). Do not rename existing skill ids.
+5. Add a row to the matching family table in [README.md](../README.md), a mapping row (only if the skill should auto-pick), and a path row in `.cursor/rules/agent-engineer-skills.mdc` (Where SKILL.md lives).
+6. If the skill writes a feature-folder file, name that file in [agent-engineer-skills/README.md](../agent-engineer-skills/README.md). If it does not, do not force `agent-engineer-skills/` onto it.
+
+Keep existing ids stable. Adding a skill is a minor change. Removing or renaming an id is a major change.
 
 ## Guardrails
 

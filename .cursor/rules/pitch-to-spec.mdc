@@ -1,0 +1,30 @@
+---
+description: Stub. Named pitch-to-spec only. Stops; does not write an MVP spec. Not for a feature in an existing repo (feature-specifier).
+alwaysApply: false
+---
+
+# Skill: pitch-to-spec
+
+Read and follow `skills/mvp-builder/pitch-to-spec/SKILL.md`. Do not fill a specification template.
+
+Announce: `Using skill: pitch-to-spec`.
+
+## Job
+
+Stop. This skill is not implemented. Tell the operator to use `feature-specifier` for a feature in an existing repo.
+
+## Must
+
+1. Announce the skill.
+2. Stop. Do not write `what-to-build.md` or any MVP spec file.
+3. Do not start another skill.
+
+## Must not
+
+- Scaffold
+- Landmine questions as if the skill were live
+- Icons or emojis
+
+## Do not use
+
+When the request is a feature in an existing repo (`feature-specifier`), or when the operator did not name this skill.

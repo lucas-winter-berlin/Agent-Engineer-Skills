@@ -1,93 +1,85 @@
 # Agent Engineer Skills
 
-Four skills you can run one at a time when building a product or feature, plus a fifth that runs implement, review, and verify in order so the agent can continue without you naming the next job.
+A collection of agent skills for developing features. Each skill is a separate job. Name the one you want.
 
 ```text
-specify  ->  implement  ->  review  ->  verify
-              \____________________________/
-                     feature-harness
+Use skill: <id>
 ```
+
+That runs only that skill. Folders `feature-builder/` and `mvp-builder/` are for browsing this repo, not for typing.
+
+## What does the pack do
+
+In an existing repo, a common sequence is specify, then implement, then review, then test. Name each skill when you want it. There is no composer skill in this collection right now.
+
+### Feature builder
 
 | Skill | What it does |
 | --- | --- |
-| `feature-specifier` | Helps you turn your idea into a feature specification. Writes `what-to-build.md`. |
-| `feature-developer` | Builds a feature based on a given feature specification. Writes `what-was-implemented.md`. |
-| `feature-code-reviewer` | Checks the new code is clean and will stay easy to change. Writes `what-was-reviewed.md`. |
-| `feature-verifier` | Tests a given build against the feature specification. Writes `what-was-verified.md`. |
-| `feature-harness` | Runs implement -> review -> verify in one go. Writes `what-was-run.md`. |
+| `feature-specifier` | Turn an idea into a feature specification for an existing repo. Writes `what-to-build.md`. |
+| `feature-developer` | Build from a feature specification. Writes `what-was-implemented.md`. |
+| `feature-code-reviewer` | Check that the new code is clean and will stay easy to change. Writes `what-was-reviewed.md`. |
+| `feature-tester` | Test a build against the feature specification. Writes `what-was-verified.md`. |
 
-## Words this repo uses
+### MVP builder
 
-| Term | Meaning |
+| Skill | What it does |
 | --- | --- |
-| Skill | One job plus its `SKILL.md`, schema, and template |
-| Specification | `what-to-build.md` — what to build. Later skills must not change the product. |
-| Wall | Out of scope. Do not implement it. |
-| Landmine | A question whose wrong guess would waste implementation time |
-| Slop | Tests or code that do not match the specification, or hollow asserts |
-| Harness | `feature-harness` running implement, review, and verify for one specification |
+| `pitch-to-spec` | Stub. Will turn a rough idea into an MVP / new-project spec. Not implemented. Do not use for a feature in an existing repo. |
 
-If someone says "lock" for the spec file, they mean `what-to-build.md`.
+`feature-specifier` is for a **feature in an existing repo**. `pitch-to-spec` is for a **rough idea turned into an MVP / new project**. If you name the stub, the agent stops and does not write a spec.
 
-## How to Install
+## How to install
 
-Copy these folders into the project, same names:
+Point an agent at **this** repo and at the **app** repo, then tell it to install Agent Engineer Skills.
 
-- `skills/`
-- `schemas/`
-- `docs/`
-- `.cursor/rules/` (Cursor)
+The agent must:
 
-Create `docs/features/` if it is missing.
+1. Copy `skills/` into the app repo (keep `feature-builder/` and `mvp-builder/` inside it).
+2. Copy only these Cursor rules into the app's `.cursor/rules/` (create that folder if needed). Do not delete or overwrite the app's other rules:
+   - `agent-engineer-skills.mdc`
+   - `feature-specifier.mdc`
+   - `feature-developer.mdc`
+   - `feature-code-reviewer.mdc`
+   - `feature-tester.mdc`
+   - `pitch-to-spec.mdc`
+3. Create `agent-engineer-skills/` in the app repo if it is missing. Copy this pack's `agent-engineer-skills/README.md` into it if the app folder has no README yet.
 
-**Cursor:** reload the window or start a **new Agent chat**. The dispatcher in `.cursor/rules/agent-engineer-skills.mdc` is always on. It only picks a skill for feature-shaped work, or when you name a skill id.
+Do not copy `docs/` or `schemas/` into the app. Do not replace the app's existing `.cursor/rules/` folder.
 
-**Gemini:** one Custom Gem per skill. Paste the preamble in [docs/GUIDE.md](docs/GUIDE.md), then that skill's `SKILL.md`. Attach `schema.json` and `templates/`.
+Then start a **new Agent chat** in the app. `Use skill: <id>` runs only that skill.
 
-## How to create a feature
+Gemini: one Custom Gem per skill. Details: [docs/GUIDE.md](docs/GUIDE.md).
+
+## How to use
 
 ```text
 Use skill: feature-specifier
 I want users to export their invoices as CSV.
 ```
 
-Answer the clickable questions. Specifier creates `docs/features/<name>/what-to-build.md`. Names such as `invoice-csv-export` in the examples below are utterances, not a folder this repo ships.
-
-Then either name each skill, or run the path:
-
-```text
-Use skill: feature-harness
-Run docs/features/invoice-csv-export/
-```
-
-That runs implement, review, and verify. One extra pass if verify fails. Then it stops. New product in later feedback goes back to specifier, not silent recode.
-
-Or step by step:
-
 ```text
 Use skill: feature-developer
-Implement docs/features/invoice-csv-export/what-to-build.md
+Implement agent-engineer-skills/invoice-csv-export/what-to-build.md
 ```
 
 ```text
 Use skill: feature-code-reviewer
-Review docs/features/invoice-csv-export/
+Review agent-engineer-skills/invoice-csv-export/
 ```
 
 ```text
-Use skill: feature-verifier
-Verify docs/features/invoice-csv-export/ against what-to-build.md
+Use skill: feature-tester
+Test agent-engineer-skills/invoice-csv-export/ against what-to-build.md
 ```
 
-Skip specifier only if `what-to-build.md` already exists and is clear. Skip review only if you say so. `feature-harness` does not skip review.
-
-If the idea is still fuzzy, the agent must specify first. It must not invent product while coding.
+Skip specifier only if `what-to-build.md` already exists and is clear. If the idea is still fuzzy, specify first. The agent must not invent product while coding.
 
 ## More
 
-- Install and Gemini details: [docs/GUIDE.md](docs/GUIDE.md)
-- How the four skills plus harness connect: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
-- Feature folder layout: [docs/features/README.md](docs/features/README.md)
+- Operator guide (Gemini, add a skill): [docs/GUIDE.md](docs/GUIDE.md)
+- How the skills connect: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+- Feature folder layout: [agent-engineer-skills/README.md](agent-engineer-skills/README.md)
 
 ## License
 
