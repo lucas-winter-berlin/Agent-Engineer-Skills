@@ -2,7 +2,7 @@
 
 Start with [README.md](../README.md). Operator notes: [GUIDE.md](GUIDE.md). Feature folders: [features/README.md](features/README.md).
 
-This file is the control plane: four jobs, one folder, one order. `feature-harness` runs the last three for one feature specification.
+This file is the control plane: four separable skills, one folder, one order. `feature-harness` runs implement, review, and verify for one feature specification so the operator does not have to name the next job.
 
 ## Picture
 
@@ -61,13 +61,15 @@ docs/features/<feature-name>/
   what-was-run.md            Harness log (only if feature-harness ran)
 ```
 
-Older names: if only `concept.md` exists, treat it as `what-to-build.md`. If only `notes.md` exists, treat it as `what-was-implemented.md`. Do not keep inventing extra spec files.
+Compatibility: if only `concept.md` exists, treat it as `what-to-build.md`. If only `notes.md` exists, treat it as `what-was-implemented.md`. Do not invent extra spec files. If a human says "lock" meaning the spec file, treat it as `what-to-build.md`.
 
 Templates live under `skills/<id>/templates/`. The agent fills them. It does not invent a parallel pack (PRD, architecture plan, capability report, STRIDE, CI freeze).
 
 ## Dispatcher
 
 Cursor: `.cursor/rules/agent-engineer-skills.mdc` always applies. The agent must still open `skills/<id>/SKILL.md`. If the short rule and `SKILL.md` disagree, `SKILL.md` wins.
+
+The dispatcher picks a skill for feature-shaped work, a feature folder, `what-to-build.md`, or `Use skill: <id>`. It does not map generic "review this", "refactor", or "test it" when no feature folder and no skill id is in play.
 
 Gemini: each Gem pastes `SKILL.md`. Gems do not share chat memory. The feature folder is the handoff.
 
@@ -172,7 +174,7 @@ Windows PowerShell: do not join commands with `&&`.
 | Term | Meaning |
 | --- | --- |
 | Skill | Job plus required outputs (`SKILL.md`, schema, template) |
-| Feature specification | `what-to-build.md` — what to build; later skills must not change the product |
+| Feature specification | `what-to-build.md` — what to build; later skills must not change the product. Not called a lock. |
 | Feature directory | `docs/features/<feature-name>/` for one change |
 | Wall | Out-of-scope item. Hard reject if code builds it |
 | Landmine | A question whose wrong guess would waste implementation time |

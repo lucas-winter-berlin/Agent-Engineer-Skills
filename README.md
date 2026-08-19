@@ -1,6 +1,6 @@
 # Agent Engineer Skills
 
-Four jobs for an agent building a feature in any kind of repo (UI, API, CLI, worker, library), plus a runner that chains three of them after a feature specification exists.
+Four skills you can run one at a time when building a product or feature, plus a fifth that runs implement, review, and verify in order so the agent can continue without you naming the next job.
 
 ```text
 specify  ->  implement  ->  review  ->  verify
@@ -16,6 +16,19 @@ specify  ->  implement  ->  review  ->  verify
 | `feature-verifier` | Tests a given build against the feature specification. Writes `what-was-verified.md`. |
 | `feature-harness` | Runs implement -> review -> verify in one go. Writes `what-was-run.md`. |
 
+## Words this repo uses
+
+| Term | Meaning |
+| --- | --- |
+| Skill | One job plus its `SKILL.md`, schema, and template |
+| Specification | `what-to-build.md` — what to build. Later skills must not change the product. |
+| Wall | Out of scope. Do not implement it. |
+| Landmine | A question whose wrong guess would waste implementation time |
+| Slop | Tests or code that do not match the specification, or hollow asserts |
+| Harness | `feature-harness` running implement, review, and verify for one specification |
+
+If someone says "lock" for the spec file, they mean `what-to-build.md`.
+
 ## How to Install
 
 Copy these folders into the project, same names:
@@ -27,7 +40,7 @@ Copy these folders into the project, same names:
 
 Create `docs/features/` if it is missing.
 
-**Cursor:** reload the window or start a **new Agent chat**. The dispatcher in `.cursor/rules/agent-engineer-skills.mdc` is always on.
+**Cursor:** reload the window or start a **new Agent chat**. The dispatcher in `.cursor/rules/agent-engineer-skills.mdc` is always on. It only picks a skill for feature-shaped work, or when you name a skill id.
 
 **Gemini:** one Custom Gem per skill. Paste the preamble in [docs/GUIDE.md](docs/GUIDE.md), then that skill's `SKILL.md`. Attach `schema.json` and `templates/`.
 
@@ -38,7 +51,9 @@ Use skill: feature-specifier
 I want users to export their invoices as CSV.
 ```
 
-Answer the clickable questions. Then either name each skill, or run the path:
+Answer the clickable questions. Specifier creates `docs/features/<name>/what-to-build.md`. Names such as `invoice-csv-export` in the examples below are utterances, not a folder this repo ships.
+
+Then either name each skill, or run the path:
 
 ```text
 Use skill: feature-harness
@@ -71,7 +86,7 @@ If the idea is still fuzzy, the agent must specify first. It must not invent pro
 ## More
 
 - Install and Gemini details: [docs/GUIDE.md](docs/GUIDE.md)
-- How the four skills connect: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+- How the four skills plus harness connect: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 - Feature folder layout: [docs/features/README.md](docs/features/README.md)
 
 ## License

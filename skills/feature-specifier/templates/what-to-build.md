@@ -1,7 +1,7 @@
 # {{TITLE}}
 
 - Feature: `{{FEATURE_NAME}}`
-- Status: {{draft | ready-for-developer}}
+- Status: {{awaiting-questions | draft | ready-for-developer}}
 - Date: {{DATE}}
 - Kind: {{UI | API | CLI | job | library | mixed}}
 

@@ -4,6 +4,8 @@ Short operator notes. Start with [README.md](../README.md). Internals: [ARCHITEC
 
 A skill is a job, not a persona. The agent announces `Using skill: <id>`, reads `skills/<id>/SKILL.md`, fills that skill's template, and covers `schema.json`. `SKILL.md` wins if a short Cursor rule disagrees.
 
+Four skills are separable (`feature-specifier`, `feature-developer`, `feature-code-reviewer`, `feature-verifier`). `feature-harness` runs implement, review, and verify for one specification so you do not have to name the next job.
+
 | Piece | Where |
 | --- | --- |
 | Job | `skills/<id>/SKILL.md` |
@@ -15,13 +17,17 @@ A skill is a job, not a persona. The agent announces `Using skill: <id>`, reads 
 
 ## Which skill
 
+`Use skill: <id>` always selects that skill.
+
 | You say | Skill |
 | --- | --- |
 | "I have an idea." / "Write a spec." | `feature-specifier` |
-| "Build this." / "Implement the spec." | `feature-developer` |
-| "Review the code." / "Clean this up." | `feature-code-reviewer` |
-| "Test it." / "Is this slop?" | `feature-verifier` |
+| "Implement this spec." / "Build docs/features/<name>/" | `feature-developer` |
+| "Review this feature folder." / "Review against what-to-build.md" | `feature-code-reviewer` |
+| "Verify docs/features/<name>/" / "Verify against what-to-build.md" | `feature-verifier` |
 | "Run the path." / "Harness." / "End to end." | `feature-harness` (specification must exist) |
+
+Do not map generic "review this", "refactor", or "test it" to these skills unless a feature folder or a skill id is in play.
 
 If the idea is fuzzy, specify first. If a specification exists and they want the whole path, use `feature-harness` instead of naming the three inner skills. Skip review only if the user said to skip it. The harness does not skip review.
 
@@ -46,7 +52,7 @@ If the idea is fuzzy, specify first. If a specification exists and they want the
 
 | File | When | Role |
 | --- | --- | --- |
-| `.cursor/rules/agent-engineer-skills.mdc` | Always | Dispatcher |
+| `.cursor/rules/agent-engineer-skills.mdc` | Always | Dispatcher (feature-shaped work, or a named skill id) |
 | `.cursor/rules/feature-specifier.mdc` | Selected | Specify |
 | `.cursor/rules/feature-developer.mdc` | Selected | Implement |
 | `.cursor/rules/feature-code-reviewer.mdc` | Selected | Review |
@@ -72,6 +78,7 @@ Rules:
 4. Stop when SKILL.md says to wait for the user (questions, a missing specification, a product landmine).
 5. Do not use icons or emojis in any artifact.
 6. If this request belongs to a different skill, refuse and name the correct one: feature-specifier, feature-developer, feature-code-reviewer, feature-verifier, or feature-harness.
+7. Generic "review this", "refactor", or "test it" is not a reason to run a feature skill unless the user named a skill id or a docs/features/<name>/ folder (or what-to-build.md).
 ```
 
 3. Attach that skill's `schema.json` and every file in `templates/`.
@@ -80,7 +87,7 @@ Rules:
 **One dispatcher Gem (optional)**
 
 1. Gem name: `agent-engineer-skills`.
-2. Tell it to pick one primary skill, announce it, then follow that `SKILL.md`.
+2. Tell it to pick one primary skill for feature-shaped work (or a named skill id), announce it, then follow that `SKILL.md`. Do not map generic review/test/refactor with no feature folder.
 3. Attach the five `SKILL.md` files and the five `schema.json` files.
 
 **Gemini API**
