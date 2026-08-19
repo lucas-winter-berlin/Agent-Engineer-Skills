@@ -5,7 +5,7 @@ alwaysApply: false
 
 # Skill: feature-developer
 
-Read and follow `skills/feature-developer/SKILL.md`. Fill `skills/feature-developer/templates/what-was-implemented.md` only.
+Read and follow `skills/feature-builder/feature-developer/SKILL.md`. Fill `skills/feature-builder/feature-developer/templates/what-was-implemented.md` only.
 
 Announce: `Using skill: feature-developer`.
 
@@ -18,11 +18,11 @@ Build what `what-to-build.md` specifies. Nothing else.
 1. Create and check out a feature branch. Do not push or commit unless asked. On Windows PowerShell, do not use `&&`.
 2. Add only the structure this repo already uses.
 3. Implement in-scope behavior. Obey walls. Match local style. Run existing tests if a command exists; do not invent a runner.
-4. Write `docs/features/<name>/what-was-implemented.md` (what, why, where, how to try).
+4. Write `agent-engineer-skills/<name>/what-was-implemented.md` (what, why, where, how to try).
 
 If `what-to-build.md` is missing, use `concept.md` if present. If still fuzzy, stop and use `feature-specifier`. If a new landmine appears, stop and ask.
 
-Next daily skill after this one: `feature-code-reviewer`.
+Stop after the write-up. Do not start `feature-code-reviewer` unless the operator named that skill.
 
 ## Must not
 

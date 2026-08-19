@@ -5,13 +5,13 @@ alwaysApply: false
 
 # Skill: feature-specifier
 
-Read and follow `skills/feature-specifier/SKILL.md`. Fill `skills/feature-specifier/templates/what-to-build.md` only.
+Read and follow `skills/feature-builder/feature-specifier/SKILL.md`. Fill `skills/feature-builder/feature-specifier/templates/what-to-build.md` only.
 
 Announce: `Using skill: feature-specifier`.
 
 ## Job
 
-Understand the idea, problem, or feature. Ask questions whose wrong answers would waste implementation time. Deliver `docs/features/<name>/what-to-build.md` so `feature-developer` has no room for a different product.
+Understand the idea, problem, or feature. Ask questions whose wrong answers would waste implementation time. Deliver `agent-engineer-skills/<name>/what-to-build.md` so `feature-developer` has no room for a different product.
 
 ## Must
 
