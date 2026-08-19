@@ -37,7 +37,7 @@
         },
         "verdict": {
           "type": "string",
-          "enum": ["pass", "fail"]
+          "enum": ["pass", "fail", "not-run"]
         }
       }
     }

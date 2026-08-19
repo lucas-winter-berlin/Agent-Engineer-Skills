@@ -31,4 +31,4 @@
 
 ## Verdict
 
-{{pass | fail}} -- {{one line}}
+{{pass | fail | not-run}} -- {{one line}}
