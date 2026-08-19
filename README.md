@@ -1,37 +1,55 @@
 # Agent Engineer Skills
 
-A collection of agent skills for developing features. Each skill is a separate job. Name the one you want.
+---
+
+Agents write code faster than you can check it. The pain is not speed. It is that they skip a concept, do not follow your idea, hallucinate what is not there, skip tests, or build overhead you never asked for. You get something that looks finished and is not.
+
+This pack is a set of named jobs for those problems. You point at one job. The agent does that job and stops. It does not run the whole path unless you name the next skill.
+
+Tell the agent which job, by its name. The names are in the tables below (`feature-specifier`, `mvp-specifier`, and so on):
 
 ```text
-Use skill: <id>
+Use skill: feature-specifier
 ```
 
-That runs only that skill. Folders `feature-builder/` and `mvp-builder/` are for browsing this repo, not for typing.
+`feature-builder/` and `mvp-builder/` are only folders in this repo. Do not type those. Type the skill name.
 
-## What does the pack do
+## What skills are included?
 
-In an existing repo, a common sequence is specify, then implement, then review, then test. Name each skill when you want it. There is no composer skill in this collection right now.
+---
+
+Two groups. Feature builder is for a change in an app you already have. MVP builder is for an MVP, prototype, or demo. Each skill is one job. Run the next one only when you name it.
 
 ### Feature builder
 
-| Skill | What it does |
-| --- | --- |
-| `feature-specifier` | Turn an idea into a feature specification for an existing repo. Writes `what-to-build.md`. |
-| `feature-developer` | Build from a feature specification. Writes `what-was-implemented.md`. |
-| `feature-code-reviewer` | Check that the new code is clean and will stay easy to change. Writes `what-was-reviewed.md`. |
-| `feature-tester` | Test a build against the feature specification. Writes `what-was-verified.md`. |
+---
+
+Use this when you already have an app and want to add or change a feature.
+
+| Skill | Problem | What it does |
+| --- | --- | --- |
+| `feature-specifier` | No concept. The agent would guess the product. | Asks the questions that matter, then writes the actual concept in `what-to-build.md`. No code is generated. |
+| `feature-developer` | The agent does not follow the spec, hallucinates, or builds overhead. | Implements `what-to-build.md` and nothing else. Writes an implementation log in `what-was-implemented.md`. |
+| `feature-code-reviewer` | The change works now but will be hard to maintain. | Strict review against this repo: duplication, unclear names, hidden control flow, coupling, layout, secrets. May refactor internals. Must not change what the user gets. Writes a review log in `what-was-reviewed.md`. |
+| `feature-tester` | Nothing was tested against the spec. It may be slop. | Writes cases from the spec, runs this repo’s tests, and reports pass, fail, or not run. Writes `what-was-verified.md`. |
 
 ### MVP builder
 
-| Skill | What it does |
-| --- | --- |
-| `pitch-to-spec` | Stub. Will turn a rough idea into an MVP / new-project spec. Not implemented. Do not use for a feature in an existing repo. |
+---
 
-`feature-specifier` is for a **feature in an existing repo**. `pitch-to-spec` is for a **rough idea turned into an MVP / new project**. If you name the stub, the agent stops and does not write a spec.
+Use this when you do not have that app yet: an MVP, a prototype, or a demo.
+
+| Skill | Problem | What it does |
+| --- | --- | --- |
+| `mvp-specifier` | No concept for an MVP, prototype, or demo. The agent would guess the product. | Asks the questions that matter, then writes a self-contained concept in `what-to-build.md`. No code is generated. |
+
+After `mvp-specifier`, start a **new** Agent chat and name `feature-developer` (Goldfish). Then review and test with the feature-builder skills, same as above. If that build invents product, the spec was unclear. Tighten the spec. Do not patch the idea in the code.
 
 ## How to install
 
-Point an agent at **this** repo and at the **app** repo, then tell it to install Agent Engineer Skills.
+---
+
+Point an agent at **this** repo and at the **app** repo. Tell it to install Agent Engineer Skills.
 
 The agent must:
 
@@ -42,16 +60,20 @@ The agent must:
    - `feature-developer.mdc`
    - `feature-code-reviewer.mdc`
    - `feature-tester.mdc`
-   - `pitch-to-spec.mdc`
+   - `mvp-specifier.mdc`
 3. Create `agent-engineer-skills/` in the app repo if it is missing. Copy this pack's `agent-engineer-skills/README.md` into it if the app folder has no README yet.
 
 Do not copy `docs/` or `schemas/` into the app. Do not replace the app's existing `.cursor/rules/` folder.
 
-Then start a **new Agent chat** in the app. `Use skill: <id>` runs only that skill.
+Then start a **new Agent chat** in the app.
 
 Gemini: one Custom Gem per skill. Details: [docs/GUIDE.md](docs/GUIDE.md).
 
 ## How to use
+
+---
+
+A feature in an app you already have:
 
 ```text
 Use skill: feature-specifier
@@ -73,14 +95,30 @@ Use skill: feature-tester
 Test agent-engineer-skills/invoice-csv-export/ against what-to-build.md
 ```
 
-Skip specifier only if `what-to-build.md` already exists and is clear. If the idea is still fuzzy, specify first. The agent must not invent product while coding.
+A prototype or new project. Spec first, then a **new** chat to build:
+
+```text
+Use skill: mvp-specifier
+I want a small app where teams log standup notes.
+```
+
+```text
+Use skill: feature-developer
+Implement agent-engineer-skills/<name>/what-to-build.md
+```
+
+Skip specify only if `what-to-build.md` already exists and is clear. If the idea is still fuzzy, specify first. The agent must not invent product while coding.
 
 ## More
 
+---
+
 - Operator guide (Gemini, add a skill): [docs/GUIDE.md](docs/GUIDE.md)
 - How the skills connect: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
-- Feature folder layout: [agent-engineer-skills/README.md](agent-engineer-skills/README.md)
+- Where write-ups live: [agent-engineer-skills/README.md](agent-engineer-skills/README.md)
 
 ## License
+
+---
 
 [PolyForm Noncommercial License 1.0.0](LICENSE). Free for noncommercial use. Not free for commercial use.

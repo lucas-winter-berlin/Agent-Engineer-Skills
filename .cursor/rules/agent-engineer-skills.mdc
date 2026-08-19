@@ -19,9 +19,9 @@ There is no composer / harness skill in this collection. If the user asks for a 
 | `feature-developer` | `skills/feature-builder/feature-developer/SKILL.md` |
 | `feature-code-reviewer` | `skills/feature-builder/feature-code-reviewer/SKILL.md` |
 | `feature-tester` | `skills/feature-builder/feature-tester/SKILL.md` |
-| `pitch-to-spec` | `skills/mvp-builder/pitch-to-spec/SKILL.md` |
+| `mvp-specifier` | `skills/mvp-builder/mvp-specifier/SKILL.md` |
 
-Templates and `schema.json` sit next to that `SKILL.md`. Feature-builder write-ups live under `agent-engineer-skills/<name>/`.
+Templates and `schema.json` sit next to that `SKILL.md`. Feature-folder write-ups live under `agent-engineer-skills/<name>/`.
 
 ## Decision mapping
 
@@ -30,20 +30,21 @@ When the user did not name a skill id:
 | User intent | Skill |
 | --- | --- |
 | Vague idea, problem, or feature; spec before code (feature in an existing repo) | `feature-specifier` |
+| Prototype, MVP, new project, greenfield, or pitch | `mvp-specifier` |
 | Implement this specification / this feature folder | `feature-developer` |
 | Review this feature folder, or review against `what-to-build.md` | `feature-code-reviewer` |
 | Test or verify this feature folder against `what-to-build.md` | `feature-tester` |
 
-If they named one skill, run only that skill. `Use skill: feature-verifier` is the old name for `feature-tester`.
+If they named one skill, run only that skill. `Use skill: feature-verifier` is the old name for `feature-tester`. `Use skill: pitch-to-spec` is the old name for `mvp-specifier`.
 
-If the specification is missing or the idea is fuzzy, run `feature-specifier` first. Do **not** map a generic idea, "MVP", or "new project" to `pitch-to-spec`. That skill runs only when they name `Use skill: pitch-to-spec` (today it is a stub and must stop). If they named implement, review, or test alone, stop after that skill.
+If the specification is missing or the idea is fuzzy: a feature in an existing app is `feature-specifier`; a prototype, MVP, new project, greenfield, or pitch is `mvp-specifier`. A generic "I have an idea" in an existing app still maps to `feature-specifier`. If they named implement, review, or test alone, stop after that skill. `mvp-specifier` must not start `feature-developer` in the same chat.
 
 ## Global contract
 
 1. Follow the steps in that skill's `SKILL.md` in order. Do not skip, merge, or reorder.
 2. Instantiate templates under that skill's `templates/` folder. Do not invent alternate structures.
 3. Cover every required field in that skill's `schema.json`.
-4. Stop when the skill says to wait (questions, missing specification, product landmine, stub not-implemented). `ok` / `lgtm` is not a skip.
+4. Stop when the skill says to wait (questions, missing specification, product landmine). `ok` / `lgtm` is not a skip.
 5. Capability claims require evidence paths. Unknown tools are `unknown` or `absent`, never implied.
 6. No icons or emojis in artifacts.
 7. Consuming-project security and secrets policy wins. This framework wins on templates and required fields for the named skill. Skill order wins only when the user named the next skill. Code style of the consuming project wins for source.
@@ -53,7 +54,7 @@ If the specification is missing or the idea is fuzzy, run `feature-specifier` fi
 - Chain specifier → developer → reviewer → tester unless the user named each skill.
 - Run `feature-developer` while the requirement is ambiguous.
 - Invent or restore `feature-harness` / a path runner.
-- Run `pitch-to-spec` unless the user named that id. If they did, follow its stub and stop.
+- Run `mvp-specifier` for a feature in an existing repo (use `feature-specifier`). Do not start `feature-developer` in the same chat as `mvp-specifier`.
 - Invent extra spec packs, CI, or a threat-model essay as part of these skills.
 - Log secrets in skill artifacts.
 

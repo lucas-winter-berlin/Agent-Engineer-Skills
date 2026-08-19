@@ -23,12 +23,12 @@ The agent announces `Using skill: <id>`, reads `skills/<family>/<id>/SKILL.md` (
 | --- | --- |
 | `Use skill: <id>` | That skill only |
 | "I have an idea." / "Write a spec." (feature in an existing repo) | `feature-specifier` |
-| `Use skill: pitch-to-spec` | `pitch-to-spec` only (stub; stops; not a feature spec) |
+| Prototype / MVP / new project / greenfield / pitch, or `Use skill: mvp-specifier` | `mvp-specifier` (Elephant: spec only; Goldfish is a new chat). Old name: `pitch-to-spec` |
 | "Build this spec." / "Implement what-to-build.md." | `feature-developer` |
 | "Review this feature folder." | `feature-code-reviewer` |
 | "Test this feature folder against what-to-build.md." | `feature-tester` |
 
-If the idea is fuzzy, specify first with `feature-specifier` (feature in an existing repo). Do not send a generic idea to `pitch-to-spec`. To implement, review, and test, name those skills one at a time.
+If the idea is fuzzy, specify first. A feature in an existing app is `feature-specifier`. A prototype, MVP, new project, or greenfield is `mvp-specifier`. A generic "I have an idea" in an existing app still maps to `feature-specifier`. To implement, review, and test, name those skills one at a time. After `mvp-specifier`, open a **new** Agent chat for `feature-developer`.
 
 ## Install
 
@@ -45,7 +45,7 @@ Same contract as [README.md](../README.md) (How to install). Cursor and Gemini n
 | `.cursor/rules/feature-developer.mdc` | Selected | Implement |
 | `.cursor/rules/feature-code-reviewer.mdc` | Selected | Review |
 | `.cursor/rules/feature-tester.mdc` | Selected | Test |
-| `.cursor/rules/pitch-to-spec.mdc` | Selected | MVP spec stub (stops) |
+| `.cursor/rules/mvp-specifier.mdc` | Selected | Prototype / MVP spec (Elephant; no code) |
 
 ### Gemini Custom Gems
 
