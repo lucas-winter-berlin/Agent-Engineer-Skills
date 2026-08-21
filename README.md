@@ -1,7 +1,5 @@
 # Agent Engineer Skills
 
----
-
 Agents write code faster than you can check it. The pain is not speed. It is that they skip a concept, do not follow your idea, hallucinate what is not there, skip tests, or build overhead you never asked for. You get something that looks finished and is not.
 
 This pack is a set of named jobs for those problems. You point at one job. The agent does that job and stops. It does not run the whole path unless you name the next skill.
@@ -16,13 +14,9 @@ Use skill: feature-specifier
 
 ## What skills are included?
 
----
-
 Two groups. Feature builder is for a change in an app you already have. MVP builder is for an MVP, prototype, or demo. Each skill is one job. Run the next one only when you name it.
 
 ### Feature builder
-
----
 
 Use this when you already have an app and want to add or change a feature.
 
@@ -35,8 +29,6 @@ Use this when you already have an app and want to add or change a feature.
 
 ### MVP builder
 
----
-
 Use this when you do not have that app yet: an MVP, a prototype, or a demo.
 
 | Skill | Problem | What it does |
@@ -46,8 +38,6 @@ Use this when you do not have that app yet: an MVP, a prototype, or a demo.
 After `mvp-specifier`, start a **new** Agent chat and name `feature-developer` (Goldfish). Then review and test with the feature-builder skills, same as above. If that build invents product, the spec was unclear. Tighten the spec. Do not patch the idea in the code.
 
 ## How to install
-
----
 
 Point an agent at **this** repo and at the **app** repo. Tell it to install Agent Engineer Skills.
 
@@ -70,8 +60,6 @@ Then start a **new Agent chat** in the app.
 Gemini: one Custom Gem per skill. Details: [docs/GUIDE.md](docs/GUIDE.md).
 
 ## How to use
-
----
 
 A feature in an app you already have:
 
@@ -111,14 +99,10 @@ Skip specify only if `what-to-build.md` already exists and is clear. If the idea
 
 ## More
 
----
-
 - Operator guide (Gemini, add a skill): [docs/GUIDE.md](docs/GUIDE.md)
 - How the skills connect: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 - Where write-ups live: [agent-engineer-skills/README.md](agent-engineer-skills/README.md)
 
 ## License
-
----
 
 [PolyForm Noncommercial License 1.0.0](LICENSE). Free for noncommercial use. Not free for commercial use.
