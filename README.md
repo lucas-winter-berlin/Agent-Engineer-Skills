@@ -1,197 +1,236 @@
 # Agent Engineer Skills
 
-A deterministic, project-aware, and adaptive skill architecture for AI agents executing end-to-end software engineering workflows.
+This repository teaches an AI coding agent (Cursor or Gemini) how to do software work in a repeatable way: write a spec, choose between options, implement a feature, and check security.
 
-Agent Engineer Skills (`agent-engineer-skills`) defines executable contracts, not prompts in the informal sense. Each skill specifies phases, inputs, outputs, adaptive rules, and human-in-the-loop gates. Gemini Custom Gems and Cursor agents can bind the same contracts and produce comparable artifacts across projects.
+You do not need to be a senior engineer to use it. Copy the files into your project, ask the agent to use a skill, and review what it produces.
 
-This repository is a production-grade reference: copy the skills into a product repository, bind them in Gemini or Cursor, and require agents to follow the schemas and templates without improvising structure.
+## Start here
 
-## Value Proposition
+If you only read one section, read this.
 
-| Property | Meaning |
-| --- | --- |
-| Deterministic | Skills execute as ordered phases with explicit stop conditions. An agent does not skip a gate, invent a phase, or emit unstructured output when a schema exists. |
-| Project-aware | Capability Discovery inspects the local repository before planning. Test runners, linters, CI pipelines, and documentation layouts drive later phases. |
-| Adaptive | The same skill produces different artifacts depending on discovered capabilities. If a test framework exists, tests are generated and executed. If it does not, a structured manual QA checklist is produced. |
-| Reviewable | Human Review Gates pause execution until an explicit sign-off is recorded. Architecture and product documents are frozen before implementation. |
-| Portable | One contract set serves Gemini system prompts / Custom Gems and Cursor `.cursor/rules/` plus `SKILL.md` files. |
+1. A **skill** is a written procedure the agent must follow. It is not a vibe, a persona, or a loose checklist.
+2. There are four skills. Pick one from the table below, or let the agent pick from your request.
+3. The agent looks at your real project (tests, CI, linters) before it plans.
+4. For implementation, the agent **stops and waits** until you type an approval line. That is on purpose.
+5. The agent fills templates instead of inventing random document shapes.
 
-## Architecture
+**Quick pick**
 
-```mermaid
-flowchart TB
-  subgraph intake [Intake]
-    Intent[User intent]
-    Dispatch[Skill dispatcher]
-  end
+| You want to... | Say this | Skill |
+| --- | --- | --- |
+| Turn a vague idea into a clear spec | `Use skill: feature-specifier` | Write the product requirements |
+| Choose between tools or designs | `Use skill: decision-matrix-architect` | Score options and write a decision record |
+| Build the feature in the repo | `Use skill: feature-developer` | Plan, wait for your OK, then code with tests |
+| Check security before shipping | `Use skill: sec-analyzer-tester` | Threat model and tests or a QA checklist |
 
-  subgraph discover [Project awareness]
-    Cap[Capability Discovery]
-    Toolchain[Tests, CI, linters, docs layout]
-  end
+A typical full path is: **specify -> decide (if needed) -> implement -> security check**.
 
-  subgraph skills [Skill contracts]
-    Spec[feature-specifier]
-    Matrix[decision-matrix-architect]
-    Dev[feature-developer]
-    Sec[sec-analyzer-tester]
-  end
+Cursor users in this repo can start a chat with:
 
-  subgraph gates [Control plane]
-    HITL[Human Review Gate]
-    Freeze[Docs Freeze]
-    Verify[CI/CD or Manual QA]
-  end
-
-  Intent --> Dispatch
-  Dispatch --> Cap
-  Cap --> Toolchain
-  Toolchain --> Spec
-  Toolchain --> Matrix
-  Toolchain --> Dev
-  Toolchain --> Sec
-  Spec --> Dev
-  Matrix --> Dev
-  Dev --> HITL
-  HITL --> Dev
-  Dev --> Sec
-  Dev --> Freeze
-  Freeze --> Verify
+```text
+Use skill: feature-specifier
+I want users to export their invoices as CSV.
 ```
 
-Execution is sequential inside a skill and compositional across skills. `feature-specifier` and `decision-matrix-architect` typically run before `feature-developer`. `sec-analyzer-tester` may run as a dedicated engagement or as Phase 5 of `feature-developer`.
+Details for Gemini and Cursor are in [Integration and Usage](#integration-and-usage). How the machinery works is in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
-The full lifecycle, discovery algorithm, and integration patterns are specified in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+## Words used in this repo
 
-## Skill Inventory
+These terms show up often. They are ordinary software ideas with specific names here.
 
-| Skill | Purpose | Primary artifacts | Human gate |
+| Term | Plain meaning |
+| --- | --- |
+| Agent | The AI that reads the skill and does the work (Cursor Agent or a Gemini Gem). |
+| Skill | A procedure plus required outputs. Main file: `skills/<name>/SKILL.md`. |
+| Phase | One numbered step inside a skill. Phases run in order. The agent cannot skip them. |
+| Template | A Markdown form the agent fills in. Empty sections stay in the file as `N/A`. |
+| Schema | A list of required fields. If a field is unknown, the agent writes `unknown` instead of hiding it. |
+| Capability Discovery | The agent inspects your repo for test commands, CI files, linters, and docs folders. It does not install tools. |
+| Human gate | A hard stop. The agent waits until you approve or reject a named phase. |
+| Approval token | The exact line you type, for example `APPROVED: feature-developer Phase 3`. "ok" is not enough. |
+| PRD | Product Requirements Document. What to build, what not to build, and how to know it is done. |
+| Gherkin | Acceptance tests in `Given / When / Then` language. Example: Given I am logged in, When I click export, Then I get a CSV. |
+| ADR | Architecture Decision Record. A short document of what we chose and why. This repo uses the MADR format (Markdown ADR). |
+| TDD | Test-driven development: write a failing test, write the smallest code that passes, then clean up. |
+| CI / CD | Automated checks on a server (GitHub Actions, GitLab CI, and similar). If you have none, the agent uses a written QA checklist instead. |
+| STRIDE | A security checklist: Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege. |
+| Trust boundary | A place where data or control crosses from one side to another (browser to API, API to database, user to admin). |
+
+## What you get
+
+| Property | Plain meaning |
+| --- | --- |
+| Repeatable | The agent follows numbered steps and stops at the same points every time. |
+| Project-aware | It uses *your* test command and *your* CI files, not a generic stack it imagined. |
+| Adaptive | If you have Jest, it runs Jest. If you have no test runner, it still writes tests and a manual checklist. The steps stay. The *how* changes. |
+| Reviewable | You approve the plan before code. Specs are saved in git. |
+| Portable | The same skills work in Cursor (project rules) and Gemini (Custom Gems or system prompts). |
+
+This is a reference you copy into a product repo. After that, you tell the agent to follow the skills instead of free-form chatting.
+
+## How a full feature run works
+
+```mermaid
+flowchart TD
+  you[You describe the work] --> pick[Agent picks a skill]
+  pick --> look[Agent looks at your repo]
+  look --> spec[feature-specifier: write the spec]
+  spec --> decide[decision-matrix-architect: pick an option if needed]
+  decide --> plan[feature-developer: write the plan]
+  plan --> wait[You approve or reject]
+  wait --> code[Agent writes tests then code]
+  code --> sec[Security review]
+  sec --> docs[Save feature docs]
+  docs --> check[CI or a manual checklist]
+```
+
+Inside one skill, steps run top to bottom. Across skills, the usual order is specifier, then decision (only if there is a real choice), then feature-developer. Security review is either its own run, or step 5 of feature-developer.
+
+## The four skills
+
+| Skill | What it does | What you will see in git | Do you have to approve? |
 | --- | --- | --- | --- |
-| [`feature-developer`](skills/feature-developer/SKILL.md) | End-to-end adaptive feature implementation pipeline | `docs/features/<feature-name>/` blueprint, code, tests, freeze, verification | Yes. Phase 3 requires explicit sign-off before implementation. |
-| [`feature-specifier`](skills/feature-specifier/SKILL.md) | Transform ambiguous ideas into unambiguous PRDs | PRD, scope boundaries, assumption log, Gherkin acceptance criteria | Optional. Clarification questions must be answered or assumptions logged before freeze of the PRD. |
-| [`decision-matrix-architect`](skills/decision-matrix-architect/SKILL.md) | Objective trade-off analysis and Architectural Decision Records | Weighted scoring matrix, MADR ADR | Recommended before irreversible architecture choices. |
-| [`sec-analyzer-tester`](skills/sec-analyzer-tester/SKILL.md) | Threat modeling, mitigation, and adaptive test-plan generation | Trust-boundary map, STRIDE model, mitigations, automated tests or manual QA checklist | Recommended before shipping security-sensitive changes. |
+| [`feature-specifier`](skills/feature-specifier/SKILL.md) | Turns a fuzzy request into a spec | PRD, in-scope / out-of-scope, questions, assumptions, Gherkin scenarios | Optional. Unanswered questions become logged assumptions. |
+| [`decision-matrix-architect`](skills/decision-matrix-architect/SKILL.md) | Compares options with scores | Scoring table and a MADR decision record | Recommended before a hard-to-undo choice. |
+| [`feature-developer`](skills/feature-developer/SKILL.md) | Builds the feature end to end | Folder under `docs/features/<name>/`, code, tests, freeze notes, verification | **Yes.** No code until `APPROVED: feature-developer Phase 3`. |
+| [`sec-analyzer-tester`](skills/sec-analyzer-tester/SKILL.md) | Finds security issues and plans tests | Trust-boundary map, STRIDE table, fixes, automated tests or a QA checklist | Yes before accepting a serious leftover risk. |
 
-Canonical JSON Schema for all skill definitions: [schemas/skill-schema.json](schemas/skill-schema.json).
-
-Per-skill input/output schemas live next to each `SKILL.md`:
+Field lists for each skill:
 
 - [skills/feature-developer/schema.json](skills/feature-developer/schema.json)
 - [skills/feature-specifier/schema.json](skills/feature-specifier/schema.json)
 - [skills/decision-matrix-architect/schema.json](skills/decision-matrix-architect/schema.json)
 - [skills/sec-analyzer-tester/schema.json](skills/sec-analyzer-tester/schema.json)
 
-## Repository Layout
+The shared definition format is [schemas/skill-schema.json](schemas/skill-schema.json).
+
+## Example: from idea to code
+
+You want invoice CSV export.
+
+1. `Use skill: feature-specifier` and describe the idea. Answer up to five questions (who can export, what columns, how large a file).
+2. If you must choose storage or a library, `Use skill: decision-matrix-architect`.
+3. `Use skill: feature-developer`. Read the plan in `docs/features/invoice-csv-export/`. If it looks right, send:
+
+   ```text
+   APPROVED: feature-developer Phase 3
+   ```
+
+4. The agent writes a failing test, then code, then a security pass, then updates docs, then runs CI or a checklist.
+
+If the idea is already a clear spec, skip to step 3. If you only want a decision, stop after step 2.
+
+## Rules the agent must follow
+
+1. **Fill the form, do not invent a new shape.** Templates and schemas exist so reviews stay comparable.
+2. **Look at the repo first.** Do not plan as if you had Jest if there is no Jest.
+3. **Stop before irreversible work.** You approve implementation plans, accepted architecture decisions, and serious security exceptions.
+4. **Tests come first when building.** If there is no test command, the agent still writes test files and says they were not run.
+5. **Security is a step, not an afterthought.** It happens before docs are frozen and before verification.
+6. **Save local feature docs and update shared docs in the same step.**
+7. **Missing CI does not mean "skip checking."** It means "use a checklist and write down evidence."
+8. **Unknowns stay visible.** They become numbered assumptions with a risk level. They are not deleted.
+
+## What is in this repository
 
 ```
 agent-engineer-skills/
-  README.md
-  docs/ARCHITECTURE.md
-  docs/features/README.md
-  schemas/skill-schema.json
-  skills/<skill-name>/SKILL.md
-  skills/<skill-name>/schema.json
-  skills/<skill-name>/templates/
-  .cursor/rules/
+  README.md                 You are here
+  docs/ARCHITECTURE.md      Deeper "how it works"
+  docs/features/            Where feature folders go when you implement
+  schemas/skill-schema.json How a skill definition is shaped
+  skills/<skill-name>/      Procedure, field list, templates
+  .cursor/rules/            Cursor bindings
 ```
-
-## Design Principles
-
-1. **Contract over improvisation.** If a template or schema exists, the agent fills it. Free-form prose is allowed only in designated narrative fields.
-2. **Discover before decide.** No architecture or implementation plan is issued until Capability Discovery has recorded the local toolchain.
-3. **Pause at irreversible points.** Human Review Gates sit in front of code changes, ADR adoption, and security-exception acceptance.
-4. **TDD when a runner exists.** Implementation writes a failing test first, then the minimum code to pass, then refactors. If no runner exists, the agent still writes tests as files and records them as unverified until a runner is introduced.
-5. **Security is a phase, not a postscript.** Threat modeling and edge-case audit occur before docs freeze and CI verification.
-6. **Documents freeze together.** Feature-local docs and global system docs are updated in the same phase, with a recorded diff.
-7. **Adapt the output, not the contract.** Missing CI does not skip verification; it switches the verification mode to structured manual QA.
-8. **No silent assumptions.** Unresolved questions become logged assumptions with an owner and a risk rating. They never disappear.
 
 ---
 
 ## Integration and Usage
 
-This section is the operational guide for binding and invoking the skills. Read it in order.
+This section is the setup and usage guide. Read it in order. You can skim [3.2](#32-bind-and-invoke-in-gemini-system-prompts--custom-gems) or [3.3](#33-bind-and-invoke-in-cursor-ide-cursorrules) if you only use one tool.
 
 ### 1. Concept Definition
 
 A **skill** in this framework is a structured instruction set and an execution contract for an AI agent.
 
-It is not a slogan, a persona, or a loose checklist. A skill is the combination of:
+That means: the agent is not asked to "be helpful about features." It is asked to run a named procedure, fill named files, and stop at named points.
 
-| Component | Location | Role |
+A skill is these pieces together:
+
+| Piece | Where it lives | What it is for |
 | --- | --- | --- |
-| Execution procedure | `skills/<skill-name>/SKILL.md` | Ordered phases, stop conditions, formatting rules, and guardrails the agent must follow. |
-| Input/output contract | `skills/<skill-name>/schema.json` | JSON Schema describing required request fields and required response artifacts. |
-| Artifact templates | `skills/<skill-name>/templates/` | Markdown forms the agent instantiates rather than inventing structure. |
-| Meta-schema | `schemas/skill-schema.json` | Validates that a skill definition itself is complete (metadata, phases, adaptive rules). |
-| IDE binding | `.cursor/rules/*.mdc` | Cursor-native projection of the same contracts. |
-| Runtime binding | Gemini system prompt or Custom Gem instructions | Copy of the skill contract injected as non-optional instructions. |
+| Procedure | `skills/<skill-name>/SKILL.md` | The ordered steps, stop rules, and writing rules. |
+| Field list | `skills/<skill-name>/schema.json` | What must appear in the result. |
+| Templates | `skills/<skill-name>/templates/` | The Markdown files the agent copies and fills. |
+| Shared format | `schemas/skill-schema.json` | Checks that a skill definition is complete. |
+| Cursor binding | `.cursor/rules/*.mdc` | Makes Cursor load the same rules in the IDE. |
+| Gemini binding | Custom Gem instructions or a system prompt | Pastes the same rules into Gemini. |
 
-When an agent "uses a skill," it must:
+When an agent uses a skill, it must:
 
-1. Identify the skill from the Decision Mapping table below.
+1. Pick the skill from the Decision Mapping table below.
 2. Read `SKILL.md` and the matching `schema.json`.
-3. Run Capability Discovery against the current repository unless the skill states that discovery is not required.
-4. Produce artifacts that validate against the schema and match the templates.
-5. Stop at every Human Review Gate until the user records an explicit sign-off.
+3. Inspect the current repo unless that skill says not to.
+4. Produce files that match the templates and include every required field.
+5. Stop at every human gate until you type a sign-off that names the gate.
 
-An agent that summarizes the skill and then proceeds in a different structure has failed the contract.
+If the agent summarizes the skill and then works in a different structure, it has not followed the skill.
 
 ### 2. Decision Mapping
 
-Map the user's intent to exactly one primary skill. Secondary skills may be invoked later as named phases, not as a substitute for the primary skill.
+Choose **one** primary skill for the current request. Other skills can run later. They do not replace the primary skill.
 
-| User intent | Primary skill | Typical follow-on |
+| You say something like... | Use this skill first | Often next |
 | --- | --- | --- |
-| "I have an idea for a feature but it is vague." | `feature-specifier` | `decision-matrix-architect`, then `feature-developer` |
-| "Write a PRD / spec / acceptance criteria for this." | `feature-specifier` | `feature-developer` |
-| "Is this in scope? What is out of scope?" | `feature-specifier` | None, unless implementation is requested |
-| "Should we use X or Y?" | `decision-matrix-architect` | `feature-developer` after the ADR is accepted |
-| "Record an architecture decision / write an ADR." | `decision-matrix-architect` | None, unless implementation is requested |
-| "Trade-off analysis / weighted scoring of options." | `decision-matrix-architect` | `feature-developer` |
-| "Implement this feature end to end." | `feature-developer` | `sec-analyzer-tester` is Phase 5 of the same pipeline |
-| "Build it, but plan first and wait for my approval." | `feature-developer` | None; Phase 3 is the approval gate |
-| "Add this capability using TDD." | `feature-developer` | None |
-| "Threat model this change / this system." | `sec-analyzer-tester` | `feature-developer` if mitigations require code |
-| "Find vulnerabilities and propose tests." | `sec-analyzer-tester` | `feature-developer` for patch implementation |
-| "Write a security test plan or QA checklist." | `sec-analyzer-tester` | None |
-| "I want a spec, a decision, and then the code." | `feature-specifier` first | Then `decision-matrix-architect`, then `feature-developer` |
+| "I have an idea but it is vague." | `feature-specifier` | Decision skill, then `feature-developer` |
+| "Write a PRD / spec / acceptance criteria." | `feature-specifier` | `feature-developer` |
+| "Is this in scope? What is out of scope?" | `feature-specifier` | Nothing, unless you then ask to build it |
+| "Should we use X or Y?" | `decision-matrix-architect` | `feature-developer` after you accept the decision |
+| "Write an ADR / record an architecture decision." | `decision-matrix-architect` | Nothing, unless you then ask to build it |
+| "Score these options." | `decision-matrix-architect` | `feature-developer` |
+| "Implement this feature end to end." | `feature-developer` | Security is already step 5 of that pipeline |
+| "Plan it, then wait for my approval." | `feature-developer` | Nothing extra; step 3 is the wait |
+| "Add this using TDD." | `feature-developer` | Nothing extra |
+| "Threat-model this." | `sec-analyzer-tester` | `feature-developer` if code fixes are needed |
+| "Find vulnerabilities and propose tests." | `sec-analyzer-tester` | `feature-developer` for the patch |
+| "Write a security test plan or QA checklist." | `sec-analyzer-tester` | Nothing extra |
+| "I want a spec, a decision, then the code." | `feature-specifier` first | Then `decision-matrix-architect`, then `feature-developer` |
 
-If the intent matches more than one row, run the skills in this fixed order:
+If more than one row fits, run them in this order:
 
-1. `feature-specifier` (ambiguity remains)
-2. `decision-matrix-architect` (more than one viable technical option remains)
-3. `feature-developer` (implementation is requested)
-4. `sec-analyzer-tester` (standalone security engagement, or Phase 5 if already inside `feature-developer`)
+1. `feature-specifier` (the request is still fuzzy)
+2. `decision-matrix-architect` (more than one real option is still open)
+3. `feature-developer` (you asked for code)
+4. `sec-analyzer-tester` (a standalone security pass, or step 5 if you are already in `feature-developer`)
 
-Do not run `feature-developer` while the product requirement is still ambiguous. Do not run `decision-matrix-architect` to justify a decision that has already been mandated as a hard constraint unless the user asks for a recorded ADR of that mandate.
+Do not start `feature-developer` while the requirement is still fuzzy. Do not run the decision skill just to decorate a choice you already locked, unless you asked for a written record of that lock.
 
 ### 3. Integration Steps
 
-Complete the copy step once per consuming repository, then bind the runtime you actually use.
+Copy the files once into the project where you want the agent to work. Then bind either Gemini, Cursor, or both.
 
-#### 3.1 Copy the contracts into a consuming repository
+#### 3.1 Copy the files into your project
 
-1. Clone or vendor this repository, or copy the `skills/`, `schemas/`, `docs/`, and `.cursor/rules/` directories into the consuming project at the same relative paths.
-2. Confirm the following files exist:
+1. Copy `skills/`, `schemas/`, `docs/`, and `.cursor/rules/` into your project, keeping the same folder names.
+2. Check that these files exist:
    - `schemas/skill-schema.json`
    - `skills/feature-developer/SKILL.md`
    - `skills/feature-specifier/SKILL.md`
    - `skills/decision-matrix-architect/SKILL.md`
    - `skills/sec-analyzer-tester/SKILL.md`
    - `.cursor/rules/agent-engineer-skills.mdc` (Cursor only)
-3. Do not rewrite skill names. Identifiers are stable: `feature-developer`, `feature-specifier`, `decision-matrix-architect`, `sec-analyzer-tester`.
-4. Create `docs/features/` in the consuming repository if it does not exist. Feature work from `feature-developer` is written there.
+3. Do not rename the skills. The ids stay: `feature-developer`, `feature-specifier`, `decision-matrix-architect`, `sec-analyzer-tester`.
+4. Create `docs/features/` if it is missing. Implementation notes from `feature-developer` go there.
 
 #### 3.2 Bind and invoke in Gemini (System Prompts / Custom Gems)
 
-Gemini has no project-local rules directory equivalent to `.cursor/rules/`. Binding is done by injecting the skill contract into the Gem instructions or into the chat system prompt.
+Gemini does not read `.cursor/rules/` from your repo. You paste the skill into a Custom Gem or into a system prompt.
 
-**Create one Gem per skill (recommended)**
+**One Gem per skill (recommended)**
 
 1. Open Google Gemini and create a Custom Gem.
-2. Name the Gem after the skill identifier, for example `feature-developer`.
-3. In the Gem instructions, paste the following preamble verbatim, then paste the full contents of the corresponding `SKILL.md` beneath it:
+2. Name it after the skill, for example `feature-developer`.
+3. Paste the block below into the Gem instructions, then paste the full `SKILL.md` under it:
 
 ```text
 You are executing an Agent Engineer Skill. The skill text that follows is an execution contract, not optional style guidance.
@@ -206,24 +245,24 @@ Rules:
 7. If the user request is out of scope for this skill, refuse and name the correct skill from the Decision Mapping table.
 ```
 
-4. Attach, or paste as additional knowledge, the skill's `schema.json` and every file under `skills/<skill-name>/templates/`.
-5. Save the Gem. Invoke it by starting a chat with that Gem and stating the user intent plus repository context (language, test command, CI vendor, and relevant file excerpts).
+4. Attach (or paste) that skill's `schema.json` and every file in `skills/<skill-name>/templates/`.
+5. Save the Gem. Start a chat with it. Say what you want, plus a short note about the repo (language, how you run tests, whether you use GitHub Actions, and any important files).
 
-**Use a single dispatcher Gem (optional)**
+**One dispatcher Gem (optional)**
 
 1. Create a Gem named `agent-engineer-skills`.
 2. Paste the Concept Definition, Decision Mapping table, and Usage Guardrails from this README into the Gem instructions.
-3. Instruct the Gem to select exactly one primary skill, announce the selection, and then follow that skill's `SKILL.md`.
-4. Attach all four `SKILL.md` files, all four `schema.json` files, and `docs/ARCHITECTURE.md` as Gem knowledge.
+3. Tell the Gem to pick exactly one primary skill, say which one, then follow that skill's `SKILL.md`.
+4. Attach all four `SKILL.md` files, all four `schema.json` files, and `docs/ARCHITECTURE.md`.
 
-**System prompt in a Gemini API integration**
+**Gemini API**
 
-1. Load `skills/<skill-name>/SKILL.md` as the system instruction.
-2. Load `skills/<skill-name>/schema.json` as a constrained output schema if the API surface supports JSON Schema, otherwise require the model to emit Markdown artifacts that cover every required field.
-3. Pass repository signals (detected test command, CI files, linter config paths) as the first user message before the actual request.
-4. Enforce Human Review Gates in application code: do not send a "continue implementation" turn until the user record contains `APPROVED: <skill> Phase <n>`.
+1. Put `skills/<skill-name>/SKILL.md` in the system instruction.
+2. If the API can take a JSON Schema, use `skills/<skill-name>/schema.json`. If not, require Markdown that still includes every required field.
+3. Send repo facts first (test command, CI files, linter paths), then the user request.
+4. In your app, do not send a "continue coding" turn until the user record contains `APPROVED: <skill> Phase <n>`.
 
-**Invocation examples (Gemini)**
+**Example prompts (Gemini)**
 
 ```text
 Gem: feature-specifier
@@ -241,18 +280,18 @@ User: Threat-model the billing export API. Trust boundaries: browser, public API
 
 #### 3.3 Bind and invoke in Cursor IDE (`.cursor/rules/`)
 
-Cursor binds skills through project rules and, optionally, through project skills.
+Cursor reads project rules from `.cursor/rules/`.
 
 **Bind**
 
-1. Copy `.cursor/rules/` from this repository into the consuming project's `.cursor/rules/` directory. The dispatcher rule `agent-engineer-skills.mdc` is `alwaysApply: true`. Individual skill rules are `alwaysApply: false` and are pulled in by mention or by the dispatcher.
-2. Copy `skills/` and `schemas/` into the consuming project at the same relative paths so the rules can point at `SKILL.md` files.
-3. Optional: copy each `skills/<skill-name>/` directory into `.cursor/skills/<skill-name>/` if you want Cursor's skill discovery to load `SKILL.md` directly. Keep the canonical copy under `skills/` in version control.
-4. Reload the Cursor window, or start a new Agent chat, so the rules are picked up.
+1. Copy `.cursor/rules/` from this repository into your project's `.cursor/rules/` folder. `agent-engineer-skills.mdc` always applies. The four skill rules apply when you mention them or when the dispatcher selects them.
+2. Copy `skills/` and `schemas/` into the same relative paths so the rules can open `SKILL.md`.
+3. Optional: also copy each `skills/<skill-name>/` folder to `.cursor/skills/<skill-name>/` if you want Cursor skill discovery. Keep the copy under `skills/` as the one you commit.
+4. Reload the Cursor window, or start a new Agent chat.
 
 **Invoke**
 
-Use an explicit skill identifier in the agent prompt. The dispatcher rule requires the agent to announce the selected skill before executing.
+Name the skill in your prompt. The agent should say which skill it is using before it starts.
 
 ```text
 Use skill: feature-specifier
@@ -274,69 +313,69 @@ Use skill: sec-analyzer-tester
 STRIDE the offline-sync worker. If a test framework exists, generate automated tests; otherwise produce a manual QA checklist.
 ```
 
-**Sign-off format in Cursor**
+**How you approve in Cursor**
 
-The agent must stop and wait. Resume with a message that names the gate:
+The agent stops. You continue with a line that names the gate:
 
 ```text
 APPROVED: feature-developer Phase 3
 Proceed to TDD implementation.
 ```
 
-Rejected or partial sign-off:
+To send it back:
 
 ```text
 REJECTED: feature-developer Phase 3
 Change the storage adapter to the existing packages/storage interface. Resubmit the architecture plan.
 ```
 
-**Rule files shipped in this repository**
+**Rule files in this repository**
 
-| File | Apply mode | Role |
+| File | When it applies | Role |
 | --- | --- | --- |
-| `.cursor/rules/agent-engineer-skills.mdc` | Always apply | Dispatcher, decision mapping, global guardrails |
-| `.cursor/rules/feature-developer.mdc` | Apply on mention / agent request | Feature pipeline |
-| `.cursor/rules/feature-specifier.mdc` | Apply on mention / agent request | PRD pipeline |
-| `.cursor/rules/decision-matrix-architect.mdc` | Apply on mention / agent request | ADR pipeline |
-| `.cursor/rules/sec-analyzer-tester.mdc` | Apply on mention / agent request | Security pipeline |
+| `.cursor/rules/agent-engineer-skills.mdc` | Always | Picks the skill and lists global rules |
+| `.cursor/rules/feature-developer.mdc` | When that skill is selected | Feature pipeline |
+| `.cursor/rules/feature-specifier.mdc` | When that skill is selected | Spec pipeline |
+| `.cursor/rules/decision-matrix-architect.mdc` | When that skill is selected | Decision pipeline |
+| `.cursor/rules/sec-analyzer-tester.mdc` | When that skill is selected | Security pipeline |
 
 ### 4. Usage Guardrails
 
-These rules are mandatory. They override conversational convenience.
+These rules always apply. They beat "just keep chatting."
 
 #### When to use each skill
 
-| Skill | Use when |
+| Skill | Use it when |
 | --- | --- |
-| `feature-specifier` | The request is ambiguous, the scope is unset, stakeholders disagree on "done," or no PRD/acceptance criteria exist. |
-| `decision-matrix-architect` | Two or more technically viable options remain, the choice is costly to reverse, or an ADR is required by process. |
-| `feature-developer` | A specification exists or is produced in-phase, implementation is requested, and the agent will own tests, security audit, docs freeze, and verification. |
-| `sec-analyzer-tester` | The work crosses a trust boundary, handles authn/authz, processes sensitive data, exposes a network interface, or the user asks for threat modeling or a security test plan. |
+| `feature-specifier` | The request is fuzzy, scope is unclear, people disagree on "done," or there is no spec yet. |
+| `decision-matrix-architect` | Two or more real options exist, the choice is expensive to undo, or you need a written decision. |
+| `feature-developer` | You want the change built, with tests, security review, docs, and verification. |
+| `sec-analyzer-tester` | The work crosses a trust boundary, deals with login or permissions, handles sensitive data, opens a network interface, or you asked for a threat model. |
 
 #### When not to use each skill
 
-| Skill | Do not use when |
+| Skill | Skip it when |
 | --- | --- |
-| `feature-specifier` | The PRD is already approved and unambiguous, and the user only wants code, a trade-off, or a threat model. Do not re-specify as a delay tactic. |
-| `decision-matrix-architect` | There is a single viable option, the user has issued a hard mandate, or the choice is trivial and reversible with no architectural blast radius. Do not produce a matrix to retroactively justify code already written unless asked to document a decision after the fact. |
-| `feature-developer` | The requirement is still ambiguous (run `feature-specifier` first), the user asked only for a document, or the change is a one-line typo/config edit with no behavioral surface. Do not start implementation before Phase 3 sign-off. |
-| `sec-analyzer-tester` | The change has no security relevance (copy edits, comment-only, purely internal documentation with no process impact). Do not use STRIDE theater on changes that do not cross a trust boundary. |
+| `feature-specifier` | The spec is already clear and approved, and you only want code, a trade-off, or a threat model. Do not rewrite the spec just to stall. |
+| `decision-matrix-architect` | There is only one real option, you already mandated the choice, or the choice is small and easy to undo. Do not score options after the fact unless you asked for a write-up. |
+| `feature-developer` | The requirement is still fuzzy (run `feature-specifier` first), you only wanted a document, or the change is a tiny typo with no behavior change. Do not code before Phase 3 approval. |
+| `sec-analyzer-tester` | The change has no security angle (comments, copy edits, internal docs with no process change). Do not run a full STRIDE show for a change that never crosses a trust boundary. |
 
-#### Global prohibitions
+#### Do not
 
-1. Do not skip Capability Discovery when the skill lists it as a phase.
-2. Do not continue past a Human Review Gate without an explicit `APPROVED: <skill> Phase <n>` (or equivalent unambiguous approval that names the gate).
-3. Do not invent toolchain facts. If Jest is not present, do not claim it is. Record `unknown` or `absent`.
-4. Do not emit icons or emojis in any skill artifact, commit message authored under a skill, or documentation file.
-5. Do not replace Gherkin, MADR, or STRIDE templates with free-form essays.
-6. Do not mark verification passed unless CI succeeded or every manual QA item is checked with evidence.
-7. Do not expand scope beyond the approved In-Scope section. Out-of-scope items become a new specifier run, not silent extras.
-8. Do not log secrets, production credentials, or personal data in skill artifacts.
+1. Skip Capability Discovery when the skill includes it.
+2. Continue past a gate without `APPROVED: <skill> Phase <n>` (or a clear approval that names that same gate).
+3. Invent tools. If Jest is not in the repo, write `absent` or `unknown`.
+4. Put icons or emojis in skill files, skill-authored commits, or docs.
+5. Replace Gherkin, MADR, or STRIDE templates with a free-form essay.
+6. Mark verification passed unless CI passed or every checklist item has evidence.
+7. Add extra scope. Out-of-scope ideas need a new specifier run.
+8. Write secrets, production passwords, or personal data into skill files.
 
 ## Versioning
 
-Skill identifiers are stable. Additive phase changes increment the `metadata.version` field inside each skill definition. Breaking changes to input/output schemas require a major version increment and a migration note in `docs/ARCHITECTURE.md`.
+Skill names do not change. Small additions bump a minor version. Removing or renaming required fields is a breaking change and must be noted in `docs/ARCHITECTURE.md`.
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+[PolyForm Noncommercial License 1.0.0](LICENSE). Free to use, copy, change, and share for noncommercial purposes (personal, hobby, study, education, research, charity, government). Not free for commercial use. The software is provided as-is, with no warranty.

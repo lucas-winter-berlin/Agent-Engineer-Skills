@@ -1,261 +1,243 @@
-# Agent Engineer Skills Architecture
+# How Agent Engineer Skills work
 
-This document is the framework specification. Skill files (`skills/*/SKILL.md`) are execution contracts. This file defines the control plane those contracts run on: lifecycle, Capability Discovery, human-in-the-loop gates, adaptive rules, artifact layout, and integration patterns.
+Start with [README.md](../README.md) if you want to *use* the skills. This file explains *how they run* once they are bound.
 
-Related artifacts:
+You do not need senior-level vocabulary to follow it. Each section starts with the simple version, then lists the exact rules the agent must keep.
 
-- Meta-schema: [`schemas/skill-schema.json`](../schemas/skill-schema.json)
-- Skill inventory and operator guide: [`README.md`](../README.md)
-- Feature documentation convention: [`docs/features/README.md`](features/README.md)
+Related files:
 
-## 1. Framework Model
+- Operator guide: [`README.md`](../README.md)
+- Shared skill format: [`schemas/skill-schema.json`](../schemas/skill-schema.json)
+- Feature folder layout: [`docs/features/README.md`](features/README.md)
 
-An Agent Engineer Skill is a deterministic state machine executed by an AI agent against a project workspace.
+## Plain picture
+
+Think of a skill as a recipe card, the agent as the cook, your git repo as the kitchen, and you as the person who tastes the dish before it is served.
 
 ```text
-Idle
-  -> Selected
-    -> Discovering
-      -> Planning
-        -> AwaitingHumanGate (optional, skill-defined)
-          -> Executing
-            -> Auditing
-              -> Freezing
-                -> Verifying
-                  -> Complete
-                  -> Failed
-          -> Rejected (return to Planning)
+You ask for work
+  -> Agent names the skill
+    -> Agent looks around the repo (tests, CI, linters)
+      -> Agent writes a plan or document
+        -> You say APPROVED or REJECTED (when the skill requires it)
+          -> Agent writes tests and code
+            -> Agent does a security pass
+              -> Agent saves docs
+                -> Agent runs CI, or walks a checklist
+                  -> Done, or back to coding if checks fail
 ```
 
-The agent is the interpreter. The skill is the program. The repository is the environment. The human is the authority at declared gates.
+The agent is not allowed to skip a step because it "already knows." If a step does not apply, it still writes `N/A` and a one-line reason.
 
-### 1.1 Design invariants
+## 1. Roles
 
-1. **Phase integrity.** Phases run in the order declared by the skill. An agent may not skip, merge, or reorder phases.
-2. **Evidence over assertion.** Claims about the repository (test runner, CI vendor, linter) are backed by file paths recorded in the capability report.
-3. **Schema completeness.** Every required field in the skill's `schema.json` appears in the output. Missing data is represented as an explicit `unknown`, `absent`, or logged assumption, never as omission.
-4. **Adaptive mode, fixed contract.** Discovery changes *how* a phase is discharged (automated vs manual, Jest vs pytest), not *whether* the phase exists.
-5. **Human authority.** Gates consume an explicit approval token. Silence, implied agreement, or "looks good" without a named gate is not approval.
-6. **Artifact locality.** Feature work is written under `docs/features/<feature-name>/` before any global document is edited.
-7. **No emoji, no iconography.** All artifacts are plain technical English and structured Markdown / JSON.
-
-### 1.2 Roles
-
-| Role | Authority | Typical actor |
+| Role | What they do | Who that usually is |
 | --- | --- | --- |
-| Requester | States intent, answers clarification questions, issues approval tokens | Human |
-| Agent | Interprets skills, writes artifacts and code, stops at gates | Gemini or Cursor agent |
-| Reviewer | Signs off or rejects a gate | Human; may be the requester |
-| System of record | Stores specs, ADRs, code, CI results | Git repository plus CI vendor |
+| You (requester) | Describe the work, answer questions, type approval lines | Human |
+| Agent | Follow the skill, write files and code, stop at gates | Cursor or Gemini |
+| Reviewer | Approve or reject a plan | Often the same human |
+| Record | Keep specs, decisions, code, and CI results | Git, plus your CI provider if you have one |
 
-## 2. Execution Lifecycle
+## 2. Rules that never change
 
-The lifecycle below is the default for `feature-developer`. Other skills are projections of the same lifecycle with unused stages marked N/A in their `SKILL.md`.
+1. **Do the steps in order.** No skipping, merging, or reordering.
+2. **Show proof for repo facts.** "We use Jest" is only allowed if a file path shows Jest.
+3. **Fill every required field.** If something is missing, write `unknown`, `absent`, or an assumption. Do not leave a hole.
+4. **Adapt the method, not the step.** No CI means "use a checklist," not "skip verification."
+5. **You are in charge at gates.** "ok" or "looks good" is not approval unless it names the skill and phase.
+6. **Feature files live together.** Work goes under `docs/features/<feature-name>/` before shared docs are edited.
+7. **No icons or emojis** in these files.
 
-### 2.1 Stage catalog
+## 3. Lifecycle (the same story with official names)
 
-| Stage | Purpose | Exit criteria |
+`feature-developer` uses every stage below. Other skills use a shorter path. Unused stages are marked `N/A` in that skill's `SKILL.md`.
+
+| Stage | Simple meaning | Ready to leave this stage when... |
 | --- | --- | --- |
-| Selected | Bind one primary skill from the Decision Mapping table | Skill identifier announced to the user |
-| Discovering | Inspect the workspace for toolchain and constraints | Capability report written and internally consistent |
-| Planning | Produce specs, architecture, matrices, or threat models | Required planning artifacts exist and validate against templates |
-| AwaitingHumanGate | Pause until named approval | `APPROVED: <skill> Phase <n>` recorded, or `REJECTED` with change list |
-| Executing | Implement under TDD or produce the skill's primary artifact | Tests exist; implementation matches approved plan |
-| Auditing | Security and edge-case review | Audit record lists findings, severities, and dispositions |
-| Freezing | Lock feature docs and sync global docs | Freeze manifest with file list and hashes or git paths |
-| Verifying | CI/CD or manual QA | Pass evidence attached; failures reopen Executing |
-| Complete | Terminal success | All required schema outputs present |
-| Failed | Terminal or retryable failure | Failure report names the stage, cause, and recovery action |
+| Selected | The agent says which skill it is using | You can see the skill name in the chat |
+| Discovering | It inspects the repo | A capability report exists |
+| Planning | It writes specs, plans, matrices, or threat models | The required templates are filled |
+| AwaitingHumanGate | It waits for you | You typed `APPROVED: <skill> Phase <n>` or `REJECTED` plus numbered changes |
+| Executing | It implements (usually test-first) | Tests exist and match the approved plan |
+| Auditing | It reviews security and odd cases | Every finding has a decision (`fix`, `accept-risk`, or `out-of-scope`) |
+| Freezing | It locks the feature docs and updates shared docs | A freeze list of files exists |
+| Verifying | It runs CI or a checklist | Pass evidence is attached |
+| Complete | Success | Required outputs are all present |
+| Failed | Stop or retry | The report names the stage, the cause, and the next action |
 
-### 2.2 Transition rules
+### 3.1 Allowed moves
 
-1. **Selected -> Discovering** occurs immediately after the skill is announced, unless the skill declares discovery not applicable.
-2. **Discovering -> Planning** requires a capability report. Incomplete discovery is allowed only when the workspace is unavailable; the report must list missing signals and the confidence as `low`.
-3. **Planning -> AwaitingHumanGate** is mandatory for `feature-developer` Phase 3 and recommended for ADR adoption and security-exception acceptance.
-4. **AwaitingHumanGate -> Executing** requires an approval token that names the skill and phase. A generic "ok" or "go ahead" is insufficient if it does not identify the gate; the agent must ask the user to restate approval in the token format.
-5. **AwaitingHumanGate -> Planning** on `REJECTED`. The agent revises only the rejected artifacts and resubmits the same gate.
-6. **Executing -> Auditing** after the implementation matches the approved scope and tests pass locally, or after tests are written as unverified files when no runner exists.
-7. **Auditing -> Freezing** after every finding is dispositioned (`fix`, `accept-risk` with owner, or `out-of-scope` with pointer to a new specifier run).
-8. **Freezing -> Verifying** after local feature docs are complete and global system docs contain a recorded sync.
-9. **Verifying -> Complete** after CI green or 100% of the manual QA checklist is evidenced.
-10. **Verifying -> Executing** on failure. The capability report is not redone unless the toolchain itself changed.
+1. After naming the skill, inspect the repo (unless that skill says not to).
+2. After discovery, plan. If the repo was not available, confidence is `low` and the plan must not depend on guessed tools.
+3. After the plan, wait for you when the skill says so. For `feature-developer` this wait is required.
+4. After `APPROVED`, implement. After `REJECTED`, fix only the rejected docs and wait again. Do not start coding on a rejection.
+5. After the code matches the plan, audit.
+6. After every finding has a decision, freeze docs.
+7. After freeze, verify.
+8. After CI is green, or every checklist row has evidence, complete.
+9. If verification fails, go back to coding. Do not redo discovery unless the tools in the repo actually changed.
 
-### 2.3 Composition across skills
+### 3.2 Using more than one skill
 
-Skills compose in a fixed order when the user requests a full delivery:
+A full delivery usually looks like this:
 
 ```text
 feature-specifier
-  -> decision-matrix-architect   (only if more than one viable option remains)
+  -> decision-matrix-architect   (only if more than one real option remains)
     -> feature-developer
-      -> sec-analyzer-tester     (Phase 5 of feature-developer, or a standalone rerun)
+      -> sec-analyzer-tester     (already step 5 of feature-developer, or a later extra pass)
 ```
 
-Composition rules:
+Rules:
 
-1. Outputs of an upstream skill become inputs of the downstream skill. A PRD `featureName` becomes the `docs/features/<feature-name>/` directory name.
-2. Do not re-run an upstream skill unless the downstream skill finds a contradiction (scope gap, missing acceptance criterion, or a new architectural option).
-3. `sec-analyzer-tester` run as Phase 5 of `feature-developer` uses the feature directory as its system-under-review. A standalone run may target a service, package, or interface that is not a feature.
+1. The output of an earlier skill is the input of the next one. The spec's feature name becomes the folder name under `docs/features/`.
+2. Do not rerun an earlier skill unless the later skill finds a hole (missing acceptance test, new design option, scope gap).
+3. A security pass inside `feature-developer` looks at that feature folder. A standalone security pass can look at any service or interface you name.
 
-### 2.4 Failure and retry
+### 3.3 When something goes wrong
 
-| Failure class | Handling |
+| Problem | What to do |
 | --- | --- |
-| Discovery miss (toolchain misdetected) | Rewrite capability report; do not patch it silently. Re-enter Planning if the plan depended on the error. |
-| Schema violation | Do not proceed. Repair the artifact until all required fields exist. |
-| Gate rejection | Return to Planning with a numbered change list. |
-| Test failure | Remain in Executing. Do not "fix" by deleting tests. |
-| CI failure with local pass | Record environment delta; fix until CI matches local, or document a blocked dependency. |
-| Scope creep request mid-implementation | Stop. Route to `feature-specifier`. Do not fold new scope into the open feature directory. |
+| Wrong tools detected | Rewrite the capability report. Do not quietly edit one line. Re-plan if the plan depended on the mistake. |
+| Missing required fields | Stop. Finish the document. |
+| You rejected the plan | Go back to planning with your numbered list. |
+| Tests fail | Stay in implementation. Do not delete tests to get a green run. |
+| CI fails but your laptop passes | Write down the difference. Fix until they match, or record a blocked dependency. |
+| New scope appears mid-build | Stop. Run `feature-specifier`. Do not squeeze extra work into the open feature folder. |
 
-## 3. Capability Discovery
+## 4. Capability Discovery (looking at your repo)
 
-Capability Discovery is the project-awareness mechanism. It is a read-only inspection of the workspace that produces a structured capability report. It does not install tools, modify CI, or "upgrade" the stack.
+Discovery is a **read-only** look at the project. The agent writes a capability report. It does not install packages, change CI, or "upgrade" your stack.
 
-### 3.1 Signals to collect
+Each item is `present`, `absent`, or `unknown`. `present` needs a file path.
 
-The agent searches the repository root and common subpaths. Each signal is recorded as `present`, `absent`, or `unknown`, with evidence paths when present.
-
-| Domain | Evidence examples | Downstream effect |
+| What it looks for | Example files | Why it matters |
 | --- | --- | --- |
-| Language and package manager | `package.json`, `go.mod`, `pyproject.toml`, `Cargo.toml`, `pom.xml`, `*.csproj` | Chooses file extensions, import style, and toolchain commands |
-| Test framework | `jest`, `vitest`, `pytest`, `go test`, `JUnit`, `NUnit`, `rspec`, `mocha`, `phpunit` | Enables automated TDD and generated tests |
-| Test command | `package.json` scripts, `Makefile`, `Taskfile`, `justfile` | Exact command used in Executing and Verifying |
-| Linter / formatter | ESLint, Ruff, golangci-lint, Checkstyle, Spotless, Prettier, Black | Must pass before freeze; config is not rewritten unless the approved plan says so |
-| Type checker | `tsc`, `mypy`, `pyright`, `go vet` | Treated as a blocking verifier when configured in CI or local scripts |
-| CI/CD | `.github/workflows/`, `.gitlab-ci.yml`, `Jenkinsfile`, `azure-pipelines.yml`, `.circleci/`, `bitbucket-pipelines.yml` | Selects CI verification mode vs manual QA |
-| Security scanners | CodeQL, Semgrep, Snyk, Dependabot, `govulncheck` | Consumed by `sec-analyzer-tester`; not a substitute for STRIDE |
-| IaC / delivery | Terraform, Pulumi, Helm, Dockerfiles, Kubernetes manifests | Expands trust boundaries and verification surface |
-| Docs layout | `docs/`, `ADR` folders, OpenAPI, README architecture sections | Targets for Docs Freeze sync |
-| Existing skills / rules | `.cursor/rules/`, `skills/`, `AGENTS.md` | Prevents conflicting instructions; this framework wins on phase order when bound |
+| Language and package manager | `package.json`, `go.mod`, `pyproject.toml` | File types and commands |
+| Test framework | Jest, Vitest, pytest, `go test`, JUnit | Whether tests can be run |
+| Test command | `npm test`, `make test` | The exact command to run |
+| Linter / formatter | ESLint, Ruff, Prettier, Black | Must be clean on touched files if it already runs in CI |
+| Type checker | `tsc`, `mypy` | Extra check when your project already uses it |
+| CI | `.github/workflows/`, `.gitlab-ci.yml` | CI mode vs checklist mode |
+| Security scanners | CodeQL, Semgrep, Dependabot | Extra input for the security skill, not a replacement for STRIDE |
+| Deploy files | Docker, Terraform, Helm | Extra security and verification surface |
+| Docs layout | `docs/`, ADR folders | Where freeze updates go |
+| Other agent rules | `.cursor/rules/`, `AGENTS.md` | Avoid conflicting instructions |
 
-### 3.2 Detection algorithm
+### 4.1 How the agent inspects
 
-1. List the repository root. Record the VCS type if `.git` exists.
-2. Detect language manifests. If multiple languages exist, identify the primary module for the requested feature and list others as adjacent.
-3. Parse test configuration:
-   - Node: `package.json` `devDependencies` and `scripts.test`
-   - Python: `pytest.ini`, `pyproject.toml` `[tool.pytest]`, `tox.ini`
-   - Go: `_test.go` files and `go.mod`
-   - JVM: Surefire/Failsafe, Gradle `test` task
-4. Parse CI entrypoints. Extract job names that run lint, test, build, and security scans. Do not invent jobs that are not in the file.
-5. Parse linter configs. Record whether they run locally, in CI, both, or unknown.
-6. Detect documentation conventions. If `docs/features/` is missing, the capability report notes that `feature-developer` will create it.
-7. Emit the capability report using `skills/feature-developer/templates/capability-report.md` (or the skill's declared discovery template).
-8. Set `adaptiveMode` flags used by later phases:
-   - `tests.automated` true iff a runner and a command were evidenced
-   - `ci.present` true iff a CI config file was evidenced
-   - `lint.blocking` true iff lint runs in CI or a documented pre-commit hook
+1. List the repo root. Note if `.git` exists.
+2. Find language files. If there are several languages, pick the one for *this* request and list the others.
+3. Find how tests run (`package.json` scripts, `pytest.ini`, `_test.go`, and so on).
+4. Read CI files. Copy job names that already exist. Do not invent jobs.
+5. Find linter config. Note whether it runs locally, in CI, both, or unknown.
+6. Find docs folders. If `docs/features/` is missing, the report says the feature skill will create it.
+7. Fill `skills/feature-developer/templates/capability-report.md` (or that skill's own discovery template).
+8. Set three flags:
+   - `tests.automated` = true only if a runner **and** a command were found
+   - `ci.present` = true only if a CI config file was found
+   - `lint.blocking` = true if lint already runs in CI or a documented git hook
 
-### 3.3 Confidence and incompleteness
+### 4.2 Confidence
 
-| Confidence | Condition |
+| Level | Meaning |
 | --- | --- |
-| high | Manifest and command both evidenced |
-| medium | Manifest evidenced, command inferred from defaults |
-| low | Workspace missing, or conflicting manifests without a primary module |
+| high | Config file and command both found |
+| medium | Config file found, command guessed from defaults |
+| low | No workspace, or several languages with no clear primary |
 
-Low-confidence discovery does not block Planning, but the plan must not depend on unevidenced tools. The agent states the fallback (manual QA, no assumed linter) in the plan.
+Low confidence does not block planning. It does block pretending a tool exists.
 
-### 3.4 Prohibited discovery behaviors
+### 4.3 Discovery must not
 
-1. Do not run package installs "to see what works" unless the user asked to bootstrap.
-2. Do not mutate lockfiles during discovery.
-3. Do not treat README claims as evidence without a corresponding config file.
-4. Do not assume GitHub Actions because the remote is GitHub. CI is present only when a workflow file exists.
+1. Install packages "to see what works" unless you asked to bootstrap.
+2. Change lockfiles.
+3. Treat README claims as proof without a matching config file.
+4. Assume GitHub Actions just because the remote is GitHub. CI is present only when a workflow file exists.
 
-## 4. Human-in-the-Loop Gates
+## 5. Human gates (your approval)
 
-A Human Review Gate is a hard stop. The agent produces the gate package, then waits.
+A gate is a hard stop. The agent writes a small review pack, then waits.
 
-### 4.1 Approval token
+### 5.1 What you type
 
-Canonical form:
+Approve:
 
 ```text
 APPROVED: <skill-id> Phase <n>
 ```
 
-Optional free text may follow the token. The first line must match the form above (case-insensitive skill id, integer phase).
+You can add more sentences after that line. The first line must name the skill and the phase number.
 
-Rejection form:
+Reject:
 
 ```text
 REJECTED: <skill-id> Phase <n>
-<numbered change requests>
+1. Change X
+2. Change Y
 ```
 
-### 4.2 Gate package
+### 5.2 What the agent shows you at a gate
 
-Every gate submission includes:
-
-1. The artifacts under review (paths)
-2. A summary of decisions that become irreversible after approval
+1. Paths of the files under review
+2. Decisions that are hard to undo after you say yes
 3. Open assumptions and their risk
-4. Explicit ask: approve, reject with changes, or request a specific amendment
+4. A clear ask: approve, reject with changes, or change one named thing
 
-### 4.3 Gate placement
+### 5.3 Where gates sit
 
-| Skill | Gate | Default |
+| Skill | Gate | Required? |
 | --- | --- | --- |
-| `feature-developer` | Phase 3 after architecture blueprint | Mandatory |
-| `feature-specifier` | After PRD draft if high-risk assumptions remain | Optional; questions must still be asked |
+| `feature-developer` | After the architecture plan (Phase 3) | Yes |
+| `feature-specifier` | After a PRD that still has high-risk assumptions | Optional; questions are still required |
 | `decision-matrix-architect` | Before treating the ADR as accepted | Recommended |
-| `sec-analyzer-tester` | Before `accept-risk` dispositions | Mandatory for high/critical findings |
+| `sec-analyzer-tester` | Before accepting leftover high/critical risk | Yes for those findings |
 
-### 4.4 Invalid approvals
+### 5.4 What does not count as approval
 
-The following are not valid tokens:
-
-- "lgtm", "ship it", "ok", "yes", thumbs-up emoji (emoji is banned in any case)
+- "lgtm", "ship it", "ok", "yes"
 - Approval of a different phase
-- Approval in a different conversation without restating the token in the active thread
-- Approval that adds new scope in the same message without a specifier run
+- Approval from another chat unless you paste the token again here
+- Approval that also sneaks in new scope (that needs the specifier skill)
 
-If the user issues an invalid approval, the agent restates the required token format and remains in `AwaitingHumanGate`.
+If the token is wrong, the agent asks you to retype it and keeps waiting.
 
-### 4.5 Timeout and continuation
+Gates do not time out. "Continue" without a token is not enough. You may waive a *recommended* gate with `WAIVED: <skill> Phase <n> by <your name>`. The agent cannot waive a *required* gate.
 
-Skills do not auto-expire gates. If the user later says "continue" without a token, the agent re-requests the token. If the user explicitly waives a recommended (not mandatory) gate, record `WAIVED: <skill> Phase <n> by <user>` in the gate file and proceed. Mandatory gates cannot be waived by the agent; only a token or a written process exception stored in the feature directory can pass them.
+## 6. Adaptive execution (same steps, different tools)
 
-## 5. Adaptive Execution
+### 6.1 Tests
 
-Adaptive rules map discovered capabilities to phase implementations.
-
-### 5.1 Test adaptation
-
-| Discovery | Executing phase behavior |
+| What was found | What the agent does |
 | --- | --- |
-| Runner + command present | Red-green-refactor. Run the exact test command after each increment. |
-| Test files exist, no command | Write tests in the existing style. Record `verificationMode: unverified-local`. |
-| No tests | Create the first test file in the language's conventional location. Record that a runner is absent. Still write tests. |
-| Snapshot / approval tests | Do not update snapshots to hide failures. Treat snapshot updates as explicit product decisions. |
+| Test runner and command | Write a failing test, run the real command, write code, run again |
+| Test files but no command | Write tests in the same style. Mark them unverified-local |
+| No tests yet | Create the first test file in the usual place for that language. Still write tests |
+| Snapshot tests | Do not update snapshots just to hide a failure |
 
-### 5.2 CI adaptation
+### 6.2 CI
 
-| Discovery | Verifying phase behavior |
+| What was found | What the agent does |
 | --- | --- |
-| CI present and invocable | Trigger or instruct the user how to trigger the relevant workflow. Record job URLs or logs. |
-| CI present but agent cannot trigger | Produce a verification checklist of the exact jobs to run and wait for user-supplied logs. |
-| CI absent | Execute `skills/sec-analyzer-tester/templates/manual-qa-checklist.md` plus feature-specific functional checks. Do not claim "CI passed." |
+| CI exists and can be started | Start it or tell you how. Save job names and results |
+| CI exists but the agent cannot start it | List the exact jobs and wait for your logs |
+| No CI | Use a written QA checklist. Never write "CI passed." |
 
-### 5.3 Linter adaptation
+### 6.3 Linters
 
-If a linter is blocking, the Executing phase is not complete until lint is clean on touched files. If a linter is absent, do not introduce one unless the approved architecture plan includes it.
+If lint already blocks in your project, dirty lint on touched files means implementation is not done. If you have no linter, the agent does not add one unless the approved plan says to.
 
-### 5.4 Security adaptation
+### 6.4 Security
 
-| Discovery | `sec-analyzer-tester` output |
+| What was found | What the security skill produces |
 | --- | --- |
-| Test runner present | Generate automated unit/integration tests for mitigations; STRIDE remains mandatory |
-| Test runner absent | STRIDE + mitigations + manual QA checklist |
-| Existing scanner jobs | Consume findings as inputs; they do not replace STRIDE |
+| Test runner | Automated tests for the fixes, plus a full STRIDE table |
+| No test runner | STRIDE, fixes, and a manual QA checklist |
+| Existing scanners | Extra findings to merge in. Scanners do not replace STRIDE |
 
-## 6. Artifact System
+## 7. Where files go
 
-### 6.1 Feature directory
-
-Created by `feature-developer` Phase 2:
+`feature-developer` creates:
 
 ```text
 docs/features/<feature-name>/
@@ -270,76 +252,58 @@ docs/features/<feature-name>/
   verification.md
 ```
 
-`<feature-name>` is kebab-case, locked at the end of Phase 2, confirmed at Phase 3.
+`<feature-name>` is lowercase with hyphens (`invoice-csv-export`). It is chosen at the end of planning and confirmed when you approve.
 
-### 6.2 Global sync
+When docs freeze, the agent also updates shared files that discovery listed (your app README, API docs, and similar), and only those files. Each shared edit is listed with a reason.
 
-During Docs Freeze, the agent updates global documents that the capability report listed (for example `README.md`, `docs/ARCHITECTURE.md` of the consuming app, OpenAPI files). Every global edit is listed in the freeze manifest with the reason. Unrelated global docs are not rewritten.
+Templates use `{{PLACEHOLDER}}`. The agent must not delete sections. Unused optional sections stay with `N/A` and one line of reason.
 
-### 6.3 Templates
+Skill definitions in this repo must match `schemas/skill-schema.json`. A run should cover every field in `skills/<skill-name>/schema.json`. When the user-facing file is Markdown, each schema field has a matching heading or table column.
 
-Templates are instantiated by replacing mustache-style placeholders of the form `{{PLACEHOLDER}}`. Agents must not delete template sections. Unused optional sections remain with `N/A` and a one-line reason.
+## 8. Cursor, Gemini, and mixed teams
 
-### 6.4 Schema validation
+**Cursor.** Rules live in `.cursor/rules/`. The dispatcher always applies. The agent must still open `skills/<skill-name>/SKILL.md`. If a short rule and `SKILL.md` disagree, `SKILL.md` wins.
 
-Skill definitions in this repository must validate against `schemas/skill-schema.json`. Runtime outputs of a skill execution should conceptually satisfy `skills/<skill-name>/schema.json`. Where a JSON object is not the user-facing artifact, Markdown fields map one-to-one onto schema properties.
+**Gemini Custom Gems.** Each Gem gets the README preamble, then `SKILL.md`, plus schema and templates. Gems do not share chat memory. You pass file paths from one Gem to the next (for example the PRD path).
 
-## 7. Skill Integration Patterns
+**Gemini API.** System instruction is `SKILL.md`. Your application must not continue into coding without a stored approval token. Markdown files in git are the record. JSON is only a summary if you use it.
 
-### 7.1 Cursor
+**Both tools on one team.** Share git files, not chat logs. The feature folder is the handoff. A Cursor agent must honor a PRD written in Gemini, and the reverse.
 
-Cursor consumes `.cursor/rules/*.mdc`. The dispatcher rule is always applied. Skill rules are requested by identifier. The agent must read `skills/<skill-name>/SKILL.md` before executing phases. Rules are projections; `SKILL.md` is authoritative if they diverge.
+**Conflicts with your project rules:**
 
-### 7.2 Gemini Custom Gems
+1. Your security, secrets, and legal rules win.
+2. For work done under these skills, phase order, gates, and required fields from this framework win.
+3. Your project's code style wins for source files.
 
-Each Gem's instruction body is: preamble (contract language from the README) + `SKILL.md` + attached `schema.json` and templates. Gems do not share memory. The user carries artifact paths across Gems (PRD path into the developer Gem).
+Write conflicts into the capability report as `instructionConflicts`.
 
-### 7.3 Gemini API
+## 9. Versioning
 
-System instruction = `SKILL.md`. Application code owns gate enforcement: it must not enqueue an Executing turn without a stored approval token. JSON mode, when available, should use `schema.json` as the response schema for machine-readable summaries; Markdown artifacts remain the system of record in git.
+- Skill ids (`feature-developer` and the others) stay stable.
+- Versions look like `1.2.3`.
+- Adding an optional field is a minor change.
+- Removing or renaming a required field is a major change.
+- Inserting a phase that shifts gate numbers is a major change. Prefer adding a phase at the end.
 
-### 7.4 Dual-runtime teams
+## 10. This framework does not
 
-Teams using both Cursor and Gemini share the git artifacts, not the chat transcripts. The feature directory is the handoff surface. A Cursor agent must not ignore a PRD written by a Gemini Gem, and the reverse.
-
-### 7.5 Conflict resolution
-
-If consuming-project rules contradict this framework:
-
-1. Security, secrets, and legal rules of the consuming project win.
-2. Phase order, gate tokens, and schema completeness of this framework win for work executed under an Agent Engineer Skill.
-3. Style/format rules of the consuming project win for source code.
-
-Record conflicts in the capability report under `instructionConflicts`.
-
-## 8. Versioning and Compatibility
-
-- Skill `metadata.id` values are stable public identifiers.
-- `metadata.version` follows semver.
-- Additive optional schema fields are minor.
-- Removing or renaming required fields is major.
-- Phase insertion that changes gate numbers is major; prefer appending phases.
-
-## 9. Non-goals
-
-This framework does not:
-
-- Replace product management process outside the PRD artifact
-- Provision CI or cloud infrastructure
-- Guarantee that generated tests are sufficient without review
-- Authorize the agent to bypass consuming-project security policy
+- Replace your product process outside the PRD file
+- Set up CI or cloud accounts for you
+- Guarantee generated tests are enough without a human look
+- Let the agent ignore your security policy
 - Define a network protocol between agents
 
-## 10. Glossary
+## 11. Glossary
 
-| Term | Definition |
+| Term | Meaning |
 | --- | --- |
-| Skill | Structured instruction set plus execution contract (procedure, schema, templates, guardrails) |
-| Phase | Ordered unit of work inside a skill with entry and exit criteria |
-| Capability report | Evidence-backed inventory of local toolchain |
-| Adaptive mode | Selection of automated vs manual discharge of a phase |
-| Approval token | Named, explicit human sign-off for a gate |
-| Feature directory | `docs/features/<feature-name>/` system of record for one change |
-| Docs freeze | Point after which spec and architecture are immutable without a new change request |
+| Skill | Procedure plus required outputs (steps, schema, templates, rules) |
+| Phase | One numbered step with a start condition and a done condition |
+| Capability report | Written list of what the repo actually has |
+| Adaptive mode | Automated vs manual way to finish the same step |
+| Approval token | The exact `APPROVED: ...` line |
+| Feature directory | `docs/features/<feature-name>/` for one change |
+| Docs freeze | After this, spec and architecture do not change unless you open a new request |
 | MADR | Markdown Architectural Decision Records |
-| STRIDE | Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege |
+| STRIDE | Six security questions: Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege |
