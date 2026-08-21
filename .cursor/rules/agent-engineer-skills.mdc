@@ -21,7 +21,7 @@ There is no composer / harness skill in this collection. If the user asks for a 
 | `feature-tester` | `skills/feature-builder/feature-tester/SKILL.md` |
 | `mvp-specifier` | `skills/mvp-builder/mvp-specifier/SKILL.md` |
 
-Templates and `schema.json` sit next to that `SKILL.md`. Feature-folder write-ups live under `agent-engineer-skills/<name>/`.
+Templates live in `assets/` next to that `SKILL.md`. Feature-folder write-ups live under `agent-engineer-skills/<name>/`.
 
 ## Decision mapping
 
@@ -42,12 +42,12 @@ If the specification is missing or the idea is fuzzy: a feature in an existing a
 ## Global contract
 
 1. Follow the steps in that skill's `SKILL.md` in order. Do not skip, merge, or reorder.
-2. Instantiate templates under that skill's `templates/` folder. Do not invent alternate structures.
-3. Cover every required field in that skill's `schema.json`.
+2. Instantiate templates from that skill's `assets/` folder. Do not invent alternate structures.
+3. Check the finished write-up against that skill's `Before you finish` list, and fix what fails.
 4. Stop when the skill says to wait (questions, missing specification, product landmine). `ok` / `lgtm` is not a skip.
 5. Capability claims require evidence paths. Unknown tools are `unknown` or `absent`, never implied.
 6. No icons or emojis in artifacts.
-7. Consuming-project security and secrets policy wins. This framework wins on templates and required fields for the named skill. Skill order wins only when the user named the next skill. Code style of the consuming project wins for source.
+7. Consuming-project security and secrets policy wins. This framework wins on templates and required write-up content for the named skill. Skill order wins only when the user named the next skill. Code style of the consuming project wins for source.
 
 ## Do not
 

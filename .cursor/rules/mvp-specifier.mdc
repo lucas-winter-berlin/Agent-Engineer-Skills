@@ -1,34 +1,39 @@
 ---
-description: Elephant for a prototype, MVP, or new-project spec. Writes what-to-build.md. No code. Not for a feature in an existing repo (feature-specifier). Old name: pitch-to-spec.
+description: Design something new from scratch when no code exists yet: MVP, prototype, demo, proof of concept, hackathon or side project, or a pitch. Challenges it in rounds, then writes a full v1 design in what-to-build.md (concept, architecture, data, screens, functions). No code. Not for a feature in an existing repo (feature-specifier). Old name: pitch-to-spec.
 alwaysApply: false
 ---
 
 # Skill: mvp-specifier
 
-Read and follow `skills/mvp-builder/mvp-specifier/SKILL.md`. Fill `skills/mvp-builder/mvp-specifier/templates/what-to-build.md` only.
+Read and follow `skills/mvp-builder/mvp-specifier/SKILL.md`. Fill `skills/mvp-builder/mvp-specifier/assets/what-to-build.md` only.
 
 Announce: `Using skill: mvp-specifier`.
 
 ## Job
 
-Be the Elephant. Challenge the pitch. Write a self-contained `agent-engineer-skills/<name>/what-to-build.md`. Do not write code. Goldfish is a new Agent chat with `feature-developer`.
+Be the Elephant. Challenge the pitch in rounds (cut, rights, architecture, data, UI, functions). Write a self-contained **design** in `agent-engineer-skills/<name>/what-to-build.md`. A Q&A table alone is a fail. Do not write code. Goldfish is a new Agent chat with `feature-developer`.
 
 ## Must
 
 1. Announce the skill. Restate the pitch. Add nothing. If this is a feature in an existing app, refuse and name `feature-specifier`.
-2. Ask only landmine questions that would make a Goldfish invent product. Always include the v1 / prototype cut unless already locked. Batch in `AskQuestion`. Do not only print A/B/C in the chat.
-3. Feed pointed context in small blocks. Distill stack, layout, and constraints into the spec. Do not dump the whole repo. Do not scaffold.
-4. Write every such decision into the specification. If the user will not answer, write `locked-default`. The developer may not pick another default.
-5. Include prototype cut, context the implementer may use, in-scope, out-of-scope walls, behavior, done-when, and a do-not list.
-6. Stop. Point at a new Agent chat and `feature-developer`. Do not start that skill here.
+2. Inquisitor in **rounds**, not one short quiz. Greenfield warrants three or more rounds and thirty or more locked decisions; length and token cost are not reasons to stop early. Name the assumption you would otherwise make and what it costs. Refuse vague adjectives ("fast", "simple", "whatever is easiest") as decisions. Surface contradictions in the pitch instead of deferring one side. Hunt edge cases per operation. Always include the v1 cut unless already locked. Ask architecture, data, screens, functions, access, and rights when a Goldfish would otherwise invent them. Batch each round in `AskQuestion`.
+3. Feed pointed context in small blocks. Summarize each block back before asking for the next. Distill into Architecture. Do not dump the whole repo. Do not scaffold.
+4. Write Concept, Users/access/rights, Architecture, Data (if stored), Screens and UI, Functions, APIs/server operations, decisions log, out of scope, done-when, do-not. If the user will not answer, `locked-default`.
+5. The design sections must stand alone without the decisions table. Determinism test before you stop: two independent implementers reading only this file would build the same product. Ambiguity is a bug in the file; the Goldfish reads literally.
+6. Consistency pass over the finished file: displayed values exist in a payload that surface can read; unauthenticated reads do not defeat a privacy rule; every state has a way in and out, including states an operator action produces; every id says how it is made; list operations define partial failure; destructive rules say what the loser sees; writes-on-read are named; the decisions table does not contradict the design; anything a client applies before the server confirms it says which side wins, and which clocks are trusted; the prototype cut, out of scope, decisions, and done-when each hold at least one real entry, and live in the design sections rather than only the decisions table; no coaching sentence survived into the output.
+7. Stop. Point at a new Agent chat and `feature-developer`. Do not start that skill here.
 
 ## Must not
 
 - Write application code, scaffold, or boilerplate
 - Start `feature-developer` or any other skill in this conversation
 - Write `prd.md`, `clarification-log.md`, `acceptance-criteria.md`, `concept.md`, or `notes.md`
+- Ship a thin clone of a feature spec (problem + Q&A + route list only)
+- Agree to be pleasant, or accept a vague adjective as a decision
+- Ship a file that contradicts itself, or skip the consistency pass because the draft is long
 - Leave "handle it appropriately" for the Goldfish
-- Copy template coaching sentences into the output file
+- Write instructions to the reader about how to fill the file in
+- Create `concept.md` next to `what-to-build.md`
 - Icons or emojis
 
 ## Do not use

@@ -5,7 +5,7 @@ alwaysApply: false
 
 # Skill: feature-developer
 
-Read and follow `skills/feature-builder/feature-developer/SKILL.md`. Fill `skills/feature-builder/feature-developer/templates/what-was-implemented.md` only.
+Read and follow `skills/feature-builder/feature-developer/SKILL.md`. Fill `skills/feature-builder/feature-developer/assets/what-was-implemented.md` only.
 
 Announce: `Using skill: feature-developer`.
 
@@ -15,10 +15,13 @@ Build what `what-to-build.md` specifies. Nothing else.
 
 ## Must (order)
 
-1. Create and check out a feature branch. Do not push or commit unless asked. On Windows PowerShell, do not use `&&`.
+1. Create and check out a feature branch from the default branch. Stop and ask if the tree is dirty or the branch already exists. Use the `cursor/` prefix unless this repo's branches show another.
 2. Add only the structure this repo already uses.
-3. Implement in-scope behavior. Obey walls. Match local style. Run existing tests if a command exists; do not invent a runner.
-4. Write `agent-engineer-skills/<name>/what-was-implemented.md` (what, why, where, how to try).
+3. Implement in-scope behavior. Obey walls. Match local style. Run existing tests if a command exists; do not invent a runner. Record failures that were already red as pre-existing.
+4. Write `agent-engineer-skills/<name>/what-was-implemented.md` (status, branch, base, commit, what, why, where, how to try).
+5. Commit on the feature branch. Do not push.
+
+Windows PowerShell 5.1 has no `&&` operator; run git commands one per call there.
 
 If `what-to-build.md` is missing, use `concept.md` if present. If still fuzzy, stop and use `feature-specifier`. If a new landmine appears, stop and ask.
 
@@ -29,4 +32,5 @@ Stop after the write-up. Do not start `feature-code-reviewer` unless the operato
 - Planning packs, CI, threat-model essays
 - New CI, new test framework, extra product
 - Silent scope
+- Push, commit to the default branch, amend, or rebase
 - Icons or emojis in the write-up

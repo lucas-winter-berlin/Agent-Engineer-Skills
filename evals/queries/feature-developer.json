@@ -1,0 +1,106 @@
+{
+  "skill": "feature-developer",
+  "notes": "Positives point at an existing specification and ask for code. Negatives are near-misses: still-fuzzy ideas (feature-specifier), post-implementation work (reviewer/tester), greenfield (mvp-specifier), and trivial edits.",
+  "queries": [
+    {
+      "query": "implement agent-engineer-skills/audit-log/what-to-build.md",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "build the feature we just specced",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "ok the spec looks good, now write the code",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "there's a what-to-build.md in docs/features/sso. make it real",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "can you build this? agent-engineer-skills/bulk-export/ has everything you need",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "the spec for scheduled reports is locked. go",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "take the concept.md in docs/features/notifications and implement it on a branch",
+      "should_trigger": true,
+      "split": "validation"
+    },
+    {
+      "query": "we agreed on the design yesterday and its written up. pls implement it",
+      "should_trigger": true,
+      "split": "validation"
+    },
+    {
+      "query": "code up the file upload feature per the spec, and match how we do things in src/features",
+      "should_trigger": true,
+      "split": "validation"
+    },
+    {
+      "query": "start on the audit log. requirements are signed off, nothing left to decide",
+      "should_trigger": true,
+      "split": "validation"
+    },
+    {
+      "query": "I have an idea for a feature but haven't fleshed it out at all",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "review this implementation for maintainability before I merge",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "write integration tests for the audit log",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "build me a new SaaS app from scratch for invoicing freelancers",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "fix the typo in the login button label",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "what-to-build.md never says who can read the audit log. sort that out first",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "the implementation is done. check it isn't slop",
+      "should_trigger": false,
+      "split": "validation"
+    },
+    {
+      "query": "refactor src/api/orders.ts, it's a mess in there",
+      "should_trigger": false,
+      "split": "validation"
+    },
+    {
+      "query": "explain how the payment flow works in this repo",
+      "should_trigger": false,
+      "split": "validation"
+    },
+    {
+      "query": "prototype a demo of the queue system for a pitch on thursday",
+      "should_trigger": false,
+      "split": "validation"
+    }
+  ]
+}

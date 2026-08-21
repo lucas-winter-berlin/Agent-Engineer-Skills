@@ -1,0 +1,106 @@
+{
+  "skill": "feature-code-reviewer",
+  "notes": "Positives ask for a quality judgement on code that already exists. Negatives are near-misses: the word 'review' applied to non-code artifacts, running tests (feature-tester), writing the first implementation (feature-developer), and mechanical edits.",
+  "queries": [
+    {
+      "query": "review this",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "is this code any good?",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "will this still be maintainable in a year?",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "I just finished the audit log feature. give it a hard look before I merge",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "clean this up. it works but it feels wrong",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "check the bulk-export feature folder, I don't trust the quality of what got written",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "did we do this the right way? the new code is under src/features/notifications",
+      "should_trigger": true,
+      "split": "validation"
+    },
+    {
+      "query": "go through the diff on cursor/scheduled-reports and tell me what a strict reviewer would say",
+      "should_trigger": true,
+      "split": "validation"
+    },
+    {
+      "query": "code review pls, im about to open a PR",
+      "should_trigger": true,
+      "split": "validation"
+    },
+    {
+      "query": "I think the new code duplicates helpers we already have. can you check and tidy it up",
+      "should_trigger": true,
+      "split": "validation"
+    },
+    {
+      "query": "run the tests and tell me if they pass",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "implement agent-engineer-skills/sso/what-to-build.md",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "review the product requirements for the export feature and tell me if they make sense",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "audit our npm dependencies for known CVEs",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "write unit tests for the new date helper",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "I need to review our MVP pitch deck before the investor call",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "check whether the feature matches what-to-build.md and actually works end to end",
+      "should_trigger": false,
+      "split": "validation"
+    },
+    {
+      "query": "what's the difference between our two auth middlewares?",
+      "should_trigger": false,
+      "split": "validation"
+    },
+    {
+      "query": "spec out an improvement to how we do code review as a team",
+      "should_trigger": false,
+      "split": "validation"
+    },
+    {
+      "query": "reformat every file with prettier and commit it",
+      "should_trigger": false,
+      "split": "validation"
+    }
+  ]
+}

@@ -30,3 +30,6 @@ venv/
 
 # Generated validation caches
 .schema-cache/
+
+# Eval run output
+evals/results/

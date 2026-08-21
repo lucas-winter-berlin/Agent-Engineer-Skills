@@ -1,0 +1,106 @@
+{
+  "skill": "feature-specifier",
+  "notes": "Positives are fuzzy feature work in an existing repo. Negatives are near-misses: greenfield/MVP work (mvp-specifier), already-specified work (developer/reviewer/tester), and changes that are already exact.",
+  "queries": [
+    {
+      "query": "our support team keeps asking for a way to see which orders got stuck in processing. can you work out what we should actually build here?",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "I want to add notifications to the app but honestly I haven't thought it through yet",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "write a spec for bulk export in the admin panel",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "the checkout page confuses people, we should improve it",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "can we make search better? it's slow and the results are bad",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "before we build the new billing dashboard, pin down what done looks like. current code is in src/billing and src/api/invoices.ts",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "my manager wants 'SSO support' by Q3 and gave me nothing else. what do we need to decide before anyone writes code?",
+      "should_trigger": true,
+      "split": "validation"
+    },
+    {
+      "query": "add acceptance criteria for the file upload feature we talked about on friday",
+      "should_trigger": true,
+      "split": "validation"
+    },
+    {
+      "query": "we need some kind of audit log. not sure what goes in it or who's allowed to see it",
+      "should_trigger": true,
+      "split": "validation"
+    },
+    {
+      "query": "theres a request in linear about letting users schedule reports, can u scope it out",
+      "should_trigger": true,
+      "split": "validation"
+    },
+    {
+      "query": "I want to build a new app for tracking my houseplants, help me design it",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "implement agent-engineer-skills/bulk-export/what-to-build.md",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "review the code I just wrote for the notifications feature",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "there's a null pointer exception on line 42 of src/api/orders.ts when the cart is empty. fix it",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "let's prototype a demo for the investor meeting next week",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "rename the getUser function to fetchUser across the repo",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "our spec says the export should be CSV only. I want to check the developer actually followed that",
+      "should_trigger": false,
+      "split": "validation"
+    },
+    {
+      "query": "greenfield internal tool for the ops team, nothing exists yet. what should v1 be?",
+      "should_trigger": false,
+      "split": "validation"
+    },
+    {
+      "query": "what does the useDebounce hook in src/hooks do?",
+      "should_trigger": false,
+      "split": "validation"
+    },
+    {
+      "query": "write integration tests for the audit log we shipped last sprint",
+      "should_trigger": false,
+      "split": "validation"
+    }
+  ]
+}

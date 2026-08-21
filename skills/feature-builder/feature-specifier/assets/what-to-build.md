@@ -5,20 +5,7 @@
 - Date: {{DATE}}
 - Kind: {{UI | API | CLI | job | library | mixed}}
 
-`feature-developer` implements this file and nothing else. Run it in a new Agent chat (Goldfish). Do not use other chat context.
-
-## Prototype cut
-
-- v1 (build): {{what ships now}}
-- Later (do not build): {{defer}}
-
-## Context the implementer may use
-
-- Stack: {{locked stack, or use the stack already in this workspace}}
-- Layout: {{folders, entry points, or None}}
-- Constraints: {{rules the Goldfish must obey, or None}}
-
-If there is no extra context, write `None.` for each line that has none. Do not copy this coaching sentence into the output file.
+`feature-developer` implements this file and nothing else.
 
 ## Problem
 
@@ -31,10 +18,6 @@ If there is no extra context, write `None.` for each line that has none. Do not 
 | Q | Asked because a wrong guess would... | Answer | Spec |
 | --- | --- | --- | --- |
 | {{question}} | {{waste}} | {{verbatim or locked-default}} | {{what the developer must do}} |
-
-If the user did not answer: write `locked-default` and still fill Spec. The developer may not pick a different spec.
-
-Do not copy this coaching sentence into the output file.
 
 ## In scope
 
@@ -57,10 +40,16 @@ Do not copy this coaching sentence into the output file.
 Given {{setup}}
 When {{action}}
 Then {{observable result}}
-```
 
-Cover: happy path, the important no-path, and leave/cancel. No second scenario file.
+Given {{setup}}
+When {{the important no-path}}
+Then {{what the user sees or the caller gets back}}
+
+Given {{work in progress}}
+When {{the user leaves, cancels, or switches}}
+Then {{what happens to that work}}
+```
 
 ## Do not
 
-- {{wrong product the Goldfish might invent}}
+- {{wrong product the developer might invent}}

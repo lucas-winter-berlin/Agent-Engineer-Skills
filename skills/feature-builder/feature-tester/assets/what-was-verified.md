@@ -12,12 +12,12 @@
 
 ## Commands run
 
-| Layer | Command | Result |
-| --- | --- | --- |
-| Unit | {{command or absent}} | {{pass / fail / not run}} |
-| Integration | {{command or absent}} | {{pass / fail / not run}} |
-| E2E | {{command or absent}} | {{pass / fail / not run}} |
-| Security | {{command or absent}} | {{pass / fail / not run}} |
+| Layer | Command | Result | Reason if not-run |
+| --- | --- | --- | --- |
+| Unit | {{command or absent}} | {{pass / fail / not-run}} | {{reason}} |
+| Integration | {{command or absent}} | {{pass / fail / not-run}} | {{reason}} |
+| E2E | {{command or absent}} | {{pass / fail / not-run}} | {{reason}} |
+| Security | {{command or absent}} | {{pass / fail / not-run}} | {{reason}} |
 
 ## Slop check
 

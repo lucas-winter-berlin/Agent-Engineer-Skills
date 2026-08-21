@@ -1,18 +1,29 @@
 ---
 name: feature-code-reviewer
 description: >-
-  Strict code review of a feature diff for clean code, project conventions, and
-  long-term maintainability. Refactors internals only when behavior stays as specified.
-  Use after feature-developer and before feature-tester.
+  Use when a change has been written and the user wants it judged before it
+  ships: "review this", "is this code any good", "will this be maintainable",
+  "clean this up", "did we do this the right way", or a pointer at a feature
+  folder. Reads the specification and the diff, checks every touched file
+  against clean-code practice and this repo's own conventions, applies internal
+  refactors that leave behavior unchanged, and writes what-was-reviewed.md with
+  a pass or fail verdict. Use even when the user does not say "review" or "code
+  quality". Do not use to decide what to build (feature-specifier), to write the
+  first implementation (feature-developer), or to write and run tests
+  (feature-tester).
+compatibility: >-
+  Requires git and a shell to resolve the diff. Works in any Agent Skills host.
+  Edits files when applying refactors; does not commit or push unless asked. No
+  network access required.
 ---
 
 # feature-code-reviewer
 
 Core job: judge whether this change will still be easy to live with in a year. Be strict. Clean code and this repo's good practice win over "it works."
 
-Input: `what-to-build.md` (or older `concept.md`), the feature diff, and nearby existing code.
+Input: `what-to-build.md`, the diff, and nearby existing code.
 
-Output: safe refactors if needed, and `agent-engineer-skills/<feature-name>/what-was-reviewed.md` (or next to the spec if it still lives under `docs/features/<feature-name>/`).
+Output: safe refactors if needed, and `what-was-reviewed.md` from [assets/what-was-reviewed.md](assets/what-was-reviewed.md).
 
 Run **after** `feature-developer` and **before** `feature-tester`.
 
@@ -24,30 +35,59 @@ Skip only for a tiny, obvious one-line fix the user already trusts.
 
 Do not use to invent product (`feature-specifier`), to write the first implementation (`feature-developer`), or to replace tests (`feature-tester`).
 
+## Gotchas
+
+- `feature-developer` commits on its feature branch, so the diff is `git diff <base>...HEAD`. `what-was-implemented.md` names the branch, the base, and the commit. If the user told the developer not to commit, the work sits in the working tree instead: use `git diff`, `git diff --cached`, and the untracked files from `git status --porcelain`. If neither yields files, stop and ask. Never review from the write-up alone.
+- The specification lives at `agent-engineer-skills/<feature-name>/what-to-build.md`, or under `docs/features/<feature-name>/` in older repos. `concept.md` is the old filename for the same artifact. Write `what-was-reviewed.md` next to whichever one you used.
+- A must-fix that cannot be fixed without changing what the user gets is still a `fail`. Record the finding as `blocked-specifier` and send them to `feature-specifier`. Blocked is a property of the finding, not a third verdict.
+- Windows PowerShell 5.1 has no `&&` operator, so joined commands fail there. PowerShell 7 and POSIX shells accept it. When the shell is unknown, run git commands one per call.
+- Refactoring is allowed; redesigning is not. If a fix would change behavior, an interface the specification named, or a wall, it is out of bounds no matter how much better it would be.
+
 ## How (mandatory order)
 
-1. **Read the specification and the diff.** Product walls stay closed. Review code, not the idea.
+1. **Read the specification, then get the diff** using the resolution order in Gotchas. Product walls stay closed. Review code, not the idea.
 2. **Read how this repo already does the same kind of work.** The local pattern is the standard. Do not import a generic textbook style that fights the codebase.
-3. **Review every touched file** against the bar below. Record findings. "Looks fine" with no file list is a fail of this skill.
-4. **Fix must-fix and should-fix** when the fix does not change user-visible behavior or walls. Then re-run the existing test command if one exists. On Windows PowerShell, no `&&`.
-5. **Write** [templates/what-was-reviewed.md](templates/what-was-reviewed.md). Verdict is `fail` until every must-fix is done or explicitly blocked (needs specifier, not a silent product change).
+3. **Review every touched file** against the gate below. Record findings with their file paths. "Looks fine" with no file list is a fail of this skill.
+4. **Fix must-fix and should-fix** where the fix does not change user-visible behavior or walls. Then re-run the existing test command if one exists.
+5. **Decide and stop** by one of the three exits below. Write `what-was-reviewed.md`.
 
-If a fix would change what the user gets, **stop**. Go to `feature-specifier`. Do not "improve" the product in review.
+## The gate
 
-## Strict bar (all apply)
+One question decides everything: **would a stranger change this file in twelve months without fear?**
 
-A change fails review if any of these is true and unfixed:
+Everything below is evidence for that question, not a list of automatic failures. Weigh each against how this repo already works.
 
-- **Wrong home:** new helper/module that duplicates something this repo already has
-- **Unreadable later:** names that do not say what they are; a function or module that does several jobs; dead code; commented-out leftovers; magic values with no name
+- **Wrong home:** a new helper or module that duplicates something this repo already has
+- **Unreadable later:** names that do not say what they are; a function or module doing several jobs; dead code; commented-out leftovers; unnamed magic values
 - **Hidden control flow:** swallowed errors; ignored promises; surprising globals; copy-paste with one line different
-- **Hard to change:** tight coupling that will break the next feature; a new dependency that is not required by the specification
-- **Project fit:** fights existing folder layout, naming, i18n, or error style
+- **Hard to change:** coupling that will break the next feature; a dependency the specification did not call for
+- **Project fit:** fights the existing folder layout, naming, i18n, or error style
 - **Hygiene:** secrets, debug leftovers, unrelated drive-by edits
 
-Nits (spacing fights, optional commas) only if this repo already enforces them. Do not invent a new style guide.
+Severity follows the gate. If a stranger would be afraid, it is `must-fix`. If they would be slowed but not endangered, `should-fix`. Nits only where this repo already enforces them; do not invent a style guide.
 
-Long-term test: "Would I trust a stranger to change this in twelve months without fear?" If no, it is must-fix or should-fix, not a nit.
+A new dependency is not automatically a failure. Ask whether the repo could have done this with what it already has, and whether the next person would understand why it is there.
+
+## The three exits
+
+The review ends in exactly one of these. There is no fourth, and no open-ended loop.
+
+1. **`pass`**: no must-fix remains.
+2. **`fail`, blocked on product**: a must-fix cannot be fixed without changing what the user gets. Record it as `blocked-specifier`, and tell them to use `feature-specifier`.
+3. **`fail`, reported**: after two full passes, must-fix findings remain. Stop refactoring, write the file, and tell the user exactly what is left.
+
+## Before you finish
+
+Check `what-was-reviewed.md` against every line here. Fix what fails, then check again.
+
+- The header names the feature, the Verdict reads exactly `pass` or `fail`, and the exit taken is recorded beneath it.
+- Every file in the diff appears under "Files reviewed". None were skipped.
+- The findings table has at least one row. If you found nothing, that row says `none` and names the files you read. An empty table is not a pass.
+- Every must-fix is either fixed or recorded as `blocked-specifier`, and the verdict matches.
+- Behavior and walls are identical to `what-to-build.md`. You changed how, never what.
+- The existing test command was re-run after your refactors, and the result recorded.
+- You added no feature, screen, endpoint, or dependency of your own.
+- No secrets in the write-up.
 
 ## Guardrails
 
@@ -67,4 +107,4 @@ MUST NOT:
 
 ## Handoff
 
-If verdict is `pass`, stop. Do not start `feature-tester` unless the operator named that skill. If `fail` and blocked on product, tell them to use `feature-specifier`. If `fail` on code still in the diff, keep reviewing until must-fix is gone.
+Report the verdict and which of the three exits you took. Stop. Do not start `feature-tester` unless the operator named that skill.

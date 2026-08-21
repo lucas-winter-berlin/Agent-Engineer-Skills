@@ -1,7 +1,10 @@
 # What was implemented
 
 - Feature: `{{FEATURE_NAME}}`
+- Status: {{implemented | blocked-need-concept | blocked-need-ask}}
 - Branch: `{{BRANCH}}`
+- Base branch: `{{BASE_BRANCH}}`
+- Commit: `{{SHA}}`
 - Built from: `agent-engineer-skills/{{FEATURE_NAME}}/what-to-build.md`
 - Date: {{DATE}}
 
@@ -26,7 +29,8 @@
 ## Tests
 
 - Command run: {{existing test command, or none in this repo}}
-- Result: {{pass / fail / not run, and why}}
+- Result: {{pass / fail / not-run, and why}}
+- Already failing before this change: {{none, or which tests}}
 
 ## Followed what-to-build
 

@@ -1,21 +1,32 @@
 ---
 name: feature-specifier
 description: >-
-  Understands an idea, problem, or feature in any kind of software project by
-  asking critical questions, then writes agent-engineer-skills/<name>/what-to-build.md that
-  feature-developer can implement without guessing. Use when the request is
-  fuzzy or "done" is not specified, for UI, API, CLI, jobs, libraries, or mixed work.
+  Use when someone wants a feature, change, or fix in an existing codebase and
+  what to build is not yet pinned down: a rough idea, a problem, a complaint, a
+  "can we make X better", or a request where "done" is undefined. Asks the few
+  questions whose wrong answers would waste implementation time, then writes
+  agent-engineer-skills/<name>/what-to-build.md with locked decisions, scope
+  walls, and observable done-when checks. Covers UI, API, CLI, jobs, libraries,
+  and mixed work. Use even when the user does not say "spec", "PRD",
+  "requirements", or "acceptance criteria". Do not use for a new project,
+  prototype, MVP, or pitch (mvp-specifier), for an already-exact change such as
+  a known bug or one-line fix, or when a specification already exists and the
+  user wants it built (feature-developer), reviewed (feature-code-reviewer), or
+  tested (feature-tester).
+compatibility: >-
+  Works in any Agent Skills host. Uses the host's clickable multiple-choice UI
+  for the question batch when one exists (for example Cursor AskQuestion), and
+  falls back to lettered options in chat. Writes files. No network access or
+  system packages required.
 ---
 
 # feature-specifier
 
 Core job: understand the idea, problem, or feature. Ask the questions whose wrong answers would waste implementation time. Hand `feature-developer` one concept so the developer cannot invent a different product.
 
-This skill is **universal**: same job in a website, API, CLI, worker, library, game, or mixed repo. It is **not** vague: only landmine questions, then a feature specification with walls.
-
 Do not write code. Do not produce a multi-file PRD pack.
 
-Output: `agent-engineer-skills/<feature-name>/what-to-build.md` from [templates/what-to-build.md](templates/what-to-build.md).
+Output: `agent-engineer-skills/<feature-name>/what-to-build.md` from [assets/what-to-build.md](assets/what-to-build.md).
 
 ## When to use
 
@@ -23,15 +34,23 @@ The request is an idea, a problem, or a feature, and "done" is not specified.
 
 Do not use when the change is already exact (known bug, one-line fix), or the user only wants code, review, or tests on an existing specification.
 
+## Gotchas
+
+- Write to `agent-engineer-skills/<kebab-name>/what-to-build.md`. If that tree does not exist but `docs/features/<kebab-name>/` already does, write there instead. Never create both trees in one repo.
+- `concept.md` is the old filename for this artifact, and the downstream skills still read it. Always write `what-to-build.md`. Never create a `concept.md`.
+- `locked-default` binds the developer. Writing one means you decided on the user's behalf and the developer may not choose otherwise. Use it only after the user declined to answer, never to save a round of questions.
+- A new project, prototype, MVP, or pitch belongs to `mvp-specifier`, even when the user phrases it as a feature. `pitch-to-spec` is that skill's old name, not this one's.
+- The repo already answers some of these questions. Read it before asking, and drop anything the request or the codebase has settled.
+
 ## How
 
 1. **Restate** the request in a few lines. Add nothing. Name the kind of work (UI, API, CLI, job, library, mixed) from the request and the repo, not from habit.
 2. **Find landmines** using the types below. Ask only the types that would cause rework **on this request**.
 3. **Ask** those questions in one batch, as clickable choices. Do not ask what the user or the repo already answered. Do not ask two questions that are the same decision.
 4. **Write the specification.** Decisions, in/out, behavior, done-when, walls.
-5. **Check** that a developer who follows only `what-to-build.md` cannot reasonably ship the wrong thing.
+5. **Check** the file against every line of `Before you finish` below. Fix what fails, then check again. Do not hand over while a line fails.
 
-If a leftover decision is still easy to get wrong, ask another round. Do not leave it for the developer. If the user will not answer, write `locked-default` in `what-to-build.md`. That default is then mandatory.
+If a leftover decision is still easy to get wrong, ask another round. Do not leave it for the developer.
 
 ## Landmine types (pick what applies)
 
@@ -62,7 +81,7 @@ For non-UI work, do not invent page/modal questions. Use routes, commands, jobs,
 
 Ask only if a wrong guess would cause rework.
 
-- Typical load is 3-7. Penalty for leaving a landmine unasked, not for asking fewer than five.
+- Typical load is 3-7. The penalty is for leaving a landmine unasked, not for asking few.
 - Drop overlapping options.
 - Stop when leftovers are harmless (copy, spacing, log wording) or a `locked-default`.
 - Record Q and A inside `what-to-build.md`. No second questions file.
@@ -77,14 +96,7 @@ If the click UI is missing or failed, print letters and one line: `Choice UI una
 
 ## what-to-build.md rules
 
-MUST include:
-
-- Problem (who, what hurts, why)
-- Decisions
-- In scope / out of scope (walls)
-- Behavior (what happens; entry points in or out; leave/cancel; failure)
-- Done when: observable checks. Happy path, important no-path, leave/cancel
-- Do not implement: the extra product a developer might invent
+The template supplies the required sections. Fill them. Do not add more.
 
 MUST NOT include:
 
@@ -92,16 +104,32 @@ MUST NOT include:
 - FR/NFR/AC ID factories and traceability matrices
 - Data-model tables unless this change persists or exposes a new contract
 - Essays. Bullets, tables, short fences. Usually under 120 lines. Cut repetition, not walls
-- Template coaching lines (for example “If the user did not answer…”)
+- Instructions to the reader about how to fill the file
+
+## Before you finish
+
+Check `what-to-build.md` against every line here. Fix what fails, then check again.
+
+- The header names the feature, and Status reads `awaiting-questions`, `draft`, or `ready-for-developer`.
+- In scope and Out of scope each list at least one item.
+- Every decisions row has both an Answer and a Spec, and no Spec cell is empty.
+- Done when holds at least one Given/When/Then, covering the happy path, the important no-path, and leave or cancel.
+- Every done-when check is observable: a second person runs it and gets the same yes or no. No "works well", no "is fast".
+- Every entry point this kind of work has is written as in scope or out of scope. None are left unmentioned.
+- Any work that can be interrupted states what happens on leave, cancel, or switch.
+- Any path that can fail or wait states what the user sees or the caller gets back.
+- Every landmine you found is answered by the user or written as `locked-default`. None are open.
+- "Do not" names the specific wrong product this idea invites, not a generic warning.
+- Out of scope is a wall: nothing listed there is needed to satisfy done-when.
+- The file holds the specification only. No leftover placeholders, no notes about how to fill it in.
 
 ## Guardrails
 
 MUST:
 
 1. Announce `Using skill: feature-specifier`.
-2. Write `agent-engineer-skills/<kebab-name>/what-to-build.md`. If that tree is missing but `docs/features/<kebab-name>/` already exists, write there instead.
-3. Treat out-of-scope as hard walls.
-4. English. No icons or emojis.
+2. Treat out-of-scope as hard walls.
+3. English. No icons or emojis.
 
 MUST NOT:
 

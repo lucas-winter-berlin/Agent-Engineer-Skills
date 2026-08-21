@@ -1,0 +1,106 @@
+{
+  "skill": "feature-tester",
+  "notes": "Positives ask whether shipped work actually does what was specified. Negatives are near-misses: standing up CI or a framework (explicitly out of scope), code-quality judgement (feature-code-reviewer), and testing-adjacent requests that are not verification of a feature.",
+  "queries": [
+    {
+      "query": "test this",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "QA the audit log feature",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "does this actually do what we said it would?",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "write tests for the bulk export and then run them",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "prove the scheduled reports feature works",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "check it's secure, the new endpoint takes user input straight from the body",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "I don't trust that this got built properly. verify it against the spec",
+      "should_trigger": true,
+      "split": "validation"
+    },
+    {
+      "query": "run the e2e suite against the checkout changes on my branch",
+      "should_trigger": true,
+      "split": "validation"
+    },
+    {
+      "query": "verify the implementation against agent-engineer-skills/sso/what-to-build.md",
+      "should_trigger": true,
+      "split": "validation"
+    },
+    {
+      "query": "can u make sure nothing out of scope got built into this",
+      "should_trigger": true,
+      "split": "validation"
+    },
+    {
+      "query": "set up CI so the tests run on every PR",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "review the code quality of the new feature before I merge",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "implement the spec in agent-engineer-skills/audit-log/",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "our test suite takes 12 minutes. speed it up",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "add Playwright to this repo, we don't have browser tests yet",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "write a spec for how our team should approach testing going forward",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "what testing framework does this repo use?",
+      "should_trigger": false,
+      "split": "validation"
+    },
+    {
+      "query": "do a full threat model of the payment flow",
+      "should_trigger": false,
+      "split": "validation"
+    },
+    {
+      "query": "the test in src/api/orders.test.ts is failing. fix it",
+      "should_trigger": false,
+      "split": "validation"
+    },
+    {
+      "query": "design an MVP for an internal QA dashboard",
+      "should_trigger": false,
+      "split": "validation"
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "skill": "mvp-specifier",
+  "notes": "Positives are greenfield design work where no code exists yet, including pitches that never say MVP or prototype, and the old name pitch-to-spec. Negatives are near-misses: feature work inside an existing repo (feature-specifier), greenfield requests that ask for code rather than a design, and already-specified work (developer/reviewer/tester).",
+  "queries": [
+    {
+      "query": "I want to build a new app for tracking my houseplants, help me design it",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "let's prototype a demo for the investor meeting next week",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "greenfield internal tool for the ops team, nothing exists yet. what should v1 be?",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "I've got an idea for a side project: a queue system for my barber shop so walk-ins can see their place in line on a TV. nothing built yet",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "we're doing a hackathon this weekend and want to build a tool that summarises meeting notes. plan it out before we start coding",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "turn this pitch into something a developer could actually build: 'uber but for dog walkers'",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "proof of concept for a local-only expense tracker, no cloud. what do I need to decide first?",
+      "should_trigger": true,
+      "split": "validation"
+    },
+    {
+      "query": "starting from scratch on a small internal admin tool. empty repo. help me figure out screens and the data model before I write anything",
+      "should_trigger": true,
+      "split": "validation"
+    },
+    {
+      "query": "my cofounder wrote a one-paragraph product idea and wants it built by friday. can you pin down what v1 actually is?",
+      "should_trigger": true,
+      "split": "validation"
+    },
+    {
+      "query": "use skill: pitch-to-spec",
+      "should_trigger": true,
+      "split": "validation"
+    },
+    {
+      "query": "our support team keeps asking for a way to see which orders got stuck in processing. can you work out what we should actually build here?",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "I want to add notifications to the app but honestly I haven't thought it through yet",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "scaffold a new next.js project with tailwind and prisma",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "implement agent-engineer-skills/barber-queue/what-to-build.md",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "review the code I just wrote for the queue display",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "write integration tests for the checkout flow",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "we want to add a whole new billing module to our existing SaaS. it's basically a new product surface but it lives in the same repo",
+      "should_trigger": false,
+      "split": "validation"
+    },
+    {
+      "query": "what does the useDebounce hook in src/hooks do?",
+      "should_trigger": false,
+      "split": "validation"
+    },
+    {
+      "query": "the spec is done, start building it",
+      "should_trigger": false,
+      "split": "validation"
+    },
+    {
+      "query": "fix the failing test in tests/queue.spec.ts",
+      "should_trigger": false,
+      "split": "validation"
+    }
+  ]
+}

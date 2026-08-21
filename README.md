@@ -29,9 +29,9 @@ Use this when you already have an app and want to add or change a feature.
 | Skill | Problem | What it does |
 | --- | --- | --- |
 | `feature-specifier` | No concept. The agent would guess the product. | Asks the questions that matter, then writes the actual concept in `what-to-build.md`. No code is generated. |
-| `feature-developer` | The agent does not follow the spec, hallucinates, or builds overhead. | Implements `what-to-build.md` and nothing else. Writes an implementation log in `what-was-implemented.md`. |
+| `feature-developer` | The agent does not follow the spec, hallucinates, or builds overhead. | Implements `what-to-build.md` and nothing else, on its own feature branch, and commits there. Never pushes. Writes an implementation log in `what-was-implemented.md`. |
 | `feature-code-reviewer` | The change works now but will be hard to maintain. | Strict review against this repo: duplication, unclear names, hidden control flow, coupling, layout, secrets. May refactor internals. Must not change what the user gets. Writes a review log in `what-was-reviewed.md`. |
-| `feature-tester` | Nothing was tested against the spec. It may be slop. | Writes cases from the spec, runs this repo’s tests, and reports pass, fail, or not run. Writes `what-was-verified.md`. |
+| `feature-tester` | Nothing was tested against the spec. It may be slop. | Writes cases from the spec, runs this repo's tests, and reports `pass`, `fail`, or `not-run`. Writes `what-was-verified.md`. |
 
 ### MVP builder
 
@@ -41,7 +41,7 @@ Use this when you do not have that app yet: an MVP, a prototype, or a demo.
 
 | Skill | Problem | What it does |
 | --- | --- | --- |
-| `mvp-specifier` | No concept for an MVP, prototype, or demo. The agent would guess the product. | Asks the questions that matter, then writes a self-contained concept in `what-to-build.md`. No code is generated. |
+| `mvp-specifier` | No concept for an MVP, prototype, or demo. The agent would guess the product. | Challenges the idea (cut, architecture, UI, data, APIs, access, rights), then writes a full v1 design in `what-to-build.md`. No code is generated. |
 
 After `mvp-specifier`, start a **new** Agent chat and name `feature-developer` (Goldfish). Then review and test with the feature-builder skills, same as above. If that build invents product, the spec was unclear. Tighten the spec. Do not patch the idea in the code.
 
@@ -63,7 +63,7 @@ The agent must:
    - `mvp-specifier.mdc`
 3. Create `agent-engineer-skills/` in the app repo if it is missing. Copy this pack's `agent-engineer-skills/README.md` into it if the app folder has no README yet.
 
-Do not copy `docs/` or `schemas/` into the app. Do not replace the app's existing `.cursor/rules/` folder.
+Do not copy `docs/` or `evals/` into the app. Do not replace the app's existing `.cursor/rules/` folder.
 
 Then start a **new Agent chat** in the app.
 

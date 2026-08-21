@@ -32,7 +32,7 @@ There is no composer / harness skill. Do not invent one.
 
 ## Contracts
 
-Each skill is a leaf folder `skills/<family>/<id>/`: `SKILL.md`, `schema.json`, `templates/*.md`. Shared package shape (this repo only): [`schemas/skill-schema.json`](../schemas/skill-schema.json). Required fields must appear in the write-up. Missing test layers are `absent`, not invented.
+Each skill is a leaf folder `skills/<family>/<id>/`: `SKILL.md` and `assets/*.md`. The directory names follow the Agent Skills specification (`assets/` for templates and resources, `references/` for on-demand docs, `scripts/` for executables). Required output content lives in each skill's `Before you finish` list, written as lines the agent can objectively fail. Missing test layers are `absent`, not invented.
 
 Cursor: `.cursor/rules/agent-engineer-skills.mdc` always applies. If the short rule and `SKILL.md` disagree, `SKILL.md` wins.
 
@@ -65,15 +65,15 @@ The agent waits when `feature-specifier` or `mvp-specifier` needs landmine answe
 | Tests fail | Stay in `feature-tester`. Do not delete tests to get green. |
 | A test layer does not exist | Write `absent`. Do not invent the layer. |
 
-Quiet and read-only until the skill says to write. Do not add Playwright, CI, or a scanner because another repo had them. Windows PowerShell: do not join commands with `&&`.
+Quiet and read-only until the skill says to write. Do not add Playwright, CI, or a scanner because another repo had them. Windows PowerShell 5.1 has no `&&` operator, so joined commands fail there; PowerShell 7 and POSIX shells accept it.
 
 ## Conflicts with the consuming project
 
 1. That project's security, secrets, and legal rules win.
-2. For skill-bound work, that skill's templates and required fields from this framework win. Skill order wins only when the user named the next skill.
+2. For skill-bound work, that skill's templates and required write-up content from this framework win. Skill order wins only when the user named the next skill.
 3. That project's code style wins for source.
 
-Share the app's git files (`skills/`, the AES `.mdc` files, `agent-engineer-skills/`), not chat logs. Do not copy this pack's `docs/` or `schemas/` into the app.
+Share the app's git files (`skills/`, the AES `.mdc` files, `agent-engineer-skills/`), not chat logs. Do not copy this pack's `docs/` or `evals/` into the app.
 
 ## Versioning
 
@@ -84,7 +84,7 @@ Share the app's git files (`skills/`, the AES `.mdc` files, `agent-engineer-skil
 ## This framework does not
 
 - Replace the team's product process outside `what-to-build.md`
-- Copy this pack's `docs/` or `schemas/` into an app, or replace that app's `.cursor/rules/` folder
+- Copy this pack's `docs/` or `evals/` into an app, or replace that app's `.cursor/rules/` folder
 - Set up CI or cloud accounts
 - Guarantee tests are enough without a human look
 - Let the agent ignore the consuming project's security policy

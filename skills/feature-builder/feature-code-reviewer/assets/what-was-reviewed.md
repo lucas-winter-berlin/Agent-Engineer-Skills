@@ -14,8 +14,6 @@
 | --- | --- | --- | --- | --- |
 | R-001 | {{sev}} | {{path}} | {{problem}} | {{fix}} |
 
-If none: write one row `none` / `n/a` / `strict pass after reading {{list of files}}`. Empty tables are not allowed.
-
 ## Refactors in this pass
 
 - {{what changed internally, or none}}
@@ -23,7 +21,7 @@ If none: write one row `none` / `n/a` / `strict pass after reading {{list of fil
 ## Tests after review
 
 - Command: {{existing command or none}}
-- Result: {{pass / fail / not run}}
+- Result: {{pass / fail / not-run}}
 
 ## Long-term
 
@@ -32,3 +30,5 @@ If none: write one row `none` / `n/a` / `strict pass after reading {{list of fil
 ## Verdict
 
 {{pass | fail}} -- {{one line}}
+
+- Exit taken: {{pass | fail blocked on product | fail reported after two passes}}

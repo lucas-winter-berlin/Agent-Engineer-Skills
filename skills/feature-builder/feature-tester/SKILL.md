@@ -1,20 +1,29 @@
 ---
 name: feature-tester
 description: >-
-  Writes test cases from what-to-build.md, runs the repo's unit, integration,
-  and security tests, and reports whether the implementation is real or slop.
-  Use after feature-code-reviewer (or after feature-developer if review was skipped),
-  or when the user asks to test a feature, MVP, or product change.
-  Old name: feature-verifier.
+  Use when someone wants to know whether a change actually works and is not AI
+  slop: "test this", "QA it", "write tests for the feature", "does this really
+  do what we said", "prove it works", "check it is secure", or a pointer at a
+  feature folder. Writes test cases from what-to-build.md in the repo's existing
+  framework, runs the unit, integration, e2e, and security commands that already
+  exist, checks that out-of-scope work was not built, and writes
+  what-was-verified.md with a per-layer verdict. Also answers to the older name
+  feature-verifier. Do not use to decide what to build (feature-specifier), to
+  implement it (feature-developer), to judge code cleanliness
+  (feature-code-reviewer), or to set up CI.
+compatibility: >-
+  Requires a shell and the repository's existing test tooling. Works in any
+  Agent Skills host. Runs the project's own test commands; e2e runs may need a
+  dev server and installed browsers. Does not install test frameworks or CI.
 ---
 
 # feature-tester
 
-Core job: make sure the new work is not AI slop. That means: test cases that match the feature specification, then actually run this repo's tests (unit, integration, security) and say what passed, failed, or could not be run.
+Core job: make sure the new work is not AI slop. That means test cases that match the feature specification, then actually running this repo's tests (unit, integration, e2e, security) and saying what passed, failed, or could not be run.
 
-Input: `agent-engineer-skills/<feature-name>/what-to-build.md` and the implementation (and `what-was-implemented.md` / `what-was-reviewed.md` if they exist). If that folder is missing but `docs/features/<feature-name>/` exists, use the old folder.
+Input: `what-to-build.md` and the implementation, plus `what-was-implemented.md` and `what-was-reviewed.md` when they exist.
 
-Output: tests in the project's existing style, a test run, and `agent-engineer-skills/<feature-name>/what-was-verified.md` (or next to the spec if it still lives under `docs/features/<feature-name>/`).
+Output: tests in the project's existing style, a test run, and `what-was-verified.md` from [assets/what-was-verified.md](assets/what-was-verified.md).
 
 ## When to use
 
@@ -22,20 +31,46 @@ After `feature-code-reviewer` on the daily path (or after `feature-developer` if
 
 Do not use to invent the product (`feature-specifier`), to write the feature (`feature-developer`), to review cleanliness (`feature-code-reviewer`), or to stand up CI.
 
+## Gotchas
+
+- Find the test commands in this order: `package.json` scripts, `Makefile`, `pyproject.toml` / `tox.ini` / `noxfile.py`, the CI workflow files, then the README. Only write `absent` for a layer after that search comes up empty. `absent` must mean the layer does not exist, never that you did not look hard enough.
+- e2e usually needs a dev server already running and browsers installed (`npx playwright install`), and can take minutes without printing anything. A red e2e run caused by a missing precondition is not a feature failure. Fix the precondition, or record that layer as `not-run` with the reason. Reporting `fail` for a setup problem is the worst error this skill can make.
+- Verdicts are spelled `pass`, `fail`, `not-run`, with the hyphen, exactly as the template writes them. `absent` is for a layer this repo does not have, and is not a verdict.
+- The specification lives at `agent-engineer-skills/<feature-name>/what-to-build.md`, or under `docs/features/<feature-name>/` in older repos. `concept.md` is the old filename for the same artifact. Write `what-was-verified.md` next to whichever one you used.
+- Windows PowerShell 5.1 has no `&&` operator, so joined commands fail there. PowerShell 7 and POSIX shells accept it. When the shell is unknown, run commands one per call.
+
 ## How (mandatory order)
 
-1. **Read the specification.** `what-to-build.md` (or older `concept.md`). Done-when, walls, who, leave/cancel, failure.
+1. **Read the specification.** `what-to-build.md`. Done-when, walls, who, leave/cancel, failure.
 2. **Read what shipped.** `what-was-implemented.md` and the diff. Look for extras the specification forbade (new routes, new deps, extra UI).
-3. **Write test cases.** In this repo's existing test folders and runner. Cover: happy path, important no-path, leave/cancel, and at least one check that a wall was not built. Tests must fail on wrong behavior. `expect(true).toBe(true)` is slop.
-4. **Run what exists.** Use the project's commands only. Typical names: unit, integration, e2e, security. On Windows PowerShell, do not join with `&&`. If a layer does not exist, write `absent` and do not invent Playwright, CI, or a scanner. If `test:e2e` or Playwright already exists, MUST run it for UI work. Do not skip e2e because unit passed.
-5. **Record.** Fill [templates/what-was-verified.md](templates/what-was-verified.md).
+3. **Write test cases.** In this repo's existing test folders and runner. Cover the happy path, the important no-path, leave/cancel, and at least one check that a wall was not built.
+4. **Run what exists.** Use the project's own commands, found through the discovery order in Gotchas. If `test:e2e` or Playwright already exists, MUST run it for UI work; do not skip e2e because unit passed. If a layer genuinely does not exist, write `absent`, and do not invent Playwright, CI, or a scanner.
+5. **Record.** Fill `what-was-verified.md`, one line per layer.
 
 ## What "not slop" means here
 
 - Every done-when item has a test, or a manual check with steps a human can repeat.
-- Out-of-scope extras are absent (or listed as a fail).
+- Out-of-scope extras are absent, or listed as a fail.
 - Tests hit real behavior (UI, API, CLI, job) the way this repo already tests.
-- Security: if the change has a who/auth or a new entry point, add or run a negative case (unauthorized caller, no new public route, no secrets in source). Do not write a threat-model essay.
+- Tests fail when the behavior is wrong. These pass while verifying nothing:
+  - asserting against a mock the test itself configured
+  - snapshotting without ever reading the snapshot
+  - asserting that a function was called, rather than what it produced
+  - covering only the happy path
+  - `expect(true).toBe(true)`
+- Security: if the change has a who/auth question or a new entry point, add or run a negative case (unauthorized caller, no new public route, no secrets in source). Do not write a threat-model essay.
+
+## Before you finish
+
+Check `what-was-verified.md` against every line here. Fix what fails, then check again.
+
+- The header names the feature, and the overall Verdict reads exactly `pass`, `fail`, or `not-run`.
+- Every done-when item has a test or a repeatable manual check. None are unaccounted for.
+- Every wall has a check that it was not built.
+- Every layer reads `pass`, `fail`, or `not-run` with a reason. No layer is blank.
+- Every `absent` was reached through the discovery order, not a guess.
+- No claim that CI passed unless CI was actually run.
+- You added no test framework, CI workflow, or security vendor.
 
 ## Guardrails
 
@@ -43,7 +78,7 @@ MUST:
 
 1. Announce `Using skill: feature-tester`.
 2. Use existing test commands and file layout.
-3. Say `pass`, `fail`, or `not run` with a reason. Do not claim CI passed if CI was not run.
+3. Say `pass`, `fail`, or `not-run` with a reason.
 
 MUST NOT:
 
