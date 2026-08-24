@@ -83,8 +83,8 @@ Layout follows [evaluating-skills](https://agentskills.io/skill-creation/evaluat
 | Path | What |
 | --- | --- |
 | `skills/<family>/<id>/evals/evals.json` | Cases: prompt, expected output, fixture, optional replies, checks |
-| `skills/<family>/<id>/evals/files/` | Overlays copied onto the fixture (specs, planted code) |
-| `evals/fixtures/` | Shared toy apps (`toy-web`, `greenfield`) |
+| `skills/<family>/<id>/evals/files/` | Skill-local overlays copied onto the fixture (planted code) |
+| `evals/fixtures/` | Shared toy apps (`toy-web`, `greenfield`) and shared overlays (`format-cents-spec`) |
 | `evals/run-quality-eval.ps1` | Runner and grader |
 | `evals/workspaces/` | Gitignored run output |
 

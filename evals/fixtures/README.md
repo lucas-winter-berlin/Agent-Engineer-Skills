@@ -6,3 +6,4 @@ Tiny consuming projects. The quality runner copies one of these, runs `git init`
 | --- | --- |
 | `toy-web/` | Existing app (specifier, developer, reviewer, tester, mvp refuse) |
 | `greenfield/` | Empty workspace (mvp-specifier pitch cases) |
+| `format-cents-spec/` | Shared `what-to-build.md` overlay for developer, reviewer, and tester cases |

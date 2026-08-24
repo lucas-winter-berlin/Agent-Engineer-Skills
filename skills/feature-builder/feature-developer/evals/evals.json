@@ -8,7 +8,7 @@
       "prompt": "Use skill: feature-developer\n\nImplement agent-engineer-skills/format-cents/what-to-build.md",
       "expected_output": "A feature branch with formatCents in src/money.js, what-was-implemented.md filled, a commit on that branch, no push, no CSV, no new test framework.",
       "fixture": "toy-web",
-      "files": ["evals/files/format-cents-spec"],
+      "files": ["evals/fixtures/format-cents-spec"],
       "replies": [],
       "assertions": [
         "Implements formatCents in src/money.js",

@@ -36,10 +36,6 @@ $script:ExtraPrdNames = @(
     'notes.md'
 )
 
-function Get-PackRoot {
-    return (Resolve-Path (Join-Path $PSScriptRoot '..\..')).Path
-}
-
 function Get-SkillRelPath {
     param([string]$SkillName)
     switch ($SkillName) {
@@ -88,6 +84,12 @@ function Get-RelativePosix {
     return ($rel -replace '\\', '/')
 }
 
+function Test-EvalRelExcluded {
+    param([string]$Rel)
+    $posix = ($Rel -replace '\\', '/')
+    return [bool]($posix -match '^(skills|\.cursor|\.git)(/|$)')
+}
+
 function Resolve-EvalGlob {
     param(
         [string]$Root,
@@ -107,6 +109,7 @@ function Resolve-EvalGlob {
     if (-not (Test-Path -LiteralPath $Root)) { return @() }
     Get-ChildItem -LiteralPath $Root -Recurse -Force -File -ErrorAction SilentlyContinue | ForEach-Object {
         $rel = Get-RelativePosix -Root $Root -FullPath $_.FullName
+        if (Test-EvalRelExcluded $rel) { return }
         if ($rel -match $regex) {
             [void]$hits.Add($_)
         }
@@ -215,15 +218,43 @@ function Get-PathSnapshot {
         if ($item.PSIsContainer) {
             Get-ChildItem -LiteralPath $item.FullName -Recurse -File -Force -ErrorAction SilentlyContinue | ForEach-Object {
                 $rel = Get-RelativePosix -Root $Root -FullPath $_.FullName
+                if (Test-EvalRelExcluded $rel) { return }
                 $map[$rel] = (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash
             }
         }
         else {
             $rel = Get-RelativePosix -Root $Root -FullPath $item.FullName
+            if (Test-EvalRelExcluded $rel) { continue }
             $map[$rel] = (Get-FileHash -LiteralPath $item.FullName -Algorithm SHA256).Hash
         }
     }
     return $map
+}
+
+function Resolve-EvalOverlayPath {
+    param(
+        [string]$PackRoot,
+        [string]$SkillDir,
+        [string]$Rel
+    )
+    if ([string]::IsNullOrWhiteSpace($Rel)) { return $null }
+    $norm = $Rel -replace '/', [IO.Path]::DirectorySeparatorChar
+    $fromSkill = Join-Path $SkillDir $norm
+    if (Test-Path -LiteralPath $fromSkill) { return $fromSkill }
+    $fromPack = Join-Path $PackRoot $norm
+    if (Test-Path -LiteralPath $fromPack) { return $fromPack }
+    return $null
+}
+
+function Test-RelUnderRoots {
+    param([string]$Rel, [string[]]$Roots)
+    $posix = ($Rel -replace '\\', '/')
+    foreach ($root in @($Roots)) {
+        $r = ($root -replace '\\', '/').TrimEnd('/')
+        if ($posix -eq $r) { return $true }
+        if ($posix.StartsWith($r + '/')) { return $true }
+    }
+    return $false
 }
 
 function Copy-DirectoryContents {
@@ -306,11 +337,12 @@ function Initialize-EvalGitRepo {
     param([string]$WorkDir)
     $r = Invoke-Git $WorkDir @('init')
     if ($r.ExitCode -ne 0) { throw "git init failed: $($r.Output)" }
-    Invoke-Git $WorkDir @('checkout', '-b', 'main') | Out-Null
+    Invoke-Git $WorkDir @('checkout', '-B', 'main') | Out-Null
     Invoke-Git $WorkDir @('add', '-A') | Out-Null
     $r = Invoke-Git $WorkDir @(
         '-c', 'user.email=aes-eval@local',
         '-c', 'user.name=AES Eval',
+        '-c', 'commit.gpgsign=false',
         'commit', '-m', 'eval fixture'
     )
     if ($r.ExitCode -ne 0) { throw "git commit fixture failed: $($r.Output)" }
@@ -322,6 +354,7 @@ function Add-EvalGitCommit {
     $r = Invoke-Git $WorkDir @(
         '-c', 'user.email=aes-eval@local',
         '-c', 'user.name=AES Eval',
+        '-c', 'commit.gpgsign=false',
         'commit', '-m', $Message
     )
     if ($r.ExitCode -ne 0) { throw "git commit failed: $($r.Output)" }
@@ -380,11 +413,6 @@ function Get-NextIterationDir {
     return (Join-Path $SkillWorkRoot "iteration-$n")
 }
 
-function ConvertTo-JsonSafe {
-    param($Object, [int]$Depth = 8)
-    return ($Object | ConvertTo-Json -Depth $Depth)
-}
-
 function Test-QualityEvalsDocument {
     param(
         [string]$PackRoot,
@@ -430,15 +458,15 @@ function Test-QualityEvalsDocument {
         }
         foreach ($f in @($ev.files)) {
             if ([string]::IsNullOrWhiteSpace($f)) { continue }
-            $p = Join-Path $skillDir ($f -replace '/', '\')
-            if (-not (Test-Path -LiteralPath $p)) {
+            $p = Resolve-EvalOverlayPath -PackRoot $PackRoot -SkillDir $skillDir -Rel $f
+            if (-not $p) {
                 [void]$errors.Add("eval $($ev.name) files path missing: $f")
             }
         }
         foreach ($f in @($ev.branch_files)) {
             if ([string]::IsNullOrWhiteSpace($f)) { continue }
-            $p = Join-Path $skillDir ($f -replace '/', '\')
-            if (-not (Test-Path -LiteralPath $p)) {
+            $p = Resolve-EvalOverlayPath -PackRoot $PackRoot -SkillDir $skillDir -Rel $f
+            if (-not $p) {
                 [void]$errors.Add("eval $($ev.name) branch_files path missing: $f")
             }
         }
@@ -465,13 +493,6 @@ function Test-QualityEvalsDocument {
     }
 }
 
-function ConvertTo-CommandArg {
-    param([string]$Value)
-    if ($null -eq $Value) { return '""' }
-    if ($Value -notmatch '[ \t\n\r"]') { return $Value }
-    return '"' + ($Value -replace '\\', '\\' -replace '"', '\"') + '"'
-}
-
 function Invoke-CursorAgentTurn {
     param(
         [string]$AgentExe,
@@ -486,32 +507,65 @@ function Invoke-CursorAgentTurn {
     $stdoutPath = Join-Path $LogPath 'agent-stdout.txt'
     $stderrPath = Join-Path $LogPath 'agent-stderr.txt'
 
-    $parts = New-Object System.Collections.Generic.List[string]
-    if ($ResumeId) {
-        $parts.Add('--resume')
-        $parts.Add((ConvertTo-CommandArg $ResumeId))
-    }
-    $parts.Add('-p')
-    $parts.Add('--force')
-    $parts.Add('--trust')
-    $parts.Add('--workspace')
-    $parts.Add((ConvertTo-CommandArg $WorkDir))
-    $parts.Add('--output-format')
-    $parts.Add('json')
-    $parts.Add((ConvertTo-CommandArg $Prompt))
-
-    $exe = $AgentExe
     $cmd = Get-Command $AgentExe -ErrorAction SilentlyContinue
-    if ($cmd -and $cmd.Source) { $exe = $cmd.Source }
+    if (-not $cmd) {
+        throw "Agent executable not found: $AgentExe"
+    }
+    $exe = $cmd.Source
+    if (-not $exe) { $exe = $AgentExe }
+
+    $invokePs1 = Join-Path $LogPath 'invoke-agent.ps1'
+    $invokeBody = @'
+$ErrorActionPreference = 'Stop'
+$exe = $env:AES_AGENT_EXE
+$ws = $env:AES_EVAL_WORKSPACE
+$query = $env:AES_EVAL_QUERY
+$resume = $env:AES_EVAL_RESUME
+if (-not $exe) { throw 'AES_AGENT_EXE is empty' }
+$dir = Split-Path -Parent $exe
+$node = Join-Path $dir 'node.exe'
+$index = Join-Path $dir 'index.js'
+$agentArgs = New-Object System.Collections.Generic.List[string]
+if ((Test-Path -LiteralPath $node) -and (Test-Path -LiteralPath $index)) {
+    $exe = $node
+    $agentArgs.Add($index)
+}
+# Options must precede the prompt. -p is a boolean (--print); the prompt is positional.
+$agentArgs.Add('-p')
+$agentArgs.Add('--force')
+$agentArgs.Add('--trust')
+$agentArgs.Add('--workspace')
+$agentArgs.Add($ws)
+$agentArgs.Add('--output-format')
+$agentArgs.Add('json')
+if ($resume) {
+    $agentArgs.Add('--resume')
+    $agentArgs.Add($resume)
+}
+$agentArgs.Add('--')
+$agentArgs.Add($query)
+& $exe @($agentArgs.ToArray())
+exit $LASTEXITCODE
+'@
+    [System.IO.File]::WriteAllText($invokePs1, $invokeBody)
 
     $psi = New-Object System.Diagnostics.ProcessStartInfo
-    $psi.FileName = $exe
-    $psi.Arguments = ($parts -join ' ')
+    $psi.FileName = (Join-Path $PSHOME 'powershell.exe')
+    $psi.Arguments = "-NoProfile -NonInteractive -ExecutionPolicy Bypass -File `"$invokePs1`""
     $psi.WorkingDirectory = $WorkDir
     $psi.UseShellExecute = $false
     $psi.RedirectStandardOutput = $true
     $psi.RedirectStandardError = $true
     $psi.CreateNoWindow = $true
+    $psi.EnvironmentVariables['AES_AGENT_EXE'] = $exe
+    $psi.EnvironmentVariables['AES_EVAL_QUERY'] = $Prompt
+    $psi.EnvironmentVariables['AES_EVAL_WORKSPACE'] = $WorkDir
+    if ($ResumeId) {
+        $psi.EnvironmentVariables['AES_EVAL_RESUME'] = $ResumeId
+    }
+    else {
+        $psi.EnvironmentVariables['AES_EVAL_RESUME'] = ''
+    }
 
     $sw = [System.Diagnostics.Stopwatch]::StartNew()
     $proc = New-Object System.Diagnostics.Process
@@ -549,7 +603,9 @@ function Invoke-CursorAgentTurn {
             $tokens = [int]$parsed.total_tokens
         }
     }
-    catch { }
+    catch {
+        $sessionId = $null
+    }
 
     return [pscustomobject]@{
         ExitCode   = $proc.ExitCode
@@ -783,14 +839,11 @@ function Invoke-EvalCheck {
         }
         'no_extra_prd' {
             $hit = $null
-            Get-ChildItem -LiteralPath $WorkDir -Recurse -File -Force -ErrorAction SilentlyContinue |
-                Where-Object { $_.FullName -notmatch '[\\/]\.git[\\/]' } |
-                ForEach-Object {
+            Get-ChildItem -LiteralPath $WorkDir -Recurse -File -Force -ErrorAction SilentlyContinue | ForEach-Object {
+                $rel = Get-RelativePosix -Root $WorkDir -FullPath $_.FullName
+                if (Test-EvalRelExcluded $rel) { return }
                 if ($script:ExtraPrdNames -contains $_.Name.ToLowerInvariant()) {
-                    $rel = Get-RelativePosix -Root $WorkDir -FullPath $_.FullName
-                    if ($rel -notmatch '^\.git/' -and $rel -notmatch '^skills/' -and $rel -notmatch '^\.cursor/') {
-                        $hit = $rel
-                    }
+                    $hit = $rel
                 }
             }
             $ok = [string]::IsNullOrEmpty($hit)
@@ -799,9 +852,11 @@ function Invoke-EvalCheck {
         }
         'paths_unchanged' {
             $before = $Snapshot
+            if ($null -eq $before) { $before = @{} }
             $after = Get-PathSnapshot -Root $WorkDir -Paths @($Check.paths)
             $changed = New-Object System.Collections.ArrayList
             foreach ($k in $before.Keys) {
+                if (-not (Test-RelUnderRoots -Rel $k -Roots @($Check.paths))) { continue }
                 if (-not $after.ContainsKey($k)) { [void]$changed.Add("removed $k") }
                 elseif ($after[$k] -ne $before[$k]) { [void]$changed.Add("changed $k") }
             }

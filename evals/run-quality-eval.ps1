@@ -83,8 +83,7 @@ $PackRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 
 function Resolve-BaselineSkillDir {
     param(
-        [string]$SkillName,
-        [string]$CurrentSkillDir
+        [string]$SkillName
     )
     if ($SkipBaseline) { return $null }
     if ($BaselineDir) {
@@ -92,7 +91,7 @@ function Resolve-BaselineSkillDir {
         if (-not (Test-Path -LiteralPath (Join-Path $resolved 'SKILL.md'))) {
             throw "BaselineDir has no SKILL.md: $resolved"
         }
-        return $resolved
+        return [pscustomobject]@{ Path = $resolved; Temporary = $false }
     }
     $rel = Get-SkillRelPath $SkillName
     $commit = $BaselineCommit
@@ -111,7 +110,7 @@ Working tree for $rel is clean. Pass one of:
     }
     $dest = Join-Path $env:TEMP ("aes-skill-baseline-{0}-{1}" -f $SkillName, [Guid]::NewGuid().ToString('N'))
     Export-SkillAtCommit -Repo $PackRoot -Commit $commit -RelPath $rel -Dest $dest
-    return $dest
+    return [pscustomobject]@{ Path = $dest; Temporary = $true }
 }
 
 function New-EvalWorktree {
@@ -130,7 +129,8 @@ function New-EvalWorktree {
     Copy-DirectoryContents -From $fixture -To $DestRoot
     foreach ($f in @($Eval.files)) {
         if ([string]::IsNullOrWhiteSpace($f)) { continue }
-        $from = Join-Path $SkillDir ($f -replace '/', '\')
+        $from = Resolve-EvalOverlayPath -PackRoot $PackRoot -SkillDir $SkillDir -Rel $f
+        if (-not $from) { throw "Overlay not found: $f" }
         Copy-DirectoryContents -From $from -To $DestRoot
     }
     Initialize-EvalGitRepo -WorkDir $DestRoot
@@ -143,7 +143,8 @@ function New-EvalWorktree {
         }
         foreach ($f in @($Eval.branch_files)) {
             if ([string]::IsNullOrWhiteSpace($f)) { continue }
-            $from = Join-Path $SkillDir ($f -replace '/', '\')
+            $from = Resolve-EvalOverlayPath -PackRoot $PackRoot -SkillDir $SkillDir -Rel $f
+            if (-not $from) { throw "Overlay not found: $f" }
             Copy-DirectoryContents -From $from -To $DestRoot
         }
         Add-EvalGitCommit -WorkDir $DestRoot -Message 'eval feature overlay'
@@ -322,9 +323,10 @@ function Invoke-SkillQualityEvals {
     $baselineDirResolved = $null
     $baselineTemp = $false
     try {
-        $baselineDirResolved = Resolve-BaselineSkillDir -SkillName $SkillName -CurrentSkillDir $currentSkillDir
-        if ($baselineDirResolved -and $baselineDirResolved.StartsWith($env:TEMP, [System.StringComparison]::OrdinalIgnoreCase)) {
-            $baselineTemp = $true
+        $baseline = Resolve-BaselineSkillDir -SkillName $SkillName
+        if ($baseline) {
+            $baselineDirResolved = $baseline.Path
+            $baselineTemp = [bool]$baseline.Temporary
         }
 
         $wsRoot = Join-Path $PackRoot "evals\workspaces\$SkillName"
