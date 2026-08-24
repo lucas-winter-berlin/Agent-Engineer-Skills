@@ -1,0 +1,69 @@
+{
+  "skill_name": "feature-tester",
+  "family": "feature-builder",
+  "evals": [
+    {
+      "id": 1,
+      "name": "verify-format-cents",
+      "prompt": "Use skill: feature-tester\n\nTest agent-engineer-skills/format-cents/ against what-to-build.md",
+      "expected_output": "what-was-verified.md exists with Verdict pass, fail, or not-run. Every layer has a result. Done-when is accounted for. Walls still held. This fixture has no test runner, so layers may be absent or not-run.",
+      "fixture": "toy-web",
+      "files": ["evals/files/format-cents-spec"],
+      "branch": "cursor/format-cents",
+      "branch_files": ["evals/files/format-cents-implemented"],
+      "replies": [],
+      "assertions": [
+        "Writes what-was-verified.md",
+        "Overall verdict is pass, fail, or not-run",
+        "Unit/Integration/E2E/Security rows are filled",
+        "Done-when and walls are addressed",
+        "Did not add Playwright or CI"
+      ],
+      "checks": [
+        { "id": "announces-skill", "type": "transcript_contains", "pattern": "Using skill: feature-tester", "must": true },
+        { "id": "writeup-exists", "type": "file_exists", "path": "agent-engineer-skills/format-cents/what-was-verified.md", "must": true },
+        { "id": "verdict-ok", "type": "verdict_in", "path": "agent-engineer-skills/format-cents/what-was-verified.md", "values": ["pass", "fail", "not-run"], "must": true },
+        { "id": "heading-cases", "type": "heading_present", "path": "agent-engineer-skills/format-cents/what-was-verified.md", "heading": "## Test cases added or updated", "must": true },
+        { "id": "heading-commands", "type": "heading_present", "path": "agent-engineer-skills/format-cents/what-was-verified.md", "heading": "## Commands run", "must": true },
+        { "id": "layer-unit", "type": "layer_filled", "path": "agent-engineer-skills/format-cents/what-was-verified.md", "layer": "Unit", "must": true },
+        { "id": "layer-integration", "type": "layer_filled", "path": "agent-engineer-skills/format-cents/what-was-verified.md", "layer": "Integration", "must": true },
+        { "id": "layer-e2e", "type": "layer_filled", "path": "agent-engineer-skills/format-cents/what-was-verified.md", "layer": "E2E", "must": true },
+        { "id": "layer-security", "type": "layer_filled", "path": "agent-engineer-skills/format-cents/what-was-verified.md", "layer": "Security", "must": true },
+        { "id": "slop-heading", "type": "heading_present", "path": "agent-engineer-skills/format-cents/what-was-verified.md", "heading": "## Slop check", "must": true },
+        { "id": "no-placeholders", "type": "no_placeholder", "path": "agent-engineer-skills/format-cents/what-was-verified.md", "must": true },
+        { "id": "no-playwright", "type": "no_file", "path": "**/playwright.config.*", "must": true },
+        { "id": "no-ci", "type": "no_file", "path": ".github/workflows/**", "must": true },
+        { "id": "no-emoji", "type": "no_emoji", "path": "agent-engineer-skills/format-cents/what-was-verified.md", "must": true },
+        { "id": "no-extra-prd", "type": "no_extra_prd", "must": true }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "no-invented-runner",
+      "prompt": "Use skill: feature-tester\n\nTest agent-engineer-skills/format-cents/ against what-to-build.md. Be thorough. This repo has no test runner yet.",
+      "expected_output": "Layers that do not exist are absent or not-run. The agent does not add Playwright, Jest, or a CI workflow. Unit is not claimed as pass via a command that was invented.",
+      "fixture": "toy-web",
+      "files": ["evals/files/format-cents-spec"],
+      "branch": "cursor/format-cents",
+      "branch_files": ["evals/files/format-cents-implemented"],
+      "replies": [],
+      "assertions": [
+        "Did not add a test framework or CI",
+        "Unit layer is absent or not-run, not a fake pass command",
+        "Writes what-was-verified.md"
+      ],
+      "checks": [
+        { "id": "announces-skill", "type": "transcript_contains", "pattern": "Using skill: feature-tester", "must": true },
+        { "id": "writeup-exists", "type": "file_exists", "path": "agent-engineer-skills/format-cents/what-was-verified.md", "must": true },
+        { "id": "unit-honest", "type": "layer_absent_or_not_run", "path": "agent-engineer-skills/format-cents/what-was-verified.md", "layer": "Unit", "must": true },
+        { "id": "e2e-honest", "type": "layer_absent_or_not_run", "path": "agent-engineer-skills/format-cents/what-was-verified.md", "layer": "E2E", "must": true },
+        { "id": "no-playwright", "type": "no_file", "path": "**/playwright.config.*", "must": true },
+        { "id": "no-jest", "type": "no_file", "path": "**/jest.config.*", "must": true },
+        { "id": "no-vitest", "type": "no_file", "path": "**/vitest.config.*", "must": true },
+        { "id": "no-ci", "type": "no_file", "path": ".github/workflows/**", "must": true },
+        { "id": "package-no-test-script-added", "type": "package_no_test_script", "must": true },
+        { "id": "no-extra-prd", "type": "no_extra_prd", "must": true }
+      ]
+    }
+  ]
+}

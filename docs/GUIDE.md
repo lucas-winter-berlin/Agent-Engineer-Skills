@@ -12,7 +12,8 @@ The agent announces `Using skill: <id>`, reads `skills/<family>/<id>/SKILL.md` (
 | Required output content | The `Before you finish` list in that `SKILL.md` |
 | Write-up shape | `skills/<family>/<id>/assets/` |
 | Skill folder shape | [Add a skill](#add-a-skill) in this guide (authors). Not copied into the app. |
-| Trigger evals | `evals/` in **this** repo (authors). Not copied into the app. |
+| Trigger evals | `evals/queries/` in **this** repo (authors). Not copied into the app. |
+| Quality evals | `skills/<family>/<id>/evals/` plus `evals/fixtures/` and `evals/run-quality-eval.ps1` (authors). Not copied into the app. |
 | Cursor | `.cursor/rules/` |
 | Gemini | Custom Gem or system prompt |
 
@@ -95,6 +96,7 @@ New skills are additive. Each one must work alone via `Use skill: <id>`.
 5. Add a row to the matching family table in [README.md](../README.md), a mapping row (only if the skill should auto-pick), and a path row in `.cursor/rules/agent-engineer-skills.mdc` (Where SKILL.md lives).
 6. If the skill writes a feature-folder file, name that file in the write-up root README (default `agent-engineer-skills/README.md`). If it does not, do not force a write-up folder onto it.
 7. Add `evals/queries/<id>.json` with about twenty labelled prompts, half of which should not trigger the skill. See [evals/README.md](../evals/README.md). The near-miss prompts matter most: they are what keep a new skill from stealing another skill's work.
+8. Add `skills/<family>/<id>/evals/evals.json` with 2-3 quality cases (prompt, expected output, deterministic checks). Reuse [evals/fixtures/](../evals/fixtures/) when the skill needs a toy app. See [evals/README.md](../evals/README.md) (Quality evals).
 
 Keep existing ids stable. Adding a skill is a minor change. Removing or renaming an id is a major change.
 

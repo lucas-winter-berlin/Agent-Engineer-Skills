@@ -43,7 +43,7 @@ Point an agent at **this** repo and at the **app** repo. Tell it to install Agen
 
 The agent must:
 
-1. Copy `skills/` into the app repo (keep `feature-builder/` and `mvp-builder/` inside it).
+1. Copy `skills/` into the app repo (keep `feature-builder/` and `mvp-builder/` inside it). Do not copy any `evals/` directory inside a skill folder.
 2. Copy only these Cursor rules into the app's `.cursor/rules/` (create that folder if needed). Do not delete or overwrite the app's other rules:
    - `agent-engineer-skills.mdc`
    - `feature-specifier.mdc`
@@ -59,7 +59,7 @@ The agent must:
 5. Set the Feature-folder write-ups line in the **app's** `.cursor/rules/agent-engineer-skills.mdc` to that directory: `Feature-folder write-ups live under <folder>/<name>/`.
 6. If this pack has `agent-engineer-skills/README.md` and the chosen folder has no README yet, copy it into that folder. If this pack has no such README, skip this step.
 
-Do not copy `docs/` or `evals/` into the app. Do not replace the app's existing `.cursor/rules/` folder. Do not rewrite copied `SKILL.md` files to hardcode the path. Do not create `aes-write-up-root`.
+Do not copy `docs/` or `evals/` into the app. Do not copy `skills/**/evals/`. Do not replace the app's existing `.cursor/rules/` folder. Do not rewrite copied `SKILL.md` files to hardcode the path. Do not create `aes-write-up-root`.
 
 Then start a **new Agent chat** in the app.
 
@@ -110,6 +110,7 @@ The paths above are the default docs folder (`agent-engineer-skills/<feature-nam
 - Operator guide (Gemini, add a skill): [docs/GUIDE.md](docs/GUIDE.md)
 - How the skills connect: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 - Where write-ups live: [agent-engineer-skills/README.md](agent-engineer-skills/README.md)
+- Trigger and quality evals (authors, not installed): [evals/README.md](evals/README.md)
 
 ## License
 

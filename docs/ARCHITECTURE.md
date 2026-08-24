@@ -75,7 +75,7 @@ Quiet and read-only until the skill says to write. Do not add Playwright, CI, or
 2. For skill-bound work, that skill's templates and required write-up content from this framework win. Skill order wins only when the user named the next skill.
 3. That project's code style wins for source.
 
-Share the app's git files (`skills/`, the AES `.mdc` files, the docs folder such as `agent-engineer-skills/`), not chat logs. Do not copy this pack's `docs/` or `evals/` into the app.
+Share the app's git files (`skills/` without skill-folder `evals/`, the AES `.mdc` files, the docs folder such as `agent-engineer-skills/`), not chat logs. Do not copy this pack's `docs/` or `evals/` into the app.
 
 ## Versioning
 
@@ -86,7 +86,7 @@ Share the app's git files (`skills/`, the AES `.mdc` files, the docs folder such
 ## This framework does not
 
 - Replace the team's product process outside `what-to-build.md`
-- Copy this pack's `docs/` or `evals/` into an app, or replace that app's `.cursor/rules/` folder
+- Copy this pack's `docs/` or `evals/` into an app, copy `skills/**/evals/`, or replace that app's `.cursor/rules/` folder
 - Set up CI or cloud accounts
 - Guarantee tests are enough without a human look
 - Let the agent ignore the consuming project's security policy
