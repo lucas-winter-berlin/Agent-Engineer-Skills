@@ -18,7 +18,7 @@ Build what `what-to-build.md` specifies. Nothing else.
 1. Create and check out a feature branch from the default branch. Stop and ask if the tree is dirty or the branch already exists. Use the `cursor/` prefix unless this repo's branches show another.
 2. Add only the structure this repo already uses.
 3. Implement in-scope behavior. Obey walls. Match local style. Run existing tests if a command exists; do not invent a runner. Record failures that were already red as pre-existing.
-4. Write `agent-engineer-skills/<name>/what-was-implemented.md` (status, branch, base, commit, what, why, where, how to try).
+4. Write `<root>/<name>/what-was-implemented.md` (status, branch, base, commit, what, why, where, how to try). `<root>` is the docs **folder** named on the Feature-folder write-ups line in `.cursor/rules/agent-engineer-skills.mdc`, else `agent-engineer-skills`.
 5. Commit on the feature branch. Do not push.
 
 Windows PowerShell 5.1 has no `&&` operator; run git commands one per call there.

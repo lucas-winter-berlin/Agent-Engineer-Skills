@@ -51,9 +51,15 @@ The agent must:
    - `feature-code-reviewer.mdc`
    - `feature-tester.mdc`
    - `mvp-specifier.mdc`
-3. Create `agent-engineer-skills/` in the app repo if it is missing. Copy this pack's `agent-engineer-skills/README.md` into it if the app folder has no README yet.
+3. MUST stop and ask the operator where markdown docs should be saved, before creating that folder. Use the host's clickable choice UI (`AskQuestion`) when it exists. Two options only:
+   - **Default:** keep the folder `agent-engineer-skills/` (docs go in `agent-engineer-skills/<feature-name>/`, for example `agent-engineer-skills/invoice-csv-export/what-to-build.md`).
+   - **Custom:** the operator types a repo-relative **folder** name; create that directory and put docs in `<that-folder>/<feature-name>/`.
+   Do not skip this question. Do not pick a path for them. Reject and re-ask if a custom path has `..`, is absolute, starts with `~`, or is exactly `skills`, `.cursor`, `evals`, or `docs`.
+4. Create the chosen path as a **directory**. Default directory name is `agent-engineer-skills`. Never write a file at the repo root for this choice. If a file named `aes-write-up-root` exists, delete it and create the directory instead.
+5. Set the Feature-folder write-ups line in the **app's** `.cursor/rules/agent-engineer-skills.mdc` to that directory: `Feature-folder write-ups live under <folder>/<name>/`.
+6. If this pack has `agent-engineer-skills/README.md` and the chosen folder has no README yet, copy it into that folder. If this pack has no such README, skip this step.
 
-Do not copy `docs/` or `evals/` into the app. Do not replace the app's existing `.cursor/rules/` folder.
+Do not copy `docs/` or `evals/` into the app. Do not replace the app's existing `.cursor/rules/` folder. Do not rewrite copied `SKILL.md` files to hardcode the path. Do not create `aes-write-up-root`.
 
 Then start a **new Agent chat** in the app.
 
@@ -96,6 +102,8 @@ Implement agent-engineer-skills/<name>/what-to-build.md
 ```
 
 Skip specify only if `what-to-build.md` already exists and is clear. If the idea is still fuzzy, specify first. The agent must not invent product while coding.
+
+The paths above are the default docs folder (`agent-engineer-skills/<feature-name>/`). If install created a custom directory, substitute that folder. Each feature still gets its own `<feature-name>` subfolder.
 
 ## More
 

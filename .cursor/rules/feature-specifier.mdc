@@ -11,7 +11,7 @@ Announce: `Using skill: feature-specifier`.
 
 ## Job
 
-Understand the idea, problem, or feature. Ask questions whose wrong answers would waste implementation time. Deliver `agent-engineer-skills/<name>/what-to-build.md` so `feature-developer` has no room for a different product.
+Understand the idea, problem, or feature. Ask questions whose wrong answers would waste implementation time. Deliver `<root>/<name>/what-to-build.md` so `feature-developer` has no room for a different product. `<root>` is the docs **folder** named on the Feature-folder write-ups line in `.cursor/rules/agent-engineer-skills.mdc`, else `agent-engineer-skills`.
 
 ## Must
 

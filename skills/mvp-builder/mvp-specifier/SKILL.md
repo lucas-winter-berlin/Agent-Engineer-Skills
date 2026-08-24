@@ -17,6 +17,10 @@ compatibility: >-
   for each question round when one exists (for example Cursor AskQuestion) and
   falls back to lettered options in chat when it does not. Writes one Markdown
   file. Needs no network access, git, or system packages.
+license: PolyForm Noncommercial License 1.0.0
+metadata:
+  author: Lucas Winter
+  version: "1.0"
 ---
 
 # mvp-specifier
@@ -27,7 +31,7 @@ This is Elephants and Goldfish. The artifact is the concept: what the product is
 
 Do not write application code. Do not scaffold. Do not produce a multi-file PRD pack. One file.
 
-Output: `agent-engineer-skills/<feature-name>/what-to-build.md` from [assets/what-to-build.md](assets/what-to-build.md).
+Output: `<root>/<feature-name>/what-to-build.md` from [assets/what-to-build.md](assets/what-to-build.md). Resolve `<root>` as in Gotchas.
 
 This is **not** `feature-specifier`. Specifier is a thin feature spec for an existing app. This skill is a full v1 design for a new MVP, prototype, or demo.
 
@@ -42,7 +46,7 @@ Do not use when they only want code, review, or tests on an existing specificati
 ## Gotchas
 
 - **The Goldfish never sees this conversation.** It is a fresh chat holding `what-to-build.md` and nothing else. Anything settled in these rounds but not written into the file does not exist. When you are unsure whether something belongs in the file, it belongs in the file.
-- **Output path.** Write `agent-engineer-skills/<kebab-name>/what-to-build.md`. If that tree does not exist but `docs/features/<kebab-name>/` already does, write there instead. Never create both trees.
+- **Output path.** `<root>` is the docs **directory** named on the Feature-folder write-ups line in the app's `.cursor/rules/agent-engineer-skills.mdc`. If that line is missing, `<root>` is `agent-engineer-skills`. Create `<root>` as a folder if needed. Never create or read a file named `aes-write-up-root`. Write `<root>/<kebab-name>/what-to-build.md`. If `docs/features/<kebab-name>/` already exists for that name and `<root>/<kebab-name>/` does not, write there instead. Never create both trees.
 - **`concept.md` is the old name for this artifact.** Downstream skills open `what-to-build.md` only. Do not create `concept.md`, `prd.md`, `clarification-log.md`, or `notes.md` next to it.
 - **`locked-default` binds the Goldfish, not just the draft.** Writing one means you decided on the user's behalf and the Goldfish may not pick differently. Use it after the user declined to answer, never as a shortcut past a round you did not run.
 - **A greenfield pitch has no repo to inherit from.** No existing stack, convention, folder layout, or test command is waiting to be discovered, so every one of those decisions comes from the user or a locked default. Do not describe them as if you found them.
@@ -157,7 +161,7 @@ MUST:
 
 1. Announce `Using skill: mvp-specifier`.
 2. Run the seven steps in order.
-3. Write `agent-engineer-skills/<kebab-name>/what-to-build.md`. If that tree is missing but `docs/features/<kebab-name>/` already exists, write there instead.
+3. Write `<root>/<kebab-name>/what-to-build.md` using the Output path gotcha. If `docs/features/<kebab-name>/` already exists for that name and `<root>/<kebab-name>/` does not, write there instead.
 4. Treat out-of-scope as hard walls.
 5. English. No icons or emojis.
 
@@ -178,7 +182,7 @@ Stop. Point the operator at the spec path. Tell them to open a **new** Agent cha
 
 ```text
 Use skill: feature-developer
-Implement agent-engineer-skills/<feature-name>/what-to-build.md
+Implement <root>/<feature-name>/what-to-build.md
 ```
 
 That new chat is the Goldfish: zero history, this file only. It reads literally, so whatever it builds wrong is a hole in the design. Return here, tighten the file, and run a **new** Goldfish. Do not fix the code in the Goldfish session, and do not ask this skill to fix it.

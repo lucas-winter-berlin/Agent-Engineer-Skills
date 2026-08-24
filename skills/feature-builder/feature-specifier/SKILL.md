@@ -18,6 +18,10 @@ compatibility: >-
   for the question batch when one exists (for example Cursor AskQuestion), and
   falls back to lettered options in chat. Writes files. No network access or
   system packages required.
+license: PolyForm Noncommercial License 1.0.0
+metadata:
+  author: Lucas Winter
+  version: "1.0"
 ---
 
 # feature-specifier
@@ -26,7 +30,7 @@ Core job: understand the idea, problem, or feature. Ask the questions whose wron
 
 Do not write code. Do not produce a multi-file PRD pack.
 
-Output: `agent-engineer-skills/<feature-name>/what-to-build.md` from [assets/what-to-build.md](assets/what-to-build.md).
+Output: `<root>/<feature-name>/what-to-build.md` from [assets/what-to-build.md](assets/what-to-build.md). Resolve `<root>` as in Gotchas.
 
 ## When to use
 
@@ -36,7 +40,7 @@ Do not use when the change is already exact (known bug, one-line fix), or the us
 
 ## Gotchas
 
-- Write to `agent-engineer-skills/<kebab-name>/what-to-build.md`. If that tree does not exist but `docs/features/<kebab-name>/` already does, write there instead. Never create both trees in one repo.
+- **Write-up root.** `<root>` is the docs **directory** named on the Feature-folder write-ups line in the app's `.cursor/rules/agent-engineer-skills.mdc`. If that line is missing, `<root>` is `agent-engineer-skills`. Create `<root>` as a folder if needed. Never create or read a file named `aes-write-up-root`. Write `<root>/<kebab-name>/what-to-build.md`. If `docs/features/<kebab-name>/` already exists for that name and `<root>/<kebab-name>/` does not, write there instead. Never create both trees for one name.
 - `concept.md` is the old filename for this artifact, and the downstream skills still read it. Always write `what-to-build.md`. Never create a `concept.md`.
 - `locked-default` binds the developer. Writing one means you decided on the user's behalf and the developer may not choose otherwise. Use it only after the user declined to answer, never to save a round of questions.
 - A new project, prototype, MVP, or pitch belongs to `mvp-specifier`, even when the user phrases it as a feature. `pitch-to-spec` is that skill's old name, not this one's.

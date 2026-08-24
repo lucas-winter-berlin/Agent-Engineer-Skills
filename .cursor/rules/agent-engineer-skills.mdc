@@ -11,6 +11,17 @@ This repo is a collection of skills for developing features. A skill is a struct
 
 There is no composer / harness skill in this collection. If the user asks for a harness, end-to-end path runner, or `feature-harness`, do not invent one. Tell them to name each skill they want (`feature-developer`, `feature-code-reviewer`, `feature-tester`).
 
+## Install
+
+When the user asks to install this pack into an app, follow `README.md` How to install. That is not a skill. Do not start `feature-specifier`.
+
+MUST stop and ask once, before creating the docs folder, where markdown output should live (`what-to-build.md` and the sibling write-ups). Use `AskQuestion` when the host has it:
+
+- Default: keep the **folder** `agent-engineer-skills/` (docs in `agent-engineer-skills/<feature-name>/`)
+- Custom: the operator types a repo-relative **folder**; create that directory; files go in `<folder>/<feature-name>/`
+
+Do not skip the question. Do not choose a path for them. Create that path as a **directory** (default name `agent-engineer-skills`). Never write a file named `aes-write-up-root`; if that file exists, delete it. Set the Feature-folder write-ups line in the app's copy of this dispatcher to that folder.
+
 ## Where SKILL.md lives
 
 | id | Path |
@@ -21,7 +32,7 @@ There is no composer / harness skill in this collection. If the user asks for a 
 | `feature-tester` | `skills/feature-builder/feature-tester/SKILL.md` |
 | `mvp-specifier` | `skills/mvp-builder/mvp-specifier/SKILL.md` |
 
-Templates live in `assets/` next to that `SKILL.md`. Feature-folder write-ups live under `agent-engineer-skills/<name>/`.
+Templates live in `assets/` next to that `SKILL.md`. Feature-folder write-ups live under `agent-engineer-skills/<name>/`. After a custom install, the **app** copy of this file names that docs folder instead. That path is a directory, not a file.
 
 ## Decision mapping
 
@@ -34,6 +45,7 @@ When the user did not name a skill id:
 | Implement this specification / this feature folder | `feature-developer` |
 | Review this feature folder, or review against `what-to-build.md` | `feature-code-reviewer` |
 | Test or verify this feature folder against `what-to-build.md` | `feature-tester` |
+| Install this pack into an app | Not a skill. Follow README How to install. Ask once for the docs folder. |
 
 If they named one skill, run only that skill. `Use skill: feature-verifier` is the old name for `feature-tester`. `Use skill: pitch-to-spec` is the old name for `mvp-specifier`.
 

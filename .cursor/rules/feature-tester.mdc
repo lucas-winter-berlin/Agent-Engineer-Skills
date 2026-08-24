@@ -18,7 +18,7 @@ Prove the implementation matches `what-to-build.md`. Write real tests, run the c
 1. Read `what-to-build.md` and the shipped code.
 2. Add tests for done-when, no-path, leave/cancel, and at least one wall. No hollow asserts.
 3. Find the commands via `package.json` scripts, `Makefile`, `pyproject.toml` / `tox.ini` / `noxfile.py`, CI workflows, then the README. Run unit, integration, e2e, and security. If a layer does not exist, write `absent`. If Playwright / `test:e2e` exists, run it for UI work. Do not invent CI or a framework.
-4. Write `agent-engineer-skills/<name>/what-was-verified.md`. Verdicts are `pass`, `fail`, `not-run`.
+4. Write `<root>/<name>/what-was-verified.md`. `<root>` is the docs **folder** named on the Feature-folder write-ups line in `.cursor/rules/agent-engineer-skills.mdc`, else `agent-engineer-skills`. Verdicts are `pass`, `fail`, `not-run`.
 
 An e2e run that fails on a missing precondition (no dev server, browsers not installed) is `not-run` with a reason, never `fail`. Windows PowerShell 5.1 has no `&&` operator; run commands one per call there.
 

@@ -33,7 +33,7 @@ If the idea is fuzzy, specify first. A feature in an existing app is `feature-sp
 
 ## Install
 
-Same contract as [README.md](../README.md) (How to install). Cursor and Gemini notes below. Then start a **new Agent chat** in the app.
+Same contract as [README.md](../README.md) (How to install). MUST stop and ask (clickable `AskQuestion` when the host has it) where markdown docs should be saved: keep the default **folder** `agent-engineer-skills/` (files under `agent-engineer-skills/<feature-name>/`), or a custom repo-relative **directory** with files still under `<folder>/<feature-name>/`. Do not skip the question. Create that directory (never a file named `aes-write-up-root`). Set the same folder on the Feature-folder write-ups line in the app's `.cursor/rules/agent-engineer-skills.mdc`. Do not rewrite copied `SKILL.md` files. Cursor and Gemini notes below. Then start a **new Agent chat** in the app.
 
 ### Cursor
 
@@ -50,7 +50,7 @@ Same contract as [README.md](../README.md) (How to install). Cursor and Gemini n
 
 ### Gemini Custom Gems
 
-Gemini does not read `.cursor/rules/`. Paste the contract into a Gem.
+Gemini does not read `.cursor/rules/`. Paste the contract into a Gem. Follow `SKILL.md`. The docs folder is the **directory** created at install (default `agent-engineer-skills/`). If install used a custom folder, tell the Gem that path. Do not look for a file named `aes-write-up-root`.
 
 **One Gem per skill**
 
@@ -89,11 +89,11 @@ Rules:
 New skills are additive. Each one must work alone via `Use skill: <id>`.
 
 1. Create `skills/<family>/<id>/` with kebab-case leaf `id` matching the skill id. Family is `feature-builder` or `mvp-builder`.
-2. Add `SKILL.md` (YAML `name` + `description` that says what it does and when to use it, including when not to use it, plus `compatibility` when the skill needs a particular host, shell, or tool) and `assets/` holding the write-up templates. State the required output content as a `Before you finish` list of lines the agent can objectively fail, not as a separate schema file.
+2. Add `SKILL.md` (YAML `name` + `description` that says what it does and when to use it, including when not to use it, plus `compatibility` when the skill needs a particular host, shell, or tool, plus `license: PolyForm Noncommercial License 1.0.0` and `metadata.author` / `metadata.version` as on the existing skills) and `assets/` holding the write-up templates. State the required output content as a `Before you finish` list of lines the agent can objectively fail, not as a separate schema file.
 3. Keep the folder shape: `name` in `SKILL.md` matches the leaf folder name, and `assets/` holds at least one Markdown template. Nothing else is required. Add `references/` only for material the skill loads on demand, and `scripts/` only for executables.
 4. Add `.cursor/rules/<id>.mdc` that points at that `SKILL.md` (Cursor). Do not rename existing skill ids.
 5. Add a row to the matching family table in [README.md](../README.md), a mapping row (only if the skill should auto-pick), and a path row in `.cursor/rules/agent-engineer-skills.mdc` (Where SKILL.md lives).
-6. If the skill writes a feature-folder file, name that file in [agent-engineer-skills/README.md](../agent-engineer-skills/README.md). If it does not, do not force `agent-engineer-skills/` onto it.
+6. If the skill writes a feature-folder file, name that file in the write-up root README (default `agent-engineer-skills/README.md`). If it does not, do not force a write-up folder onto it.
 7. Add `evals/queries/<id>.json` with about twenty labelled prompts, half of which should not trigger the skill. See [evals/README.md](../evals/README.md). The near-miss prompts matter most: they are what keep a new skill from stealing another skill's work.
 
 Keep existing ids stable. Adding a skill is a minor change. Removing or renaming an id is a major change.
