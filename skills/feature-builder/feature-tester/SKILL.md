@@ -10,7 +10,8 @@ description: >-
   what-was-verified.md with a per-layer verdict. Also answers to the older name
   feature-verifier. Do not use to decide what to build (feature-specifier), to
   implement it (feature-developer), to judge code cleanliness
-  (feature-code-reviewer), or to set up CI.
+  (feature-code-reviewer), to restructure a messy module (feature-refactorer),
+  or to set up CI.
 compatibility: >-
   Requires a shell and the repository's existing test tooling. Works in any
   Agent Skills host. Runs the project's own test commands; e2e runs may need a
@@ -33,7 +34,7 @@ Output: tests in the project's existing style, a test run, and `what-was-verifie
 
 After `feature-code-reviewer` on the daily path (or after `feature-developer` if review was skipped), or when the user asks to test, verify, or security-check a feature.
 
-Do not use to invent the product (`feature-specifier`), to write the feature (`feature-developer`), to review cleanliness (`feature-code-reviewer`), or to stand up CI.
+Do not use to invent the product (`feature-specifier`), to write the feature (`feature-developer`), to review cleanliness (`feature-code-reviewer`), to restructure a messy module (`feature-refactorer`), or to stand up CI.
 
 ## Gotchas
 

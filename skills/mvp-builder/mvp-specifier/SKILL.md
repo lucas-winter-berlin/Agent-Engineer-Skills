@@ -9,9 +9,9 @@ description: >-
   agent-engineer-skills/<name>/what-to-build.md that an agent with no memory of
   the conversation can build without guessing. Use even when the user never
   says MVP or prototype. Do not use for a feature or change inside an existing
-  codebase (that is feature-specifier), and do not write code, scaffold, or
-  implement here (that is feature-developer, in a new chat). Old name:
-  pitch-to-spec.
+  codebase (that is feature-specifier), to restructure existing code
+  (feature-refactorer), and do not write code, scaffold, or implement here
+  (that is feature-developer, in a new chat). Old name: pitch-to-spec.
 compatibility: >-
   Works in any Agent Skills host. Uses the host's clickable multiple-choice UI
   for each question round when one exists (for example Cursor AskQuestion) and
@@ -41,7 +41,7 @@ The operator names `Use skill: mvp-specifier` (or the old name `pitch-to-spec`),
 
 Do not use for a **feature in an existing app**. That job is `feature-specifier`. Refuse and name that skill.
 
-Do not use when they only want code, review, or tests on an existing specification.
+Do not use when they only want code, review, or tests on an existing specification, or a behavior-preserving cleanup of existing code (`feature-refactorer`).
 
 ## Gotchas
 

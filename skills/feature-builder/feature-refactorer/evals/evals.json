@@ -1,0 +1,70 @@
+{
+  "skill_name": "feature-refactorer",
+  "family": "feature-builder",
+  "evals": [
+    {
+      "id": 1,
+      "name": "smelly-orders",
+      "prompt": "Use skill: feature-refactorer\n\nRefactor src/orders.js. It is a mess: unclear names (fn1) and duplicated filters. Do not change listOrders behavior or its export. Do not add features.",
+      "expected_output": "A feature branch with listOrders still exported from src/orders.js, fn1 gone or reported, what-was-refactored.md with Status refactored, a commit, no push, no CSV, no new pages.",
+      "fixture": "toy-web",
+      "files": ["evals/files/smelly-orders"],
+      "replies": [],
+      "checks": [
+        { "id": "announces-skill", "type": "transcript_contains", "pattern": "Using skill: feature-refactorer", "must": true },
+        { "id": "listorders-exported", "type": "file_contains", "path": "src/orders.js", "pattern": "listOrders", "must": true },
+        { "id": "writeup-exists", "type": "file_exists", "path": "agent-engineer-skills/orders/what-was-refactored.md", "must": true },
+        { "id": "status-refactored", "type": "status_in", "path": "agent-engineer-skills/orders/what-was-refactored.md", "values": ["refactored"], "must": true },
+        { "id": "heading-scope", "type": "heading_present", "path": "agent-engineer-skills/orders/what-was-refactored.md", "heading": "## Scope", "must": true },
+        { "id": "heading-invariants", "type": "heading_present", "path": "agent-engineer-skills/orders/what-was-refactored.md", "heading": "## Invariants", "must": true },
+        { "id": "heading-where", "type": "heading_present", "path": "agent-engineer-skills/orders/what-was-refactored.md", "heading": "## Where", "must": true },
+        { "id": "heading-tests", "type": "heading_present", "path": "agent-engineer-skills/orders/what-was-refactored.md", "heading": "## Tests", "must": true },
+        { "id": "smell-handled", "type": "smell_addressed_or_reported", "smell_pattern": "function\\s+fn1\\s*\\(", "smell_path": "src/orders.js", "report_pattern": "(?i)(fn1|duplicat|unclear name)", "writeup": "agent-engineer-skills/orders/what-was-refactored.md", "must": true },
+        { "id": "no-placeholders", "type": "no_placeholder", "path": "agent-engineer-skills/orders/what-was-refactored.md", "must": true },
+        { "id": "no-emoji", "type": "no_emoji", "path": "agent-engineer-skills/orders/what-was-refactored.md", "must": true },
+        { "id": "not-on-default", "type": "git_not_default", "must": true },
+        { "id": "branch-cursor", "type": "git_branch_matches", "pattern": "cursor/orders", "must": true },
+        { "id": "committed", "type": "git_ahead_of_main", "must": true },
+        { "id": "no-push", "type": "git_no_push", "must": true },
+        { "id": "no-csv", "type": "file_not_contains", "path": "src/**/*.js", "pattern": "(?i)csv", "must": true },
+        { "id": "no-new-page", "type": "no_file", "path": "public/export.html", "must": true },
+        { "id": "no-what-to-build", "type": "no_file", "path": "**/what-to-build.md", "must": true },
+        { "id": "no-extra-prd", "type": "no_extra_prd", "must": true }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "refuse-product",
+      "prompt": "Use skill: feature-refactorer\n\nRefactor checkout and add CSV export while you are here.",
+      "expected_output": "The agent names feature-specifier, does not start that skill, and does not add CSV export code.",
+      "fixture": "toy-web",
+      "files": [],
+      "replies": [],
+      "checks": [
+        { "id": "announces-skill", "type": "transcript_contains", "pattern": "Using skill: feature-refactorer", "must": true },
+        { "id": "names-specifier", "type": "transcript_contains", "pattern": "feature-specifier", "must": true },
+        { "id": "did-not-chain", "type": "transcript_not_contains", "pattern": "Using skill: feature-specifier", "must": true },
+        { "id": "no-csv-source", "type": "file_not_contains", "path": "src/**/*.js", "pattern": "(?i)csv", "must": true },
+        { "id": "source-untouched", "type": "paths_unchanged", "paths": ["src", "public", "package.json"], "must": true },
+        { "id": "no-extra-prd", "type": "no_extra_prd", "must": true }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "refuse-review",
+      "prompt": "Use skill: feature-refactorer\n\nReview agent-engineer-skills/format-cents/ against what-to-build.md",
+      "expected_output": "The agent names feature-code-reviewer, does not start that skill, and does not write a review log.",
+      "fixture": "toy-web",
+      "files": ["evals/fixtures/format-cents-spec"],
+      "replies": [],
+      "checks": [
+        { "id": "announces-skill", "type": "transcript_contains", "pattern": "Using skill: feature-refactorer", "must": true },
+        { "id": "names-reviewer", "type": "transcript_contains", "pattern": "feature-code-reviewer", "must": true },
+        { "id": "did-not-chain", "type": "transcript_not_contains", "pattern": "Using skill: feature-code-reviewer", "must": true },
+        { "id": "no-review-log", "type": "no_file", "path": "**/what-was-reviewed.md", "must": true },
+        { "id": "source-untouched", "type": "paths_unchanged", "paths": ["src", "public", "package.json"], "must": true },
+        { "id": "no-extra-prd", "type": "no_extra_prd", "must": true }
+      ]
+    }
+  ]
+}

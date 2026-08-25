@@ -101,6 +101,11 @@
       "query": "prototype a demo of the queue system for a pitch on thursday",
       "should_trigger": false,
       "split": "validation"
+    },
+    {
+      "query": "refactor src/api/orders.ts, it's a mess in there",
+      "should_trigger": false,
+      "split": "validation"
     }
   ]
 }

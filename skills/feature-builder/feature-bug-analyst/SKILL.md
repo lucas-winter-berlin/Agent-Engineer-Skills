@@ -10,7 +10,8 @@ description: >-
   failing test then a minimal fix. Do not use for fuzzy new product work
   (feature-specifier), greenfield or MVP design (mvp-specifier), implementing a
   ready specification (feature-developer), judging cleanliness
-  (feature-code-reviewer), or verifying a shipped feature (feature-tester).
+  (feature-code-reviewer), verifying a shipped feature (feature-tester), or
+  restructuring a messy module with no defect report (feature-refactorer).
 compatibility: >-
   Works in any Agent Skills host. Uses the host's clickable multiple-choice UI
   for the question batch when one exists (for example Cursor AskQuestion), and
@@ -30,7 +31,7 @@ Output: `agent-engineer-skills/<feature-name>/what-to-build.md` from [assets/wha
 
 The request is a bug, crash, wrong behavior, regression, or flaky failure in an existing app, and the fix is not yet locked in a specification.
 
-Do not use when the request is a new capability without an existing contract (`feature-specifier`), a new project (`mvp-specifier`), or the user only wants code, review, or tests on an existing specification.
+Do not use when the request is a new capability without an existing contract (`feature-specifier`), a new project (`mvp-specifier`), the user only wants code, review, or tests on an existing specification, or the request is a messy-module restructure with no defect (`feature-refactorer`).
 
 ## Gotchas
 

@@ -11,7 +11,7 @@ Announce: `Using skill: feature-tester`.
 
 ## Job
 
-Prove the implementation matches `what-to-build.md`. Write real tests, run the commands this repo already has, report pass/fail. This is not code review (`feature-code-reviewer`).
+Prove the implementation matches `what-to-build.md`. Write real tests, run the commands this repo already has, report pass/fail. This is not code review (`feature-code-reviewer`) and not a messy-module restructure (`feature-refactorer`).
 
 ## Must (order)
 

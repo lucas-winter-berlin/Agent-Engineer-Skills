@@ -10,10 +10,10 @@ description: >-
   UI, API, CLI, jobs, libraries, and mixed work. Use even when the user does not
   say "spec", "PRD", "requirements", or "acceptance criteria". Do not use for a
   new project, prototype, MVP, or pitch (mvp-specifier), for a defect with
-  expected vs actual or a stacktrace to root-cause (feature-bug-analyst), for an
-  already-exact one-line change the user already trusts, or when a specification
-  already exists and the user wants it built (feature-developer), reviewed
-  (feature-code-reviewer), or tested (feature-tester).
+  expected vs actual (feature-bug-analyst), for an exact one-line change, when
+  a specification already exists and the user wants it built
+  (feature-developer), reviewed (feature-code-reviewer), or tested
+  (feature-tester), or to restructure existing code (feature-refactorer).
 compatibility: >-
   Works in any Agent Skills host. Uses the host's clickable multiple-choice UI
   for the question batch when one exists (for example Cursor AskQuestion), and
@@ -37,7 +37,7 @@ Output: `<root>/<feature-name>/what-to-build.md` from [assets/what-to-build.md](
 
 The request is an idea, a problem, or a feature, and "done" is not specified.
 
-Do not use when the change is a defect to root-cause (`feature-bug-analyst`), already exact and trusted as a one-line edit, or the user only wants code, review, or tests on an existing specification.
+Do not use when the change is a defect to root-cause (`feature-bug-analyst`), already exact and trusted as a one-line edit, the user only wants code, review, or tests on an existing specification, or the request is a behavior-preserving cleanup of existing code (`feature-refactorer`).
 
 ## Gotchas
 

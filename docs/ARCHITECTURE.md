@@ -42,11 +42,12 @@ Cursor: `.cursor/rules/agent-engineer-skills.mdc` always applies. If the short r
 
 | Skill | Not this skill |
 | --- | --- |
-| Specifier | Code, extra PRD files, class names the user did not require, defect root-cause hunts |
+| Specifier | Code, extra PRD files, class names the user did not require, defect root-cause hunts, standalone refactors |
 | Bug analyst | Code, new tests on disk, product invention, CI, a threat-model essay |
 | mvp-specifier | Code, scaffold, same-chat Goldfish, chaining, a feature in an existing repo |
-| Developer | Product invention, CI, new test frameworks, review essays, STRIDE |
-| Reviewer | New product, new dependencies, unrelated rewrites |
+| Developer | Product invention, CI, new test frameworks, review essays, STRIDE, standalone refactors |
+| Reviewer | New product, new dependencies, unrelated rewrites, standalone legacy mess with no feature spec |
+| Refactorer | New product, a just-built feature diff, a defect hunt, `what-to-build.md` |
 | Tester | New product, new CI, new scanners, a threat-model essay |
 
 Security on the daily path is a **negative test** in `feature-tester` when the change has a who/auth or a new entry point. It is not a threat-model pack.
@@ -55,7 +56,7 @@ Technical forks the specification did not name: **stop and ask**.
 
 ## Waiting for a human
 
-The agent waits when `feature-specifier`, `feature-bug-analyst`, or `mvp-specifier` needs landmine answers or evidence, developer finds a hole, reviewer would have to change the product, or tester needs a manual check. `ok` / `lgtm` does not skip questions or turn a fail into a pass.
+The agent waits when `feature-specifier`, `feature-bug-analyst`, or `mvp-specifier` needs landmine answers or evidence, developer finds a hole, reviewer would have to change the product, tester needs a manual check, or `feature-refactorer` cannot lock scope or invariants. `ok` / `lgtm` does not skip questions or turn a fail into a pass.
 
 ## Failures
 
@@ -68,6 +69,7 @@ The agent waits when `feature-specifier`, `feature-bug-analyst`, or `mvp-specifi
 | Review must-fix remains | Stay in `feature-code-reviewer` until it is gone or blocked for the skill that wrote the spec |
 | Tests fail | Stay in `feature-tester`. Do not delete tests to get green. |
 | A test layer does not exist | Write `absent`. Do not invent the layer. |
+| Messy existing module, no feature spec | `feature-refactorer` |
 
 Quiet and read-only until the skill says to write. Do not add Playwright, CI, or a scanner because another repo had them. Windows PowerShell 5.1 has no `&&` operator, so joined commands fail there; PowerShell 7 and POSIX shells accept it.
 
@@ -104,6 +106,7 @@ Share the app's git files (`skills/` without skill-folder `evals/`, the AES `.md
 | Feature directory | `<root>/<feature-name>/` for one change. `<root>` is the docs **folder** named in the app dispatcher, else `agent-engineer-skills` |
 | mvp-specifier | Elephant: prototype / MVP / new project spec. Not `feature-specifier`. Goldfish is a new chat with `feature-developer`. |
 | feature-bug-analyst | Defect analysis that writes a fix-ready `what-to-build.md`. Not product invention. |
+| feature-refactorer | Behavior-preserving restructure of named existing code. Not a feature spec. Not a review of a just-built diff. |
 | Wall | Out-of-scope. Hard reject if code builds it |
 | Landmine | A question whose wrong guess would waste implementation time |
 | Slop | Tests or code that do not match the specification, or hollow asserts |

@@ -1,0 +1,106 @@
+{
+  "skill": "feature-refactorer",
+  "notes": "Positives ask for a behavior-preserving restructure of existing messy code with no feature spec. Negatives are near-misses: post-implement cleanup (feature-code-reviewer), implementing a spec (feature-developer), defects (feature-bug-analyst), new product (feature-specifier), greenfield (mvp-specifier), verification (feature-tester), and mechanical whole-tree format.",
+  "queries": [
+    {
+      "query": "refactor src/api/orders.ts, it's a mess in there",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "this module is a mess, clean up src/billing/invoice.ts without changing behavior",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "extract a helper from src/orders.js, the file is doing too many jobs",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "split this god class in src/services/OrderService.ts",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "tech debt in src/auth.js, it's unreadable",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "pull this duplicated filter out of src/orders.js",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "src/api/orders.ts is unreadable, restructure it, keep the public API",
+      "should_trigger": true,
+      "split": "validation"
+    },
+    {
+      "query": "can you extract the date formatting out of this 400-line file src/reports.ts",
+      "should_trigger": true,
+      "split": "validation"
+    },
+    {
+      "query": "god file in src/checkout.js, split it up, don't change what the user sees",
+      "should_trigger": true,
+      "split": "validation"
+    },
+    {
+      "query": "we have tech debt in src/cart.js, names are x and fn1, tidy the structure only",
+      "should_trigger": true,
+      "split": "validation"
+    },
+    {
+      "query": "clean this up. it works but it feels wrong",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "implement agent-engineer-skills/sso/what-to-build.md",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "checkout throws when cart is empty. expected empty state, actual 500. pin the root cause first",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "I want to add notifications to the app but honestly I haven't thought it through yet",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "reformat every file with prettier and commit it",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "test this feature folder against what-to-build.md",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "I just finished the audit log feature. give it a hard look before I merge",
+      "should_trigger": false,
+      "split": "validation"
+    },
+    {
+      "query": "review agent-engineer-skills/bulk-export/",
+      "should_trigger": false,
+      "split": "validation"
+    },
+    {
+      "query": "prototype a demo of the queue system for a pitch on thursday",
+      "should_trigger": false,
+      "split": "validation"
+    },
+    {
+      "query": "can we make search better? it's slow and the results are bad",
+      "should_trigger": false,
+      "split": "validation"
+    }
+  ]
+}

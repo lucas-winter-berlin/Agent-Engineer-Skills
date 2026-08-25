@@ -26,6 +26,7 @@ Use this when you already have an app and want to add or change a feature.
 | `feature-bug-analyst` | A defect is reported, but the root cause and fix are not locked. | Pins Expected vs Actual, finds evidence in the repo, and writes a fix-ready `what-to-build.md` (failing-test plan, minimal fix). No code is generated. |
 | `feature-developer` | The agent does not follow the spec, hallucinates, or builds overhead. | Implements `what-to-build.md` and nothing else, on its own feature branch, and commits there. Never pushes. Writes an implementation log in `what-was-implemented.md`. |
 | `feature-code-reviewer` | The change works now but will be hard to maintain. | Strict review against this repo: duplication, unclear names, hidden control flow, coupling, layout, secrets. May refactor internals. Must not change what the user gets. Writes a review log in `what-was-reviewed.md`. |
+| `feature-refactorer` | Existing code is a mess, and there is no feature spec. | Locks scope and invariants, restructures named files without changing behavior, commits on a feature branch. Never pushes. Writes `what-was-refactored.md`. |
 | `feature-tester` | Nothing was tested against the spec. It may be slop. | Writes cases from the spec, runs this repo's tests, and reports `pass`, `fail`, or `not-run`. Writes `what-was-verified.md`. |
 
 ### MVP builder
@@ -51,6 +52,7 @@ The agent must:
    - `feature-bug-analyst.mdc`
    - `feature-developer.mdc`
    - `feature-code-reviewer.mdc`
+   - `feature-refactorer.mdc`
    - `feature-tester.mdc`
    - `mvp-specifier.mdc`
 3. MUST stop and ask the operator where markdown docs should be saved, before creating that folder. Use the host's clickable choice UI (`AskQuestion`) when it exists. Two options only:
@@ -94,6 +96,11 @@ Review agent-engineer-skills/invoice-csv-export/
 ```text
 Use skill: feature-tester
 Test agent-engineer-skills/invoice-csv-export/ against what-to-build.md
+```
+
+```text
+Use skill: feature-refactorer
+Refactor src/api/orders.ts. It is a mess. Do not change behavior.
 ```
 
 A prototype or new project. Spec first, then a **new** chat to build:

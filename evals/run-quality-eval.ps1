@@ -53,6 +53,7 @@ param(
         'feature-bug-analyst',
         'feature-developer',
         'feature-code-reviewer',
+        'feature-refactorer',
         'feature-tester',
         'mvp-specifier',
         'all'

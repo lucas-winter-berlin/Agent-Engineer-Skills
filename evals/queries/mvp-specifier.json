@@ -101,6 +101,11 @@
       "query": "fix the failing test in tests/queue.spec.ts",
       "should_trigger": false,
       "split": "validation"
+    },
+    {
+      "query": "refactor src/api/orders.ts, it's a mess in there",
+      "should_trigger": false,
+      "split": "validation"
     }
   ]
 }

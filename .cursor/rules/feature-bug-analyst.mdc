@@ -35,4 +35,4 @@ Turn a reported defect into a locked fix specification. Ask only landmines that 
 
 ## Do not use
 
-When the idea is a new capability without an existing contract (`feature-specifier`), a greenfield/MVP design (`mvp-specifier`), or the user only wants code, review, or tests on an existing specification.
+When the idea is a new capability without an existing contract (`feature-specifier`), a greenfield/MVP design (`mvp-specifier`), a messy-module restructure with no defect (`feature-refactorer`), or the user only wants code, review, or tests on an existing specification.

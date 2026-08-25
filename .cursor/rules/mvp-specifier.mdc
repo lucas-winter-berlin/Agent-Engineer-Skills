@@ -38,4 +38,4 @@ Be the Elephant. Challenge the pitch in rounds (cut, rights, architecture, data,
 
 ## Do not use
 
-When the request is a feature in an existing repo (`feature-specifier`), or they only want code, review, or tests on an existing specification.
+When the request is a feature in an existing repo (`feature-specifier`), a messy-module restructure (`feature-refactorer`), or they only want code, review, or tests on an existing specification.

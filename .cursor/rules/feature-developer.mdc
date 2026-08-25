@@ -23,7 +23,7 @@ Build what `what-to-build.md` specifies. Nothing else.
 
 Windows PowerShell 5.1 has no `&&` operator; run git commands one per call there.
 
-If `what-to-build.md` is missing, use `concept.md` if present. If still fuzzy, stop and use `feature-specifier`. If the request is a defect without a locked analysis, stop and use `feature-bug-analyst`. If a new landmine appears, stop and ask.
+If `what-to-build.md` is missing, use `concept.md` if present. If still fuzzy, stop and use `feature-specifier`. If the request is a defect without a locked analysis, stop and use `feature-bug-analyst`. If the request is a messy-module cleanup with no specification, stop and use `feature-refactorer`. If a new landmine appears, stop and ask.
 
 Stop after the write-up. Do not start `feature-code-reviewer` unless the operator named that skill.
 

@@ -29,9 +29,10 @@ The agent announces `Using skill: <id>`, reads `skills/<family>/<id>/SKILL.md` (
 | Prototype / MVP / new project / greenfield / pitch, or `Use skill: mvp-specifier` | `mvp-specifier` (Elephant: spec only; Goldfish is a new chat). Old name: `pitch-to-spec` |
 | "Build this spec." / "Implement what-to-build.md." | `feature-developer` |
 | "Review this feature folder." | `feature-code-reviewer` |
+| "Refactor this messy module." / extract / split, no new product | `feature-refactorer` |
 | "Test this feature folder against what-to-build.md." | `feature-tester` |
 
-If the idea is fuzzy, specify first. A feature in an existing app is `feature-specifier`. A defect with expected vs actual (or a stacktrace) is `feature-bug-analyst`. A prototype, MVP, new project, or greenfield is `mvp-specifier`. A generic "I have an idea" in an existing app still maps to `feature-specifier`. To implement, review, and test, name those skills one at a time. After `mvp-specifier` or `feature-bug-analyst`, open a **new** Agent chat for `feature-developer` unless you named that skill in the same chat.
+If the idea is fuzzy, specify first. A feature in an existing app is `feature-specifier`. A defect with expected vs actual (or a stacktrace) is `feature-bug-analyst`. A prototype, MVP, new project, or greenfield is `mvp-specifier`. A messy module with no new product is `feature-refactorer`. A generic "I have an idea" in an existing app still maps to `feature-specifier`. To implement, review, refactor, and test, name those skills one at a time. After `mvp-specifier` or `feature-bug-analyst`, open a **new** Agent chat for `feature-developer` unless you named that skill in the same chat.
 
 ## Install
 
@@ -48,6 +49,7 @@ Same contract as [README.md](../README.md) (How to install). MUST stop and ask (
 | `.cursor/rules/feature-bug-analyst.mdc` | Selected | Analyze a defect (existing repo) |
 | `.cursor/rules/feature-developer.mdc` | Selected | Implement |
 | `.cursor/rules/feature-code-reviewer.mdc` | Selected | Review |
+| `.cursor/rules/feature-refactorer.mdc` | Selected | Refactor existing code |
 | `.cursor/rules/feature-tester.mdc` | Selected | Test |
 | `.cursor/rules/mvp-specifier.mdc` | Selected | Prototype / MVP spec (Elephant; no code) |
 

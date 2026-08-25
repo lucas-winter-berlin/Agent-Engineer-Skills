@@ -3,14 +3,15 @@ name: feature-code-reviewer
 description: >-
   Use when a change has been written and the user wants it judged before it
   ships: "review this", "is this code any good", "will this be maintainable",
-  "clean this up", "did we do this the right way", or a pointer at a feature
-  folder. Reads the specification and the diff, checks every touched file
-  against clean-code practice and this repo's own conventions, applies internal
-  refactors that leave behavior unchanged, and writes what-was-reviewed.md with
-  a pass or fail verdict. Use even when the user does not say "review" or "code
-  quality". Do not use to decide what to build (feature-specifier), to write the
-  first implementation (feature-developer), or to write and run tests
-  (feature-tester).
+  "clean this up" on a just-built change, "did we do this the right way", or a
+  pointer at a feature folder. Reads the specification and the diff, checks
+  every touched file against clean-code practice and this repo's own
+  conventions, applies internal refactors that leave behavior unchanged, and
+  writes what-was-reviewed.md with a pass or fail verdict. Use even when the
+  user does not say "review" or "code quality". Do not use to decide what to
+  build (feature-specifier), to write the first implementation
+  (feature-developer), to write and run tests (feature-tester), or for a messy
+  module with no feature specification (feature-refactorer).
 compatibility: >-
   Requires git and a shell to resolve the diff. Works in any Agent Skills host.
   Edits files when applying refactors; does not commit or push unless asked. No
@@ -37,7 +38,7 @@ A feature was just implemented and you care that it is not throwaway.
 
 Skip only for a tiny, obvious one-line fix the user already trusts.
 
-Do not use to invent product (`feature-specifier`), to write the first implementation (`feature-developer`), or to replace tests (`feature-tester`).
+Do not use to invent product (`feature-specifier`), to write the first implementation (`feature-developer`), to replace tests (`feature-tester`), or to restructure a messy module that has no feature spec (`feature-refactorer`).
 
 ## Gotchas
 

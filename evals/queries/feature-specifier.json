@@ -101,6 +101,11 @@
       "query": "write integration tests for the audit log we shipped last sprint",
       "should_trigger": false,
       "split": "validation"
+    },
+    {
+      "query": "refactor src/api/orders.ts, it's a mess in there",
+      "should_trigger": false,
+      "split": "validation"
     }
   ]
 }

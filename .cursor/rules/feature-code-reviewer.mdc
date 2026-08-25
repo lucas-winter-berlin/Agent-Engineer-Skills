@@ -15,7 +15,7 @@ Be strict. The change must stay usable for a long time. Match this repo. No poli
 
 ## When
 
-After `feature-developer` when the operator names this skill. Before `feature-tester` only if they name that skill next.
+After `feature-developer` when the operator names this skill. Before `feature-tester` only if they name that skill next. Do not use for a messy module with no feature spec (`feature-refactorer`).
 
 ## Must (order)
 

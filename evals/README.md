@@ -25,7 +25,7 @@ Do not copy `evals/` or `skills/**/evals/` into a consuming app.
 
 A skill only helps if it loads. The `description` in `SKILL.md` is the only thing an agent sees before deciding, so these evals measure one thing: **does each skill trigger on the prompts it should, and stay quiet on the ones it should not.**
 
-The `feature-builder` skills share a lot of vocabulary (feature, spec, build, review, test, verify, bug, fix). That makes them each other's worst near-misses. `feature-bug-analyst` adds defect language that must not steal fuzzy product work from `feature-specifier` or implementation from `feature-developer`. `mvp-specifier` adds another set, because the line between "a new thing" and "a feature in an existing thing" is exactly where it and `feature-specifier` steal each other's prompts. That is what these query sets are built to catch.
+The `feature-builder` skills share a lot of vocabulary (feature, spec, build, review, test, verify, bug, fix, refactor, clean up). That makes them each other's worst near-misses. `feature-bug-analyst` adds defect language that must not steal fuzzy product work from `feature-specifier` or implementation from `feature-developer`. `feature-refactorer` adds another set, because "clean this up" on a just-built change belongs to `feature-code-reviewer`, while "this module is a mess" with no spec belongs to `feature-refactorer`. `mvp-specifier` adds another set, because the line between "a new thing" and "a feature in an existing thing" is exactly where it and `feature-specifier` steal each other's prompts. That is what these query sets are built to catch.
 
 ### What you have
 

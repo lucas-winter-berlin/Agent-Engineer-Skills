@@ -12,7 +12,8 @@ description: >-
   (feature-specifier), while a defect still needs root-cause analysis
   (feature-bug-analyst), for a new project, prototype, or MVP (mvp-specifier),
   or when the code already exists and the user wants it reviewed
-  (feature-code-reviewer) or tested (feature-tester).
+  (feature-code-reviewer), tested (feature-tester), or restructured without a
+  specification (feature-refactorer).
 compatibility: >-
   Requires git and a shell. Works in any Agent Skills host. Creates a local
   branch and commits to it; never pushes unless asked. Needs no network access
@@ -35,7 +36,7 @@ Output: a feature branch with the change committed on it, and `what-was-implemen
 
 The user wants the feature specification built in this repo.
 
-Do not use when the idea is still fuzzy (`feature-specifier`), when a defect still needs analysis (`feature-bug-analyst`), when they want a review of shipped code (`feature-code-reviewer`), or only tests (`feature-tester`).
+Do not use when the idea is still fuzzy (`feature-specifier`), when a defect still needs analysis (`feature-bug-analyst`), when they want a review of shipped code (`feature-code-reviewer`), only tests (`feature-tester`), or a behavior-preserving cleanup with no specification (`feature-refactorer`).
 
 ## Gotchas
 
