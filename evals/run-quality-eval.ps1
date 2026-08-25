@@ -110,8 +110,9 @@ Working tree for $rel is clean. Pass one of:
 "@
         }
     }
+    $exportRel = Get-SkillRelPathAtCommit -Repo $PackRoot -Commit $commit -SkillName $SkillName
     $dest = Join-Path $env:TEMP ("aes-skill-baseline-{0}-{1}" -f $SkillName, [Guid]::NewGuid().ToString('N'))
-    Export-SkillAtCommit -Repo $PackRoot -Commit $commit -RelPath $rel -Dest $dest
+    Export-SkillAtCommit -Repo $PackRoot -Commit $commit -RelPath $exportRel -Dest $dest
     return [pscustomobject]@{ Path = $dest; Temporary = $true }
 }
 

@@ -9,15 +9,15 @@ This file is the internals for authors of this pack. Skill list and install live
 ```text
 You name one skill (or describe feature work)
   -> Agent runs only that skill
-    -> Agent reads skills/<family>/<id>/SKILL.md
+    -> Agent reads skills/<id>/SKILL.md
       -> Agent does that job
         -> Writes that skill's files (under <root>/<name>/)
           -> Stop. Do not start the next skill unless they named it.
 ```
 
-`family` is `feature-builder` or `mvp-builder`. The **id** is what you type (`Use skill: feature-specifier`).
+The **id** is what you type (`Use skill: feature-specifier`). Family (`feature-builder` or `mvp-builder`) is `metadata.family` and a README grouping, not a folder.
 
-Markdown docs live under `<root>/<feature-name>/`. The install agent MUST ask once: keep the default **folder** `agent-engineer-skills/`, or create a custom repo-relative directory. Install creates that directory. The app's `.cursor/rules/agent-engineer-skills.mdc` names it on the Feature-folder write-ups line. Skills use that folder, else `agent-engineer-skills`. Do not write a file named `aes-write-up-root`. Do not rewrite copied `SKILL.md` files to hardcode the path.
+Markdown docs live under `<root>/<feature-name>/`. The install agent MUST ask once: keep the default **folder** `agent-engineer-skills/`, or create a custom repo-relative directory. Install creates that directory. The app's `AGENTS.md` names it on the Feature-folder write-ups line (the dispatcher repeats that line). Skills use that folder, else `agent-engineer-skills`. Do not write a file named `aes-write-up-root`. Do not rewrite copied `SKILL.md` files to hardcode the path.
 
 A skill is a recipe card. The agent is the cook. Your git repo is the kitchen. `what-to-build.md` is the specification from `feature-specifier`, `feature-bug-analyst`, or `mvp-specifier`; later skills may not build a different product.
 
@@ -34,9 +34,9 @@ There is no composer / harness skill. Do not invent one.
 
 ## Contracts
 
-Each skill is a leaf folder `skills/<family>/<id>/`: `SKILL.md` and `assets/*.md`. The directory names follow the Agent Skills specification (`assets/` for templates and resources, `references/` for on-demand docs, `scripts/` for executables). Required output content lives in each skill's `Before you finish` list, written as lines the agent can objectively fail. Missing test layers are `absent`, not invented.
+Each skill is a leaf folder `skills/<id>/`: `SKILL.md` and `assets/*.md`. The directory names follow the Agent Skills specification (`assets/` for templates and resources, `references/` for on-demand docs, `scripts/` for executables). Required output content lives in each skill's `Before you finish` list, written as lines the agent can objectively fail. Missing test layers are `absent`, not invented.
 
-Cursor: `.cursor/rules/agent-engineer-skills.mdc` always applies. If the short rule and `SKILL.md` disagree, `SKILL.md` wins.
+Cursor discovers `.cursor/skills/<id>/`. Antigravity discovers `.agents/skills/<id>/`. Both are copies of the canonical leaf without `evals/`. Cursor: `.cursor/rules/agent-engineer-skills.mdc` always applies. If the short rule and `SKILL.md` disagree, `SKILL.md` wins.
 
 ## What each skill must not swallow
 
@@ -79,12 +79,12 @@ Quiet and read-only until the skill says to write. Do not add Playwright, CI, or
 2. For skill-bound work, that skill's templates and required write-up content from this framework win. Skill order wins only when the user named the next skill.
 3. That project's code style wins for source.
 
-Share the app's git files (`skills/` without skill-folder `evals/`, the AES `.mdc` files, the docs folder such as `agent-engineer-skills/`), not chat logs. Do not copy this pack's `docs/` or `evals/` into the app.
+Share the app's git files (`skills/` without skill-folder `evals/`, `.cursor/skills/`, `.agents/skills/`, the AES dispatcher `.mdc`, `AGENTS.md`, the docs folder such as `agent-engineer-skills/`), not chat logs. Do not copy this pack's `docs/` or `evals/` into the app.
 
 ## Versioning
 
 - Skill ids stay stable except `feature-verifier`, now `feature-tester`, and `pitch-to-spec`, now `mvp-specifier`. There is no `feature-harness`.
-- Adding a new skill id is a minor change. Place it under `feature-builder` or `mvp-builder`. It must run alone via `Use skill: <id>`.
+- Adding a new skill id is a minor change. Place it at `skills/<id>/` with `metadata.family` set to `feature-builder` or `mvp-builder`. It must run alone via `Use skill: <id>`.
 - Removing or renaming a required write-up or a skill id is a major change.
 
 ## This framework does not
@@ -101,9 +101,9 @@ Share the app's git files (`skills/` without skill-folder `evals/`, the AES `.md
 | Term | Meaning |
 | --- | --- |
 | Skill | Job plus required outputs. Runnable alone. Id is the leaf folder. |
-| Family | `feature-builder` or `mvp-builder`. Browse path only. |
+| Family | `feature-builder` or `mvp-builder`. README grouping and `metadata.family`. Not a folder. |
 | Feature specification | `what-to-build.md` from `feature-specifier`, `feature-bug-analyst`, or `mvp-specifier` |
-| Feature directory | `<root>/<feature-name>/` for one change. `<root>` is the docs **folder** named in the app dispatcher, else `agent-engineer-skills` |
+| Feature directory | `<root>/<feature-name>/` for one change. `<root>` is the docs **folder** named in `AGENTS.md`, else `agent-engineer-skills` |
 | mvp-specifier | Elephant: prototype / MVP / new project spec. Not `feature-specifier`. Goldfish is a new chat with `feature-developer`. |
 | feature-bug-analyst | Defect analysis that writes a fix-ready `what-to-build.md`. Not product invention. |
 | feature-refactorer | Behavior-preserving restructure of named existing code. Not a feature spec. Not a review of a just-built diff. |

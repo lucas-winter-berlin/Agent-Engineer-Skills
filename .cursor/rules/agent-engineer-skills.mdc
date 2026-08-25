@@ -1,5 +1,5 @@
 ---
-description: Dispatcher for Agent Engineer Skills. Maps feature-development work to one skill. Use skill: <id> runs only that skill. Lookup is skills/<family>/<id>/SKILL.md.
+description: Dispatcher for Agent Engineer Skills. Maps feature-development work to one skill. Use skill: <id> runs only that skill. Lookup is skills/<id>/SKILL.md.
 alwaysApply: true
 ---
 
@@ -7,7 +7,9 @@ alwaysApply: true
 
 This repo is a collection of skills for developing features. A skill is a structured instruction set and execution contract, not optional style advice.
 
-`Use skill: <id>` always selects that skill and **only** that skill. The **id** is the leaf folder name. The **family** (`feature-builder` or `mvp-builder`) is only where the files live. Read `skills/<family>/<id>/SKILL.md` and execute that contract. Do not start the next skill unless the user named it. `SKILL.md` is authoritative if this rule and the skill file diverge.
+`Use skill: <id>` always selects that skill and **only** that skill. The **id** is the leaf folder name. Read `skills/<id>/SKILL.md` and execute that contract. Do not start the next skill unless the user named it. `SKILL.md` is authoritative if this rule and the skill file diverge.
+
+Cursor also discovers copies at `.cursor/skills/<id>/`. Antigravity discovers copies at `.agents/skills/<id>/`. Canonical source is `skills/<id>/` (includes author `evals/`). Host copies omit `evals/`. Family (`feature-builder` or `mvp-builder`) is grouping only, not a folder.
 
 There is no composer / harness skill in this collection. If the user asks for a harness, end-to-end path runner, or `feature-harness`, do not invent one. Tell them to name each skill they want (`feature-developer`, `feature-code-reviewer`, `feature-refactorer`, `feature-tester`).
 
@@ -20,21 +22,21 @@ MUST stop and ask once, before creating the docs folder, where markdown output s
 - Default: keep the **folder** `agent-engineer-skills/` (docs in `agent-engineer-skills/<feature-name>/`)
 - Custom: the operator types a repo-relative **folder**; create that directory; files go in `<folder>/<feature-name>/`
 
-Do not skip the question. Do not choose a path for them. Create that path as a **directory** (default name `agent-engineer-skills`). Never write a file named `aes-write-up-root`; if that file exists, delete it. Set the Feature-folder write-ups line in the app's copy of this dispatcher to that folder.
+Do not skip the question. Do not choose a path for them. Create that path as a **directory** (default name `agent-engineer-skills`). Never write a file named `aes-write-up-root`; if that file exists, delete it. Set the Feature-folder write-ups line in the app's `AGENTS.md` and in the app's copy of this dispatcher to that folder.
 
 ## Where SKILL.md lives
 
 | id | Path |
 | --- | --- |
-| `feature-specifier` | `skills/feature-builder/feature-specifier/SKILL.md` |
-| `feature-bug-analyst` | `skills/feature-builder/feature-bug-analyst/SKILL.md` |
-| `feature-developer` | `skills/feature-builder/feature-developer/SKILL.md` |
-| `feature-code-reviewer` | `skills/feature-builder/feature-code-reviewer/SKILL.md` |
-| `feature-refactorer` | `skills/feature-builder/feature-refactorer/SKILL.md` |
-| `feature-tester` | `skills/feature-builder/feature-tester/SKILL.md` |
-| `mvp-specifier` | `skills/mvp-builder/mvp-specifier/SKILL.md` |
+| `feature-specifier` | `skills/feature-specifier/SKILL.md` |
+| `feature-bug-analyst` | `skills/feature-bug-analyst/SKILL.md` |
+| `feature-developer` | `skills/feature-developer/SKILL.md` |
+| `feature-code-reviewer` | `skills/feature-code-reviewer/SKILL.md` |
+| `feature-refactorer` | `skills/feature-refactorer/SKILL.md` |
+| `feature-tester` | `skills/feature-tester/SKILL.md` |
+| `mvp-specifier` | `skills/mvp-specifier/SKILL.md` |
 
-Templates live in `assets/` next to that `SKILL.md`. Feature-folder write-ups live under `agent-engineer-skills/<name>/`. After a custom install, the **app** copy of this file names that docs folder instead. That path is a directory, not a file.
+Templates live in `assets/` next to that `SKILL.md`. Feature-folder write-ups live under `agent-engineer-skills/<name>/`. After a custom install, the **app** `AGENTS.md` and this dispatcher name that docs folder instead. That path is a directory, not a file.
 
 ## Decision mapping
 
@@ -78,4 +80,4 @@ If the specification is missing or the idea is fuzzy: a feature in an existing a
 - Invent extra spec packs, CI, or a threat-model essay as part of these skills.
 - Log secrets in skill artifacts.
 
-Quick start: `README.md`. Operator guide: `docs/GUIDE.md`. Control plane: `docs/ARCHITECTURE.md`. Feature folders: `agent-engineer-skills/README.md`. Add a skill: `docs/GUIDE.md` (Add a skill).
+Quick start: `README.md`. Operator guide: `docs/GUIDE.md`. Control plane: `docs/ARCHITECTURE.md`. Feature folders: `agent-engineer-skills/README.md`. Write-up root pointer: `AGENTS.md`. Add a skill: `docs/GUIDE.md` (Add a skill).
