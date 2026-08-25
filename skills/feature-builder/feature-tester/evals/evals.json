@@ -12,13 +12,6 @@
       "branch": "cursor/format-cents",
       "branch_files": ["evals/files/format-cents-implemented"],
       "replies": [],
-      "assertions": [
-        "Writes what-was-verified.md",
-        "Overall verdict is pass, fail, or not-run",
-        "Unit/Integration/E2E/Security rows are filled",
-        "Done-when and walls are addressed",
-        "Did not add Playwright or CI"
-      ],
       "checks": [
         { "id": "announces-skill", "type": "transcript_contains", "pattern": "Using skill: feature-tester", "must": true },
         { "id": "writeup-exists", "type": "file_exists", "path": "agent-engineer-skills/format-cents/what-was-verified.md", "must": true },
@@ -47,11 +40,6 @@
       "branch": "cursor/format-cents",
       "branch_files": ["evals/files/format-cents-implemented"],
       "replies": [],
-      "assertions": [
-        "Did not add a test framework or CI",
-        "Unit layer is absent or not-run, not a fake pass command",
-        "Writes what-was-verified.md"
-      ],
       "checks": [
         { "id": "announces-skill", "type": "transcript_contains", "pattern": "Using skill: feature-tester", "must": true },
         { "id": "writeup-exists", "type": "file_exists", "path": "agent-engineer-skills/format-cents/what-was-verified.md", "must": true },

@@ -10,13 +10,6 @@
       "fixture": "toy-web",
       "files": [],
       "replies": [],
-      "assertions": [
-        "Announces Using skill: feature-specifier",
-        "Asks landmine questions or writes Status awaiting-questions",
-        "Does not implement source",
-        "Does not write concept.md or an extra PRD pack",
-        "Does not set Status to ready-for-developer with invented answers"
-      ],
       "checks": [
         { "id": "announces-skill", "type": "transcript_contains", "pattern": "Using skill: feature-specifier", "must": true },
         { "id": "asked-or-awaiting", "type": "asked_or_awaiting", "transcript_pattern": "(?i)(AskQuestion|Choice UI|who may|signed-in|which (page|screen|button)|where (should|does)|what columns|cancel|empty)", "awaiting_glob": "**/what-to-build.md", "must": true },
@@ -35,13 +28,6 @@
       "files": [],
       "replies": [
         "Answers: 1) Signed-in customers, their own invoices only. 2) A Download CSV button on the existing orders page, not a new page. 3) Columns: date, invoice id, total. 4) Cancel closes without writing a file. 5) If there are no invoices, show 'No invoices to export' on the same page. 6) No PDF, no email, no scheduled export."
-      ],
-      "assertions": [
-        "Writes what-to-build.md from the template",
-        "Status is draft or ready-for-developer",
-        "In scope and Out of scope each have an item",
-        "Done when has Given/When/Then",
-        "No source changes, no extra PRD files"
       ],
       "checks": [
         { "id": "announces-skill", "type": "transcript_contains", "pattern": "Using skill: feature-specifier", "must": true },
@@ -66,11 +52,6 @@
       "fixture": "toy-web",
       "files": [],
       "replies": [],
-      "assertions": [
-        "Names mvp-specifier",
-        "Does not write what-to-build.md for a plant-tracker feature",
-        "Does not change source"
-      ],
       "checks": [
         { "id": "names-mvp", "type": "transcript_contains", "pattern": "mvp-specifier", "must": true },
         { "id": "no-spec", "type": "no_file", "path": "**/what-to-build.md", "must": true },

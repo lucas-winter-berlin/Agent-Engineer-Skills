@@ -12,13 +12,6 @@
       "branch": "cursor/format-cents",
       "branch_files": ["evals/files/format-cents-smelly"],
       "replies": [],
-      "assertions": [
-        "Writes what-was-reviewed.md with Verdict pass or fail",
-        "Files reviewed lists the diff",
-        "Findings table is not empty",
-        "Smell is fixed or reported",
-        "No new product"
-      ],
       "checks": [
         { "id": "announces-skill", "type": "transcript_contains", "pattern": "Using skill: feature-code-reviewer", "must": true },
         { "id": "writeup-exists", "type": "file_exists", "path": "agent-engineer-skills/format-cents/what-was-reviewed.md", "must": true },
@@ -44,12 +37,6 @@
       "branch": "cursor/format-cents",
       "branch_files": ["evals/files/format-cents-clean"],
       "replies": [],
-      "assertions": [
-        "Verdict is pass",
-        "Files reviewed includes src/money.js",
-        "Findings table is not empty",
-        "No extra product"
-      ],
       "checks": [
         { "id": "announces-skill", "type": "transcript_contains", "pattern": "Using skill: feature-code-reviewer", "must": true },
         { "id": "writeup-exists", "type": "file_exists", "path": "agent-engineer-skills/format-cents/what-was-reviewed.md", "must": true },

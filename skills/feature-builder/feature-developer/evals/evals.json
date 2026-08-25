@@ -10,12 +10,6 @@
       "fixture": "toy-web",
       "files": ["evals/fixtures/format-cents-spec"],
       "replies": [],
-      "assertions": [
-        "Implements formatCents in src/money.js",
-        "Writes what-was-implemented.md with Status implemented",
-        "Work is on a feature branch, not main, and was not pushed",
-        "No CSV export, no Playwright/Jest/CI"
-      ],
       "checks": [
         { "id": "announces-skill", "type": "transcript_contains", "pattern": "Using skill: feature-developer", "must": true },
         { "id": "helper-exists", "type": "file_exists", "path": "src/money.js", "must": true },
@@ -46,11 +40,6 @@
       "fixture": "toy-web",
       "files": [],
       "replies": [],
-      "assertions": [
-        "Does not invent the CSV feature",
-        "Stops for a missing specification",
-        "Does not add a test framework"
-      ],
       "checks": [
         { "id": "announces-skill", "type": "transcript_contains", "pattern": "Using skill: feature-developer", "must": true },
         { "id": "blocked-or-specifier", "type": "blocked_or_names_specifier", "must": true },

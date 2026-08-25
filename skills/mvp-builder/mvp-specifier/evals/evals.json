@@ -13,12 +13,6 @@
         "v1 cut: one team, one shared board, notes for today only. Later: Slack, mobile, history search. Staff have accounts. No public access. Notes are not medical. Store on one local disk, no cloud.",
         "Architecture: one laptop, local Node server, SQLite file, browser UI. Data: Team, User, Note (id, author, body, created_at). Screens: sign-in, today's board, add-note form. Functions: sign in, add note, list today's notes. No HTTP API beyond the local server page loads. Empty board shows 'No notes yet'. Bad password shows 'Wrong email or password' on the same form. Closing the add-note form discards the draft."
       ],
-      "assertions": [
-        "Writes one what-to-build.md",
-        "Includes Concept, Architecture, Screens, Functions headings",
-        "Does not scaffold application source",
-        "Does not start feature-developer"
-      ],
       "checks": [
         { "id": "announces-skill", "type": "transcript_contains", "pattern": "Using skill: mvp-specifier", "must": true },
         { "id": "spec-exists", "type": "file_exists", "path": "**/what-to-build.md", "must": true },
@@ -42,11 +36,6 @@
       "fixture": "toy-web",
       "files": [],
       "replies": [],
-      "assertions": [
-        "Names feature-specifier",
-        "Does not write what-to-build.md",
-        "Does not change source"
-      ],
       "checks": [
         { "id": "names-specifier", "type": "transcript_contains", "pattern": "feature-specifier", "must": true },
         { "id": "no-spec", "type": "no_file", "path": "**/what-to-build.md", "must": true },
@@ -62,12 +51,6 @@
       "fixture": "greenfield",
       "files": [],
       "replies": [],
-      "assertions": [
-        "Announces mvp-specifier",
-        "Asks challenge questions or writes awaiting-questions",
-        "Does not scaffold",
-        "Does not invent a ready spec"
-      ],
       "checks": [
         { "id": "announces-skill", "type": "transcript_contains", "pattern": "Using skill: mvp-specifier", "must": true },
         { "id": "asked-or-awaiting", "type": "asked_or_awaiting", "transcript_pattern": "(?i)(AskQuestion|Choice UI|v1|prototype cut|who |tablet|privacy|where (does|should) (it|data))", "awaiting_glob": "**/what-to-build.md", "must": true },
