@@ -25,12 +25,13 @@ The agent announces `Using skill: <id>`, reads `skills/<family>/<id>/SKILL.md` (
 | --- | --- |
 | `Use skill: <id>` | That skill only |
 | "I have an idea." / "Write a spec." (feature in an existing repo) | `feature-specifier` |
+| "This is broken." / bug, crash, regression, wrong output (analyze before fix) | `feature-bug-analyst` |
 | Prototype / MVP / new project / greenfield / pitch, or `Use skill: mvp-specifier` | `mvp-specifier` (Elephant: spec only; Goldfish is a new chat). Old name: `pitch-to-spec` |
 | "Build this spec." / "Implement what-to-build.md." | `feature-developer` |
 | "Review this feature folder." | `feature-code-reviewer` |
 | "Test this feature folder against what-to-build.md." | `feature-tester` |
 
-If the idea is fuzzy, specify first. A feature in an existing app is `feature-specifier`. A prototype, MVP, new project, or greenfield is `mvp-specifier`. A generic "I have an idea" in an existing app still maps to `feature-specifier`. To implement, review, and test, name those skills one at a time. After `mvp-specifier`, open a **new** Agent chat for `feature-developer`.
+If the idea is fuzzy, specify first. A feature in an existing app is `feature-specifier`. A defect with expected vs actual (or a stacktrace) is `feature-bug-analyst`. A prototype, MVP, new project, or greenfield is `mvp-specifier`. A generic "I have an idea" in an existing app still maps to `feature-specifier`. To implement, review, and test, name those skills one at a time. After `mvp-specifier` or `feature-bug-analyst`, open a **new** Agent chat for `feature-developer` unless you named that skill in the same chat.
 
 ## Install
 
@@ -44,6 +45,7 @@ Same contract as [README.md](../README.md) (How to install). MUST stop and ask (
 | --- | --- | --- |
 | `.cursor/rules/agent-engineer-skills.mdc` | Always | Dispatcher |
 | `.cursor/rules/feature-specifier.mdc` | Selected | Specify (existing repo) |
+| `.cursor/rules/feature-bug-analyst.mdc` | Selected | Analyze a defect (existing repo) |
 | `.cursor/rules/feature-developer.mdc` | Selected | Implement |
 | `.cursor/rules/feature-code-reviewer.mdc` | Selected | Review |
 | `.cursor/rules/feature-tester.mdc` | Selected | Test |

@@ -25,7 +25,7 @@ Do not copy `evals/` or `skills/**/evals/` into a consuming app.
 
 A skill only helps if it loads. The `description` in `SKILL.md` is the only thing an agent sees before deciding, so these evals measure one thing: **does each skill trigger on the prompts it should, and stay quiet on the ones it should not.**
 
-The four `feature-builder` skills share almost all their vocabulary (feature, spec, build, review, test, verify), which makes them each other's worst near-misses. `mvp-specifier` adds a fifth set, because the line between "a new thing" and "a feature in an existing thing" is exactly where it and `feature-specifier` steal each other's prompts. That is what these query sets are built to catch.
+The `feature-builder` skills share a lot of vocabulary (feature, spec, build, review, test, verify, bug, fix). That makes them each other's worst near-misses. `feature-bug-analyst` adds defect language that must not steal fuzzy product work from `feature-specifier` or implementation from `feature-developer`. `mvp-specifier` adds another set, because the line between "a new thing" and "a feature in an existing thing" is exactly where it and `feature-specifier` steal each other's prompts. That is what these query sets are built to catch.
 
 ### What you have
 
@@ -70,10 +70,10 @@ Detection is a substring match for the skill name in that output, so the command
 cd evals
 
 ./run-trigger-eval.ps1 `
-    -QueriesFile ./queries/feature-tester.json `
+    -QueriesFile ./queries/feature-bug-analyst.json `
     -AgentCommand 'cursor-agent -p $env:AES_EVAL_QUERY' `
     -Split train `
-    -OutFile ./results/feature-tester-train.json
+    -OutFile ./results/feature-bug-analyst-train.json
 ```
 
 Wrap `-AgentCommand` in single quotes so `$env:AES_EVAL_QUERY` is expanded when the runner invokes it, not when you type it. Verify the command on its own once before running 60 invocations through it.
@@ -108,7 +108,7 @@ Layout follows [evaluating-skills](https://agentskills.io/skill-creation/evaluat
 
 ### What you have
 
-2–3 cases per skill in `skills/<family>/<id>/evals/evals.json`. Each case has a prompt, a tiny fake app (fixture), optional scripted answers, and a list of checks (file exists, Status is `ready-for-developer`, no CSV, and so on).
+2-3 cases per skill in `skills/<family>/<id>/evals/evals.json`. Each case has a prompt, a tiny fake app (fixture), optional scripted answers, and a list of checks (file exists, Status is `ready-for-developer`, no CSV / no source edits for analysis-only skills, and so on).
 
 | Path | What |
 | --- | --- |
@@ -123,7 +123,7 @@ Each eval directory contains `with_skill/` and, when a baseline exists, `old_ski
 ### Steps for one case
 
 1. Copy a tiny app (`evals/fixtures/toy-web` or `greenfield`).
-2. Copy extra files on top if needed (for example the shared `format-cents` spec). Overlay paths resolve in the skill folder first, then at the pack root.
+2. Copy extra files on top if needed (for example the shared `format-cents` spec or a planted bug under the skill's `evals/files/`). Overlay paths resolve in the skill folder first, then at the pack root.
 3. `git init` that copy so it looks like a real repo.
 4. Inject **only that one skill** (plus the dispatcher rule). Skill-folder `evals/` is not copied into this sandbox.
 5. Run `cursor-agent` with that prompt in that workspace (`-p --force --trust --workspace`).
@@ -150,10 +150,10 @@ cd evals
 ./run-quality-eval.ps1 -Skill feature-specifier -BaselineCommit HEAD~1
 
 # Current skill only, no comparison
-./run-quality-eval.ps1 -Skill feature-developer -SkipBaseline
+./run-quality-eval.ps1 -Skill feature-bug-analyst -SkipBaseline
 ```
 
-`-Skill all` runs every skill. `-EvalName fuzzy-csv-export-ask` runs one case. The runner does not install a CI job.
+`-Skill all` runs every skill. `-EvalName fuzzy-csv-export-ask` (or `empty-cart-exact-report`) runs one case. The runner does not install a CI job.
 
 ### Reading benchmark.json
 
@@ -163,4 +163,4 @@ cd evals
 
 ### Adding cases
 
-Start with 2-3 prompts per skill. Vary phrasing. Include one edge (refuse the wrong sibling skill, missing spec, no test runner). Checks should be things a script can fail: file exists, Status/Verdict enum, template headings, no emoji, no `concept.md`, git branch rules.
+Start with 2-3 prompts per skill. Vary phrasing. Include one edge (refuse the wrong sibling skill, missing spec or evidence, no test runner). Checks should be things a script can fail: file exists, Status/Verdict enum, template headings, no emoji, no `concept.md`, git branch rules, source untouched for analysis-only skills.

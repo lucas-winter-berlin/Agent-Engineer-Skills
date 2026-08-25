@@ -23,6 +23,7 @@ Use this when you already have an app and want to add or change a feature.
 | Skill | Problem | What it does |
 | --- | --- | --- |
 | `feature-specifier` | No concept. The agent would guess the product. | Asks the questions that matter, then writes the actual concept in `what-to-build.md`. No code is generated. |
+| `feature-bug-analyst` | A defect is reported, but the root cause and fix are not locked. | Pins Expected vs Actual, finds evidence in the repo, and writes a fix-ready `what-to-build.md` (failing-test plan, minimal fix). No code is generated. |
 | `feature-developer` | The agent does not follow the spec, hallucinates, or builds overhead. | Implements `what-to-build.md` and nothing else, on its own feature branch, and commits there. Never pushes. Writes an implementation log in `what-was-implemented.md`. |
 | `feature-code-reviewer` | The change works now but will be hard to maintain. | Strict review against this repo: duplication, unclear names, hidden control flow, coupling, layout, secrets. May refactor internals. Must not change what the user gets. Writes a review log in `what-was-reviewed.md`. |
 | `feature-tester` | Nothing was tested against the spec. It may be slop. | Writes cases from the spec, runs this repo's tests, and reports `pass`, `fail`, or `not-run`. Writes `what-was-verified.md`. |
@@ -47,6 +48,7 @@ The agent must:
 2. Copy only these Cursor rules into the app's `.cursor/rules/` (create that folder if needed). Do not delete or overwrite the app's other rules:
    - `agent-engineer-skills.mdc`
    - `feature-specifier.mdc`
+   - `feature-bug-analyst.mdc`
    - `feature-developer.mdc`
    - `feature-code-reviewer.mdc`
    - `feature-tester.mdc`
@@ -72,6 +74,11 @@ A feature in an app you already have:
 ```text
 Use skill: feature-specifier
 I want users to export their invoices as CSV.
+```
+
+```text
+Use skill: feature-bug-analyst
+Checkout throws when the cart is empty. Expected: empty-state message. Actual: 500.
 ```
 
 ```text

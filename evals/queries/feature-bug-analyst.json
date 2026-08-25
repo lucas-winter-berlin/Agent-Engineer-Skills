@@ -1,0 +1,106 @@
+{
+  "skill": "feature-bug-analyst",
+  "notes": "Positives are defects to root-cause before a fix. Negatives are near-misses: fuzzy product work (feature-specifier), greenfield (mvp-specifier), implement/review/test on an existing spec, and trivial edits that are not investigations.",
+  "queries": [
+    {
+      "query": "there's a null pointer exception on line 42 of src/api/orders.ts when the cart is empty. expected empty-state message, actual 500. analyze it before we fix",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "checkout fails intermittently on staging with a race in the payment webhook. can you pin the root cause?",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "bug: search returns 500 when the query string is empty. expected: empty results. actual: crash. stacktrace attached in the ticket",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "after yesterday's deploy the CSV export truncates the last column. what broke?",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "why is login redirecting to /error for expired sessions instead of /login?",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "Linear ENG-441: mobile app crashes on Android 14 when opening the camera picker. need a root-cause write-up",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "the invoice total is wrong when a discount code is applied twice. Expected single application, Actual double discount. dig in",
+      "should_trigger": true,
+      "split": "validation"
+    },
+    {
+      "query": "flaky e2e: orders page sometimes shows stale cart items after checkout. analyze before anyone patches it",
+      "should_trigger": true,
+      "split": "validation"
+    },
+    {
+      "query": "prod logs show TypeError: Cannot read properties of undefined (reading 'id') in src/billing/invoice.ts. find the cause",
+      "should_trigger": true,
+      "split": "validation"
+    },
+    {
+      "query": "regression: webhook retries used to be idempotent, now they create duplicate shipments. investigate",
+      "should_trigger": true,
+      "split": "validation"
+    },
+    {
+      "query": "I want to add notifications to the app but honestly I haven't thought it through yet",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "implement agent-engineer-skills/empty-cart-500/what-to-build.md",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "review the code I just wrote for the notifications feature",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "write integration tests for the audit log and run them against the spec",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "I want to build a new app for tracking my houseplants, help me design it",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "fix the typo in the login button label",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "can we make search better? it's slow and the results are bad",
+      "should_trigger": false,
+      "split": "validation"
+    },
+    {
+      "query": "set up CI so the tests run on every PR",
+      "should_trigger": false,
+      "split": "validation"
+    },
+    {
+      "query": "explain how the payment flow works in this repo",
+      "should_trigger": false,
+      "split": "validation"
+    },
+    {
+      "query": "prototype a demo of the queue system for a pitch on thursday",
+      "should_trigger": false,
+      "split": "validation"
+    }
+  ]
+}
