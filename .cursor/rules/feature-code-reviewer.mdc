@@ -23,7 +23,7 @@ After `feature-developer` when the operator names this skill. Before `feature-te
 2. Compare to existing patterns in this repo.
 3. Record findings (`must-fix` / `should-fix` / `nit`) with file paths. Empty "looks fine" is a fail of this skill.
 4. Fix must-fix and should-fix without changing product or walls. Re-run existing tests if a command exists.
-5. Write `agent-engineer-skills/<name>/what-was-reviewed.md`. End on one of three exits: `pass`; `fail` blocked on product (send them to `feature-specifier`); `fail` reported after two full passes.
+5. Write `<root>/<name>/what-was-reviewed.md`. `<root>` is the docs **folder** named on the Feature-folder write-ups line in `.cursor/rules/agent-engineer-skills.mdc`, else `agent-engineer-skills`. End on one of three exits: `pass`; `fail` blocked on product (send them to `feature-specifier`); `fail` reported after two full passes.
 
 The gate is one question: would a stranger change this file in twelve months without fear? Severity follows from it. Windows PowerShell 5.1 has no `&&` operator; run git commands one per call there.
 

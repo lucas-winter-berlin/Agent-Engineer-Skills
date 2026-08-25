@@ -1,0 +1,63 @@
+{
+  "skill_name": "mvp-specifier",
+  "family": "mvp-builder",
+  "evals": [
+    {
+      "id": 1,
+      "name": "standup-notes-pitch",
+      "prompt": "Use skill: mvp-specifier\n\nI want a small app where teams log standup notes. Turn this into something we can actually build.",
+      "expected_output": "After scripted answers, one what-to-build.md exists with Concept, Architecture, Screens, and Functions. No application scaffold. No extra PRD files.",
+      "fixture": "greenfield",
+      "files": [],
+      "replies": [
+        "v1 cut: one team, one shared board, notes for today only. Later: Slack, mobile, history search. Staff have accounts. No public access. Notes are not medical. Store on one local disk, no cloud.",
+        "Architecture: one laptop, local Node server, SQLite file, browser UI. Data: Team, User, Note (id, author, body, created_at). Screens: sign-in, today's board, add-note form. Functions: sign in, add note, list today's notes. No HTTP API beyond the local server page loads. Empty board shows 'No notes yet'. Bad password shows 'Wrong email or password' on the same form. Closing the add-note form discards the draft."
+      ],
+      "checks": [
+        { "id": "announces-skill", "type": "transcript_contains", "pattern": "Using skill: mvp-specifier", "must": true },
+        { "id": "spec-exists", "type": "file_exists", "path": "**/what-to-build.md", "must": true },
+        { "id": "status-ok", "type": "status_in", "path": "**/what-to-build.md", "values": ["draft", "ready-for-developer", "awaiting-questions"], "must": true },
+        { "id": "heading-concept", "type": "heading_present", "path": "**/what-to-build.md", "heading": "## Concept", "must": true },
+        { "id": "heading-architecture", "type": "heading_present", "path": "**/what-to-build.md", "heading": "## Architecture", "must": true },
+        { "id": "heading-screens", "type": "heading_present", "path": "**/what-to-build.md", "heading": "## Screens and UI", "must": true },
+        { "id": "heading-functions", "type": "heading_present", "path": "**/what-to-build.md", "heading": "## Functions", "must": true },
+        { "id": "no-scaffold-src", "type": "no_file", "path": "src/**", "must": true },
+        { "id": "no-package", "type": "no_file", "path": "package.json", "must": true },
+        { "id": "did-not-chain", "type": "transcript_not_contains", "pattern": "Using skill: feature-developer", "must": true },
+        { "id": "no-extra-prd", "type": "no_extra_prd", "must": true },
+        { "id": "no-emoji", "type": "no_emoji", "path": "**/what-to-build.md", "must": true }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "refuse-existing-app-feature",
+      "prompt": "Use skill: mvp-specifier\n\nadd a CSV export to the existing orders page in this repo. public/orders.html already lists invoices.",
+      "expected_output": "The agent refuses, names feature-specifier, and does not write an MVP design.",
+      "fixture": "toy-web",
+      "files": [],
+      "replies": [],
+      "checks": [
+        { "id": "names-specifier", "type": "transcript_contains", "pattern": "feature-specifier", "must": true },
+        { "id": "no-spec", "type": "no_file", "path": "**/what-to-build.md", "must": true },
+        { "id": "source-untouched", "type": "paths_unchanged", "paths": ["src", "public", "package.json"], "must": true },
+        { "id": "no-extra-prd", "type": "no_extra_prd", "must": true }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "casual-investor-demo",
+      "prompt": "Use skill: mvp-specifier\n\nhey can we prototype a demo for the investor meeting next week? something where a clinic checks patients in on a tablet.",
+      "expected_output": "The agent challenges the pitch (does not rubber-stamp). It asks rounds of questions or writes Status awaiting-questions. It does not scaffold an app or mark ready-for-developer with guessed product.",
+      "fixture": "greenfield",
+      "files": [],
+      "replies": [],
+      "checks": [
+        { "id": "announces-skill", "type": "transcript_contains", "pattern": "Using skill: mvp-specifier", "must": true },
+        { "id": "asked-or-awaiting", "type": "asked_or_awaiting", "transcript_pattern": "(?i)(AskQuestion|Choice UI|v1|prototype cut|who |tablet|privacy|where (does|should) (it|data))", "awaiting_glob": "**/what-to-build.md", "must": true },
+        { "id": "not-ready-guess", "type": "status_not_in", "path": "**/what-to-build.md", "values": ["ready-for-developer"], "optional": true, "must": true },
+        { "id": "no-scaffold-src", "type": "no_file", "path": "src/**", "must": true },
+        { "id": "no-extra-prd", "type": "no_extra_prd", "must": true }
+      ]
+    }
+  ]
+}

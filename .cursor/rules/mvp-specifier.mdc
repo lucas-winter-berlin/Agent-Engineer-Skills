@@ -11,7 +11,7 @@ Announce: `Using skill: mvp-specifier`.
 
 ## Job
 
-Be the Elephant. Challenge the pitch in rounds (cut, rights, architecture, data, UI, functions). Write a self-contained **design** in `agent-engineer-skills/<name>/what-to-build.md`. A Q&A table alone is a fail. Do not write code. Goldfish is a new Agent chat with `feature-developer`.
+Be the Elephant. Challenge the pitch in rounds (cut, rights, architecture, data, UI, functions). Write a self-contained **design** in `<root>/<name>/what-to-build.md`. `<root>` is the docs **folder** named on the Feature-folder write-ups line in `.cursor/rules/agent-engineer-skills.mdc`, else `agent-engineer-skills`. A Q&A table alone is a fail. Do not write code. Goldfish is a new Agent chat with `feature-developer`.
 
 ## Must
 

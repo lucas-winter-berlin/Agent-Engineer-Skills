@@ -11,11 +11,13 @@ You name one skill (or describe feature work)
   -> Agent runs only that skill
     -> Agent reads skills/<family>/<id>/SKILL.md
       -> Agent does that job
-        -> Writes that skill's files (often under agent-engineer-skills/<name>/)
+        -> Writes that skill's files (under <root>/<name>/)
           -> Stop. Do not start the next skill unless they named it.
 ```
 
 `family` is `feature-builder` or `mvp-builder`. The **id** is what you type (`Use skill: feature-specifier`).
+
+Markdown docs live under `<root>/<feature-name>/`. The install agent MUST ask once: keep the default **folder** `agent-engineer-skills/`, or create a custom repo-relative directory. Install creates that directory. The app's `.cursor/rules/agent-engineer-skills.mdc` names it on the Feature-folder write-ups line. Skills use that folder, else `agent-engineer-skills`. Do not write a file named `aes-write-up-root`. Do not rewrite copied `SKILL.md` files to hardcode the path.
 
 A skill is a recipe card. The agent is the cook. Your git repo is the kitchen. `what-to-build.md` is the specification from `feature-specifier` or `mvp-specifier`; later skills may not build a different product.
 
@@ -73,7 +75,7 @@ Quiet and read-only until the skill says to write. Do not add Playwright, CI, or
 2. For skill-bound work, that skill's templates and required write-up content from this framework win. Skill order wins only when the user named the next skill.
 3. That project's code style wins for source.
 
-Share the app's git files (`skills/`, the AES `.mdc` files, `agent-engineer-skills/`), not chat logs. Do not copy this pack's `docs/` or `evals/` into the app.
+Share the app's git files (`skills/` without skill-folder `evals/`, the AES `.mdc` files, the docs folder such as `agent-engineer-skills/`), not chat logs. Do not copy this pack's `docs/` or `evals/` into the app.
 
 ## Versioning
 
@@ -84,7 +86,7 @@ Share the app's git files (`skills/`, the AES `.mdc` files, `agent-engineer-skil
 ## This framework does not
 
 - Replace the team's product process outside `what-to-build.md`
-- Copy this pack's `docs/` or `evals/` into an app, or replace that app's `.cursor/rules/` folder
+- Copy this pack's `docs/` or `evals/` into an app, copy `skills/**/evals/`, or replace that app's `.cursor/rules/` folder
 - Set up CI or cloud accounts
 - Guarantee tests are enough without a human look
 - Let the agent ignore the consuming project's security policy
@@ -97,7 +99,7 @@ Share the app's git files (`skills/`, the AES `.mdc` files, `agent-engineer-skil
 | Skill | Job plus required outputs. Runnable alone. Id is the leaf folder. |
 | Family | `feature-builder` or `mvp-builder`. Browse path only. |
 | Feature specification | `what-to-build.md` from `feature-specifier` or `mvp-specifier` |
-| Feature directory | `agent-engineer-skills/<feature-name>/` for one change |
+| Feature directory | `<root>/<feature-name>/` for one change. `<root>` is the docs **folder** named in the app dispatcher, else `agent-engineer-skills` |
 | mvp-specifier | Elephant: prototype / MVP / new project spec. Not `feature-specifier`. Goldfish is a new chat with `feature-developer`. |
 | Wall | Out-of-scope. Hard reject if code builds it |
 | Landmine | A question whose wrong guess would waste implementation time |

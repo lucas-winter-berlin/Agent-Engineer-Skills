@@ -1,0 +1,9 @@
+{
+  "name": "toy-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Tiny existing storefront used as a quality-eval fixture. No test runner.",
+  "scripts": {
+    "start": "node src/index.js"
+  }
+}

@@ -15,13 +15,17 @@ compatibility: >-
   Requires git and a shell. Works in any Agent Skills host. Creates a local
   branch and commits to it; never pushes unless asked. Needs no network access
   beyond the repo's own package manager.
+license: PolyForm Noncommercial License 1.0.0
+metadata:
+  author: Lucas Winter
+  version: "1.0"
 ---
 
 # feature-developer
 
 Core job: implement `what-to-build.md`. Do not invent product. Do not run testing, documentation, or CI/CD as separate programs.
 
-Input: `agent-engineer-skills/<feature-name>/what-to-build.md` from `feature-specifier`.
+Input: `<root>/<feature-name>/what-to-build.md` from `feature-specifier`. Resolve `<root>` as in Gotchas.
 
 Output: a feature branch with the change committed on it, and `what-was-implemented.md` from [assets/what-was-implemented.md](assets/what-was-implemented.md).
 
@@ -33,7 +37,7 @@ Do not use when the idea is still fuzzy (`feature-specifier`), when they want a 
 
 ## Gotchas
 
-- The specification lives at `agent-engineer-skills/<feature-name>/what-to-build.md`. If that tree is missing but `docs/features/<feature-name>/` exists, use the old folder and write your write-up next to it. `concept.md` is the old filename for the same artifact; treat it as `what-to-build.md`.
+- **Write-up root.** `<root>` is the docs **directory** named on the Feature-folder write-ups line in the app's `.cursor/rules/agent-engineer-skills.mdc`. If that line is missing, `<root>` is `agent-engineer-skills`. That path must be a folder. Never create or read a file named `aes-write-up-root`. The specification lives at `<root>/<feature-name>/what-to-build.md`. If that tree is missing but `docs/features/<feature-name>/` exists, use the old folder and write your write-up next to it. Never create both trees for one name. `concept.md` is the old filename for the same artifact; treat it as `what-to-build.md`.
 - Commit your work on the feature branch. That commit is what `feature-code-reviewer` diffs against the base, so leaving it uncommitted hides the change. Never push, never commit to the default branch, never amend or rebase. If the user explicitly told you not to commit, say so in the handoff so the reviewer knows to read the working tree instead.
 - Windows PowerShell 5.1 has no `&&` operator, so joined commands fail there. PowerShell 7 and POSIX shells accept it. When the shell is unknown, run git commands one per call.
 - Repos routinely have tests that were already failing before you touched anything. Record those as pre-existing and own only the failures your diff caused. Never delete, skip, or weaken a test to get a green run.
@@ -53,7 +57,7 @@ Do not use when the idea is still fuzzy (`feature-specifier`), when they want a 
    - Match local style: naming, folder layout, error handling, imports, user-facing text.
    - Add tests only in the repo's existing pattern and folders. If there is no test runner, add none.
    - Run the repo's existing test command. Separate pre-existing failures from ones your change caused.
-4. **Describe.** Write `agent-engineer-skills/<feature-name>/what-was-implemented.md`: what you did, why, where, how to try it. Full context for a reviewer who did not see the chat. Not a second spec.
+4. **Describe.** Write `<root>/<feature-name>/what-was-implemented.md`: what you did, why, where, how to try it. Full context for a reviewer who did not see the chat. Not a second spec.
 5. **Commit.** Stage the source changes and the write-up, then commit on the feature branch with a message naming the feature. One commit is enough unless the work has genuinely separable parts. Do not push.
 
 ## Read the repo first (quiet)
