@@ -32,4 +32,4 @@ Understand the idea, problem, or feature. Ask questions whose wrong answers woul
 
 ## Do not use
 
-When a feature specification already exists and the user wants code, review, or tests.
+When the request is a defect to root-cause (`feature-bug-analyst`), or a feature specification already exists and the user wants code, review, or tests.

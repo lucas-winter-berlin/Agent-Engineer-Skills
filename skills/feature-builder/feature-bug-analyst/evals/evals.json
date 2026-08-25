@@ -1,0 +1,69 @@
+{
+  "skill_name": "feature-bug-analyst",
+  "family": "feature-builder",
+  "evals": [
+    {
+      "id": 1,
+      "name": "empty-cart-exact-report",
+      "prompt": "Use skill: feature-bug-analyst\n\nThere's a TypeError on line 3 of src/cart.js when the cart is empty. Expected: return 0. Actual: Cannot read properties of undefined (reading 'length'). Analyze before we fix.",
+      "expected_output": "Writes agent-engineer-skills/<name>/what-to-build.md with Origin feature-bug-analyst, confirmed or likely root cause at src/cart.js, proposed failing test, Edge cases: none (or only the empty-cart path). No source edits. Does not start feature-developer.",
+      "fixture": "toy-web",
+      "files": ["evals/files/empty-cart-npe"],
+      "replies": [],
+      "checks": [
+        { "id": "announces-skill", "type": "transcript_contains", "pattern": "Using skill: feature-bug-analyst", "must": true },
+        { "id": "spec-exists", "type": "file_exists", "path": "**/what-to-build.md", "must": true },
+        { "id": "origin", "type": "file_contains", "path": "**/what-to-build.md", "pattern": "Origin:\\s*`?feature-bug-analyst`?", "must": true },
+        { "id": "status-ready", "type": "status_in", "path": "**/what-to-build.md", "values": ["ready-for-developer"], "must": true },
+        { "id": "root-cause-status", "type": "file_contains", "path": "**/what-to-build.md", "pattern": "Root-cause status:\\s*`?(confirmed|likely)`?", "must": true },
+        { "id": "cites-cart", "type": "file_contains", "path": "**/what-to-build.md", "pattern": "src/cart\\.js", "must": true },
+        { "id": "heading-hypotheses", "type": "heading_present", "path": "**/what-to-build.md", "heading": "## Hypotheses", "must": true },
+        { "id": "heading-root-cause", "type": "heading_present", "path": "**/what-to-build.md", "heading": "## Root cause", "must": true },
+        { "id": "heading-proposed-test", "type": "heading_present", "path": "**/what-to-build.md", "heading": "## Proposed failing test", "must": true },
+        { "id": "heading-fix-approach", "type": "heading_present", "path": "**/what-to-build.md", "heading": "## Fix approach", "must": true },
+        { "id": "heading-done-when", "type": "heading_present", "path": "**/what-to-build.md", "heading": "## Done when", "must": true },
+        { "id": "heading-do-not", "type": "heading_present", "path": "**/what-to-build.md", "heading": "## Do not", "must": true },
+        { "id": "has-gwt", "type": "file_contains", "path": "**/what-to-build.md", "pattern": "(?im)Given\\s+.+(?:\\r?\\n)When\\s+.+(?:\\r?\\n)Then\\s+", "must": true },
+        { "id": "no-speculative-edges", "type": "file_not_contains", "path": "**/what-to-build.md", "pattern": "(?i)ambiguous/nonexistent|leap second|prefer the same Instant|or document the chosen", "must": true },
+        { "id": "no-placeholders", "type": "no_placeholder", "path": "**/what-to-build.md", "must": true },
+        { "id": "source-untouched", "type": "paths_unchanged", "paths": ["src", "public", "package.json"], "must": true },
+        { "id": "did-not-chain", "type": "transcript_not_contains", "pattern": "Using skill: feature-developer", "must": true },
+        { "id": "no-extra-prd", "type": "no_extra_prd", "must": true },
+        { "id": "no-emoji", "type": "no_emoji", "path": "**/what-to-build.md", "must": true }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "refuse-missing-feature",
+      "prompt": "Use skill: feature-bug-analyst\n\nI want to add notifications to the app but honestly I haven't thought it through yet. Can you analyze the bug?",
+      "expected_output": "The agent refuses product invention, names feature-specifier, and does not write a ready-for-developer bug fix spec.",
+      "fixture": "toy-web",
+      "files": [],
+      "replies": [],
+      "checks": [
+        { "id": "announces-skill", "type": "transcript_contains", "pattern": "Using skill: feature-bug-analyst", "must": true },
+        { "id": "names-specifier", "type": "transcript_contains", "pattern": "feature-specifier", "must": true },
+        { "id": "not-ready-fix", "type": "status_not_in", "path": "**/what-to-build.md", "values": ["ready-for-developer"], "optional": true, "must": true },
+        { "id": "source-untouched", "type": "paths_unchanged", "paths": ["src", "public", "package.json"], "must": true },
+        { "id": "no-extra-prd", "type": "no_extra_prd", "must": true }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "fuzzy-bug-asks",
+      "prompt": "Use skill: feature-bug-analyst\n\ncheckout is broken sometimes on staging. dig in.",
+      "expected_output": "The agent asks landmine questions (expected/actual, reproduction, environment) or writes Status awaiting-questions / blocked-need-evidence. It does not mark ready-for-developer with a guessed root cause, and does not edit source.",
+      "fixture": "toy-web",
+      "files": ["evals/files/empty-cart-npe"],
+      "replies": [],
+      "checks": [
+        { "id": "announces-skill", "type": "transcript_contains", "pattern": "Using skill: feature-bug-analyst", "must": true },
+        { "id": "asked-or-awaiting", "type": "asked_or_awaiting", "transcript_pattern": "(?i)(AskQuestion|Choice UI|expected|actual|repro|how often|intermittent|staging|which (browser|env))", "awaiting_glob": "**/what-to-build.md", "must": true },
+        { "id": "not-ready-guess", "type": "status_not_in", "path": "**/what-to-build.md", "values": ["ready-for-developer"], "optional": true, "must": true },
+        { "id": "source-untouched", "type": "paths_unchanged", "paths": ["src", "public", "package.json"], "must": true },
+        { "id": "did-not-chain", "type": "transcript_not_contains", "pattern": "Using skill: feature-developer", "must": true },
+        { "id": "no-extra-prd", "type": "no_extra_prd", "must": true }
+      ]
+    }
+  ]
+}

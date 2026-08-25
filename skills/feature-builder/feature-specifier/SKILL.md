@@ -1,18 +1,19 @@
 ---
 name: feature-specifier
 description: >-
-  Use when someone wants a feature, change, or fix in an existing codebase and
-  what to build is not yet pinned down: a rough idea, a problem, a complaint, a
-  "can we make X better", or a request where "done" is undefined. Asks the few
-  questions whose wrong answers would waste implementation time, then writes
-  agent-engineer-skills/<name>/what-to-build.md with locked decisions, scope
-  walls, and observable done-when checks. Covers UI, API, CLI, jobs, libraries,
-  and mixed work. Use even when the user does not say "spec", "PRD",
-  "requirements", or "acceptance criteria". Do not use for a new project,
-  prototype, MVP, or pitch (mvp-specifier), for an already-exact change such as
-  a known bug or one-line fix, or when a specification already exists and the
-  user wants it built (feature-developer), reviewed (feature-code-reviewer), or
-  tested (feature-tester).
+  Use when someone wants a feature, change, or improvement in an existing
+  codebase and what to build is not yet pinned down: a rough idea, a complaint
+  about missing capability, a "can we make X better", or a request where "done"
+  is undefined. Asks the few questions whose wrong answers would waste
+  implementation time, then writes agent-engineer-skills/<name>/what-to-build.md
+  with locked decisions, scope walls, and observable done-when checks. Covers
+  UI, API, CLI, jobs, libraries, and mixed work. Use even when the user does not
+  say "spec", "PRD", "requirements", or "acceptance criteria". Do not use for a
+  new project, prototype, MVP, or pitch (mvp-specifier), for a defect with
+  expected vs actual or a stacktrace to root-cause (feature-bug-analyst), for an
+  already-exact one-line change the user already trusts, or when a specification
+  already exists and the user wants it built (feature-developer), reviewed
+  (feature-code-reviewer), or tested (feature-tester).
 compatibility: >-
   Works in any Agent Skills host. Uses the host's clickable multiple-choice UI
   for the question batch when one exists (for example Cursor AskQuestion), and
@@ -36,7 +37,7 @@ Output: `<root>/<feature-name>/what-to-build.md` from [assets/what-to-build.md](
 
 The request is an idea, a problem, or a feature, and "done" is not specified.
 
-Do not use when the change is already exact (known bug, one-line fix), or the user only wants code, review, or tests on an existing specification.
+Do not use when the change is a defect to root-cause (`feature-bug-analyst`), already exact and trusted as a one-line edit, or the user only wants code, review, or tests on an existing specification.
 
 ## Gotchas
 

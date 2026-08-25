@@ -50,6 +50,7 @@ param(
     [Parameter(Mandatory = $true)]
     [ValidateSet(
         'feature-specifier',
+        'feature-bug-analyst',
         'feature-developer',
         'feature-code-reviewer',
         'feature-tester',
