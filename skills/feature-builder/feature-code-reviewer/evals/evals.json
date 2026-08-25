@@ -1,0 +1,53 @@
+{
+  "skill_name": "feature-code-reviewer",
+  "family": "feature-builder",
+  "evals": [
+    {
+      "id": 1,
+      "name": "smelly-format-cents",
+      "prompt": "Use skill: feature-code-reviewer\n\nReview agent-engineer-skills/format-cents/ against what-to-build.md",
+      "expected_output": "what-was-reviewed.md exists. Unclear names (x, fn1) and duplicated formatters are reported as must-fix or cleaned up. Verdict is fail if the smell remains unreported, or pass if it was fixed. No CSV or new pages.",
+      "fixture": "toy-web",
+      "files": ["evals/fixtures/format-cents-spec"],
+      "branch": "cursor/format-cents",
+      "branch_files": ["evals/files/format-cents-smelly"],
+      "replies": [],
+      "checks": [
+        { "id": "announces-skill", "type": "transcript_contains", "pattern": "Using skill: feature-code-reviewer", "must": true },
+        { "id": "writeup-exists", "type": "file_exists", "path": "agent-engineer-skills/format-cents/what-was-reviewed.md", "must": true },
+        { "id": "verdict-ok", "type": "verdict_in", "path": "agent-engineer-skills/format-cents/what-was-reviewed.md", "values": ["pass", "fail"], "must": true },
+        { "id": "files-reviewed", "type": "heading_present", "path": "agent-engineer-skills/format-cents/what-was-reviewed.md", "heading": "## Files reviewed", "must": true },
+        { "id": "reviewed-money", "type": "file_contains", "path": "agent-engineer-skills/format-cents/what-was-reviewed.md", "pattern": "src/money\\.js", "must": true },
+        { "id": "findings-heading", "type": "heading_present", "path": "agent-engineer-skills/format-cents/what-was-reviewed.md", "heading": "## Findings", "must": true },
+        { "id": "findings-row", "type": "findings_has_row", "path": "agent-engineer-skills/format-cents/what-was-reviewed.md", "must": true },
+        { "id": "smell-handled", "type": "smell_addressed_or_reported", "smell_pattern": "function\\s+x\\s*\\(", "smell_path": "src/money.js", "report_pattern": "(?i)(\\bx\\b|fn1|duplicat|unclear name|must-fix)", "writeup": "agent-engineer-skills/format-cents/what-was-reviewed.md", "must": true },
+        { "id": "no-csv", "type": "no_file", "path": "**/*csv*", "must": true },
+        { "id": "no-new-page", "type": "no_file", "path": "public/export.html", "must": true },
+        { "id": "no-emoji", "type": "no_emoji", "path": "agent-engineer-skills/format-cents/what-was-reviewed.md", "must": true },
+        { "id": "no-extra-prd", "type": "no_extra_prd", "must": true }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "clean-format-cents",
+      "prompt": "Use skill: feature-code-reviewer\n\nReview agent-engineer-skills/format-cents/",
+      "expected_output": "Verdict pass. Findings has at least one row (none is allowed if it names the files read). No product changes.",
+      "fixture": "toy-web",
+      "files": ["evals/fixtures/format-cents-spec"],
+      "branch": "cursor/format-cents",
+      "branch_files": ["evals/files/format-cents-clean"],
+      "replies": [],
+      "checks": [
+        { "id": "announces-skill", "type": "transcript_contains", "pattern": "Using skill: feature-code-reviewer", "must": true },
+        { "id": "writeup-exists", "type": "file_exists", "path": "agent-engineer-skills/format-cents/what-was-reviewed.md", "must": true },
+        { "id": "verdict-pass", "type": "verdict_in", "path": "agent-engineer-skills/format-cents/what-was-reviewed.md", "values": ["pass"], "must": true },
+        { "id": "reviewed-money", "type": "file_contains", "path": "agent-engineer-skills/format-cents/what-was-reviewed.md", "pattern": "src/money\\.js", "must": true },
+        { "id": "findings-row", "type": "findings_has_row", "path": "agent-engineer-skills/format-cents/what-was-reviewed.md", "must": true },
+        { "id": "exit-taken", "type": "file_contains", "path": "agent-engineer-skills/format-cents/what-was-reviewed.md", "pattern": "(?im)Exit taken:", "must": true },
+        { "id": "no-csv", "type": "no_file", "path": "**/*csv*", "must": true },
+        { "id": "no-emoji", "type": "no_emoji", "path": "agent-engineer-skills/format-cents/what-was-reviewed.md", "must": true },
+        { "id": "no-extra-prd", "type": "no_extra_prd", "must": true }
+      ]
+    }
+  ]
+}

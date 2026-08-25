@@ -1,0 +1,63 @@
+{
+  "skill_name": "feature-specifier",
+  "family": "feature-builder",
+  "evals": [
+    {
+      "id": 1,
+      "name": "fuzzy-csv-export-ask",
+      "prompt": "Use skill: feature-specifier\n\nour support team keeps asking for a way to export invoices as CSV. can you work out what we should actually build here? current pages are public/index.html and public/orders.html, helpers in src/.",
+      "expected_output": "The agent announces feature-specifier, asks landmine questions (who, where the export lives, columns, cancel, empty list, extras), and does not write application code or a ready-for-developer spec with guessed answers.",
+      "fixture": "toy-web",
+      "files": [],
+      "replies": [],
+      "checks": [
+        { "id": "announces-skill", "type": "transcript_contains", "pattern": "Using skill: feature-specifier", "must": true },
+        { "id": "asked-or-awaiting", "type": "asked_or_awaiting", "transcript_pattern": "(?i)(AskQuestion|Choice UI|who may|signed-in|which (page|screen|button)|where (should|does)|what columns|cancel|empty)", "awaiting_glob": "**/what-to-build.md", "must": true },
+        { "id": "not-ready-guess", "type": "status_not_in", "path": "**/what-to-build.md", "values": ["ready-for-developer"], "optional": true, "must": true },
+        { "id": "source-untouched", "type": "paths_unchanged", "paths": ["src", "public", "package.json"], "must": true },
+        { "id": "no-extra-prd", "type": "no_extra_prd", "must": true },
+        { "id": "no-emoji-writeups", "type": "no_emoji", "path": "agent-engineer-skills/**/*.md", "optional": true, "must": true }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "csv-export-after-answers",
+      "prompt": "Use skill: feature-specifier\n\nI want users to export their invoices as CSV from this app. Pages: public/orders.html. Code: src/orders.js.",
+      "expected_output": "After the scripted answers, agent-engineer-skills/<name>/what-to-build.md exists, uses the template headings, Status is ready-for-developer or draft, and no source was changed.",
+      "fixture": "toy-web",
+      "files": [],
+      "replies": [
+        "Answers: 1) Signed-in customers, their own invoices only. 2) A Download CSV button on the existing orders page, not a new page. 3) Columns: date, invoice id, total. 4) Cancel closes without writing a file. 5) If there are no invoices, show 'No invoices to export' on the same page. 6) No PDF, no email, no scheduled export."
+      ],
+      "checks": [
+        { "id": "announces-skill", "type": "transcript_contains", "pattern": "Using skill: feature-specifier", "must": true },
+        { "id": "spec-exists", "type": "file_exists", "path": "**/what-to-build.md", "must": true },
+        { "id": "status-ok", "type": "status_in", "path": "**/what-to-build.md", "values": ["draft", "ready-for-developer"], "must": true },
+        { "id": "heading-in-scope", "type": "heading_present", "path": "**/what-to-build.md", "heading": "## In scope", "must": true },
+        { "id": "heading-out-of-scope", "type": "heading_present", "path": "**/what-to-build.md", "heading": "## Out of scope", "must": true },
+        { "id": "heading-done-when", "type": "heading_present", "path": "**/what-to-build.md", "heading": "## Done when", "must": true },
+        { "id": "heading-do-not", "type": "heading_present", "path": "**/what-to-build.md", "heading": "## Do not", "must": true },
+        { "id": "has-gwt", "type": "file_contains", "path": "**/what-to-build.md", "pattern": "(?im)Given\\s+.+(?:\\r?\\n)When\\s+.+(?:\\r?\\n)Then\\s+", "must": true },
+        { "id": "no-placeholders", "type": "no_placeholder", "path": "**/what-to-build.md", "must": true },
+        { "id": "source-untouched", "type": "paths_unchanged", "paths": ["src", "public", "package.json"], "must": true },
+        { "id": "no-extra-prd", "type": "no_extra_prd", "must": true },
+        { "id": "no-emoji", "type": "no_emoji", "path": "**/what-to-build.md", "must": true }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "refuse-greenfield-mvp",
+      "prompt": "Use skill: feature-specifier\n\nI want to build a new app for tracking my houseplants, help me design an MVP from scratch.",
+      "expected_output": "The agent refuses, names mvp-specifier, and does not write a feature spec or scaffold an app.",
+      "fixture": "toy-web",
+      "files": [],
+      "replies": [],
+      "checks": [
+        { "id": "names-mvp", "type": "transcript_contains", "pattern": "mvp-specifier", "must": true },
+        { "id": "no-spec", "type": "no_file", "path": "**/what-to-build.md", "must": true },
+        { "id": "source-untouched", "type": "paths_unchanged", "paths": ["src", "public", "package.json"], "must": true },
+        { "id": "no-extra-prd", "type": "no_extra_prd", "must": true }
+      ]
+    }
+  ]
+}

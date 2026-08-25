@@ -33,3 +33,4 @@ venv/
 
 # Eval run output
 evals/results/
+evals/workspaces/

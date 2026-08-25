@@ -17,7 +17,7 @@ You name one skill (or describe feature work)
 
 `family` is `feature-builder` or `mvp-builder`. The **id** is what you type (`Use skill: feature-specifier`).
 
-A skill is a recipe card. The agent is the cook. Your git repo is the kitchen. `what-to-build.md` is the specification from `feature-specifier` or `mvp-specifier`; later skills may not build a different product.
+A skill is a recipe card. The agent is the cook. Your git repo is the kitchen. `what-to-build.md` is the specification from `feature-specifier`, `feature-bug-analyst`, or `mvp-specifier`; later skills may not build a different product.
 
 ## Rules
 
@@ -26,7 +26,7 @@ A skill is a recipe card. The agent is the cook. Your git repo is the kitchen. `
 3. Do not start `feature-developer` while the specification is missing or still fuzzy.
 4. Do not skip `feature-code-reviewer` when the operator asked for implement then test unless they said to skip review.
 5. Do not rerun an earlier skill unless a later one finds a hole (ambiguous spec, product change, failed tests).
-6. If a later skill would change what the user gets, stop and go back to the skill that wrote the spec (`feature-specifier` or `mvp-specifier`).
+6. If a later skill would change what the user gets, stop and go back to the skill that wrote the spec (`feature-specifier`, `feature-bug-analyst`, or `mvp-specifier`).
 
 There is no composer / harness skill. Do not invent one.
 
@@ -40,7 +40,8 @@ Cursor: `.cursor/rules/agent-engineer-skills.mdc` always applies. If the short r
 
 | Skill | Not this skill |
 | --- | --- |
-| Specifier | Code, extra PRD files, class names the user did not require |
+| Specifier | Code, extra PRD files, class names the user did not require, defect root-cause hunts |
+| Bug analyst | Code, new tests on disk, product invention, CI, a threat-model essay |
 | mvp-specifier | Code, scaffold, same-chat Goldfish, chaining, a feature in an existing repo |
 | Developer | Product invention, CI, new test frameworks, review essays, STRIDE |
 | Reviewer | New product, new dependencies, unrelated rewrites |
@@ -52,13 +53,14 @@ Technical forks the specification did not name: **stop and ask**.
 
 ## Waiting for a human
 
-The agent waits when `feature-specifier` or `mvp-specifier` needs landmine answers, developer finds a hole, reviewer would have to change the product, or tester needs a manual check. `ok` / `lgtm` does not skip questions or turn a fail into a pass.
+The agent waits when `feature-specifier`, `feature-bug-analyst`, or `mvp-specifier` needs landmine answers or evidence, developer finds a hole, reviewer would have to change the product, or tester needs a manual check. `ok` / `lgtm` does not skip questions or turn a fail into a pass.
 
 ## Failures
 
 | Problem | What to do |
 | --- | --- |
 | Specification missing or fuzzy (existing-repo feature) | `feature-specifier` |
+| Defect reported; root cause or fix not locked | `feature-bug-analyst` |
 | Specification missing or fuzzy (prototype / MVP / new project) | `mvp-specifier` |
 | New product landmine mid-build | Stop. Ask. |
 | Review must-fix remains | Stay in `feature-code-reviewer` until it is gone or blocked for the skill that wrote the spec |
@@ -96,9 +98,10 @@ Share the app's git files (`skills/`, the AES `.mdc` files, `agent-engineer-skil
 | --- | --- |
 | Skill | Job plus required outputs. Runnable alone. Id is the leaf folder. |
 | Family | `feature-builder` or `mvp-builder`. Browse path only. |
-| Feature specification | `what-to-build.md` from `feature-specifier` or `mvp-specifier` |
+| Feature specification | `what-to-build.md` from `feature-specifier`, `feature-bug-analyst`, or `mvp-specifier` |
 | Feature directory | `agent-engineer-skills/<feature-name>/` for one change |
 | mvp-specifier | Elephant: prototype / MVP / new project spec. Not `feature-specifier`. Goldfish is a new chat with `feature-developer`. |
+| feature-bug-analyst | Defect analysis that writes a fix-ready `what-to-build.md`. Not product invention. |
 | Wall | Out-of-scope. Hard reject if code builds it |
 | Landmine | A question whose wrong guess would waste implementation time |
 | Slop | Tests or code that do not match the specification, or hollow asserts |

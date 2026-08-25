@@ -1,6 +1,6 @@
 {
   "skill": "feature-developer",
-  "notes": "Positives point at an existing specification and ask for code. Negatives are near-misses: still-fuzzy ideas (feature-specifier), post-implementation work (reviewer/tester), greenfield (mvp-specifier), and trivial edits.",
+  "notes": "Positives point at an existing specification and ask for code. Negatives are near-misses: still-fuzzy ideas (feature-specifier), unresolved defects (feature-bug-analyst), post-implementation work (reviewer/tester), greenfield (mvp-specifier), and trivial edits.",
   "queries": [
     {
       "query": "implement agent-engineer-skills/audit-log/what-to-build.md",
@@ -93,7 +93,7 @@
       "split": "validation"
     },
     {
-      "query": "explain how the payment flow works in this repo",
+      "query": "checkout throws when cart is empty. expected empty state, actual 500. pin the root cause before anyone codes",
       "should_trigger": false,
       "split": "validation"
     },

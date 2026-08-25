@@ -1,6 +1,6 @@
 {
   "skill": "feature-specifier",
-  "notes": "Positives are fuzzy feature work in an existing repo. Negatives are near-misses: greenfield/MVP work (mvp-specifier), already-specified work (developer/reviewer/tester), and changes that are already exact.",
+  "notes": "Positives are fuzzy feature work in an existing repo. Negatives are near-misses: greenfield/MVP work (mvp-specifier), defect root-cause work (feature-bug-analyst), already-specified work (developer/reviewer/tester), and changes that are already exact.",
   "queries": [
     {
       "query": "our support team keeps asking for a way to see which orders got stuck in processing. can you work out what we should actually build here?",
@@ -68,7 +68,7 @@
       "split": "train"
     },
     {
-      "query": "there's a null pointer exception on line 42 of src/api/orders.ts when the cart is empty. fix it",
+      "query": "checkout throws when cart is empty. expected empty state, actual 500. pin the root cause first",
       "should_trigger": false,
       "split": "train"
     },

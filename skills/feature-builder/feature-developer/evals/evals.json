@@ -1,0 +1,53 @@
+{
+  "skill_name": "feature-developer",
+  "family": "feature-builder",
+  "evals": [
+    {
+      "id": 1,
+      "name": "implement-format-cents",
+      "prompt": "Use skill: feature-developer\n\nImplement agent-engineer-skills/format-cents/what-to-build.md",
+      "expected_output": "A feature branch with formatCents in src/money.js, what-was-implemented.md filled, a commit on that branch, no push, no CSV, no new test framework.",
+      "fixture": "toy-web",
+      "files": ["evals/fixtures/format-cents-spec"],
+      "replies": [],
+      "checks": [
+        { "id": "announces-skill", "type": "transcript_contains", "pattern": "Using skill: feature-developer", "must": true },
+        { "id": "helper-exists", "type": "file_exists", "path": "src/money.js", "must": true },
+        { "id": "helper-named", "type": "file_contains", "path": "src/money.js", "pattern": "formatCents", "must": true },
+        { "id": "writeup-exists", "type": "file_exists", "path": "agent-engineer-skills/format-cents/what-was-implemented.md", "must": true },
+        { "id": "status-implemented", "type": "status_in", "path": "agent-engineer-skills/format-cents/what-was-implemented.md", "values": ["implemented"], "must": true },
+        { "id": "writeup-headings", "type": "heading_present", "path": "agent-engineer-skills/format-cents/what-was-implemented.md", "heading": "## What I did", "must": true },
+        { "id": "writeup-where", "type": "heading_present", "path": "agent-engineer-skills/format-cents/what-was-implemented.md", "heading": "## Where", "must": true },
+        { "id": "writeup-tests", "type": "heading_present", "path": "agent-engineer-skills/format-cents/what-was-implemented.md", "heading": "## Tests", "must": true },
+        { "id": "no-placeholders", "type": "no_placeholder", "path": "agent-engineer-skills/format-cents/what-was-implemented.md", "must": true },
+        { "id": "no-emoji", "type": "no_emoji", "path": "agent-engineer-skills/format-cents/what-was-implemented.md", "must": true },
+        { "id": "not-on-default", "type": "git_not_default", "must": true },
+        { "id": "branch-cursor", "type": "git_branch_matches", "pattern": "cursor/format-cents", "must": true },
+        { "id": "committed", "type": "git_ahead_of_main", "must": true },
+        { "id": "no-push", "type": "git_no_push", "must": true },
+        { "id": "no-csv", "type": "file_not_contains", "path": "src/**/*.js", "pattern": "(?i)csv", "must": true },
+        { "id": "no-jest", "type": "no_file", "path": "**/jest.config.*", "must": true },
+        { "id": "no-playwright", "type": "no_file", "path": "**/playwright.config.*", "must": true },
+        { "id": "no-ci", "type": "no_file", "path": ".github/workflows/**", "must": true },
+        { "id": "no-extra-prd", "type": "no_extra_prd", "must": true }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "missing-spec-stop",
+      "prompt": "Use skill: feature-developer\n\nImplement the invoice CSV export for this app. There is no spec file yet, just build it.",
+      "expected_output": "The agent stops, names feature-specifier or writes Status blocked-need-concept, and does not invent CSV export code.",
+      "fixture": "toy-web",
+      "files": [],
+      "replies": [],
+      "checks": [
+        { "id": "announces-skill", "type": "transcript_contains", "pattern": "Using skill: feature-developer", "must": true },
+        { "id": "blocked-or-specifier", "type": "blocked_or_names_specifier", "must": true },
+        { "id": "no-csv-source", "type": "file_not_contains", "path": "src/**/*.js", "pattern": "(?i)csv", "must": true },
+        { "id": "source-untouched", "type": "paths_unchanged", "paths": ["src", "public", "package.json"], "must": true },
+        { "id": "no-playwright", "type": "no_file", "path": "**/playwright.config.*", "must": true },
+        { "id": "no-extra-prd", "type": "no_extra_prd", "must": true }
+      ]
+    }
+  ]
+}
