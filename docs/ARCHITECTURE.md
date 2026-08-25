@@ -36,7 +36,7 @@ There is no composer / harness skill. Do not invent one.
 
 Each skill is a leaf folder `skills/<id>/`: `SKILL.md` and `assets/*.md`. The directory names follow the Agent Skills specification (`assets/` for templates and resources, `references/` for on-demand docs, `scripts/` for executables). Required output content lives in each skill's `Before you finish` list, written as lines the agent can objectively fail. Missing test layers are `absent`, not invented.
 
-Cursor discovers `.cursor/skills/<id>/`. Antigravity discovers `.agents/skills/<id>/`. Both are copies of the canonical leaf without `evals/`. Cursor: `.cursor/rules/agent-engineer-skills.mdc` always applies. If the short rule and `SKILL.md` disagree, `SKILL.md` wins.
+Cursor in this pack reads `skills/<id>/SKILL.md` via the dispatcher. After install, Cursor discovers `.cursor/skills/<id>/` and Antigravity discovers `.agents/skills/<id>/`. Those app folders are install outputs, not a second source tree in this pack. If the short rule and `SKILL.md` disagree, `SKILL.md` wins.
 
 ## What each skill must not swallow
 
@@ -79,7 +79,7 @@ Quiet and read-only until the skill says to write. Do not add Playwright, CI, or
 2. For skill-bound work, that skill's templates and required write-up content from this framework win. Skill order wins only when the user named the next skill.
 3. That project's code style wins for source.
 
-Share the app's git files (`skills/` without skill-folder `evals/`, `.cursor/skills/`, `.agents/skills/`, the AES dispatcher `.mdc`, `AGENTS.md`, the docs folder such as `agent-engineer-skills/`), not chat logs. Do not copy this pack's `docs/` or `evals/` into the app.
+Share the app's git files (`.cursor/skills/` and `.agents/skills/` without skill-folder `evals/`, the AES dispatcher `.mdc`, `AGENTS.md`, the docs folder such as `agent-engineer-skills/`), not chat logs. Do not copy this pack's `docs/` or `evals/` into the app.
 
 ## Versioning
 

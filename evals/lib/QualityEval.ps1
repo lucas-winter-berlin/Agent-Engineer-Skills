@@ -407,9 +407,6 @@ function Install-SkillIntoWorkspace {
         [string]$SkillName,
         [string]$SkillSourceDir
     )
-    $rel = Get-SkillRelPath $SkillName
-    $dest = Join-Path $WorkDir ($rel -replace '/', [IO.Path]::DirectorySeparatorChar)
-    Copy-SkillTree -From $SkillSourceDir -To $dest
     Copy-SkillTree -From $SkillSourceDir -To (Join-Path $WorkDir ".cursor\skills\$SkillName")
     Copy-SkillTree -From $SkillSourceDir -To (Join-Path $WorkDir ".agents\skills\$SkillName")
 

@@ -125,7 +125,7 @@ Each eval directory contains `with_skill/` and, when a baseline exists, `old_ski
 1. Copy a tiny app (`evals/fixtures/toy-web` or `greenfield`).
 2. Copy extra files on top if needed (for example the shared `format-cents` spec or a planted bug under the skill's `evals/files/`). Overlay paths resolve in the skill folder first, then at the pack root.
 3. `git init` that copy so it looks like a real repo.
-4. Inject **only that one skill** (plus the dispatcher rule, `AGENTS.md`, and host copies under `.cursor/skills/` and `.agents/skills/`). Skill-folder `evals/` is not copied into this sandbox.
+4. Inject **only that one skill** (plus the dispatcher rule and `AGENTS.md`) into `.cursor/skills/` and `.agents/skills/`. Skill-folder `evals/` is not copied into this sandbox.
 5. Run `cursor-agent` with that prompt in that workspace (`-p --force --trust --workspace`).
 6. If the case has replies, send those as follow-up turns (like answering landmine questions).
 7. Grade with a script: pass/fail per check. No human reading required.

@@ -45,18 +45,17 @@ Point an agent at **this** repo and at the **app** repo. Tell it to install Agen
 
 The agent must:
 
-1. Copy each `skills/<id>/` folder into the app's `skills/<id>/`. Do not copy any `evals/` directory inside a skill folder. Do not create `feature-builder/` or `mvp-builder/` wrappers.
-2. Copy those same leaf folders (still without `evals/`) into the host discovery paths (create the parent folders if needed):
+1. Copy each `skills/<id>/` folder (no `evals/`) into the app's host discovery paths only. Do not also copy them into the app's `skills/` folder. Do not create `feature-builder/` or `mvp-builder/` wrappers.
    - Cursor: `.cursor/skills/<id>/`
    - Antigravity: `.agents/skills/<id>/` (if the app already uses `.agent/skills/`, copy there instead)
-3. Copy only `.cursor/rules/agent-engineer-skills.mdc` into the app's `.cursor/rules/` (create that folder if needed). Do not delete or overwrite the app's other rules. Do not copy per-skill `.mdc` files; those no longer exist.
-4. MUST stop and ask the operator where markdown docs should be saved, before creating that folder. Use the host's clickable choice UI (`AskQuestion`) when it exists. Two options only:
+2. Copy only `.cursor/rules/agent-engineer-skills.mdc` into the app's `.cursor/rules/` (create that folder if needed). Do not delete or overwrite the app's other rules. Do not copy per-skill `.mdc` files; those no longer exist.
+3. MUST stop and ask the operator where markdown docs should be saved, before creating that folder. Use the host's clickable choice UI (`AskQuestion`) when it exists. Two options only:
    - **Default:** keep the folder `agent-engineer-skills/` (docs go in `agent-engineer-skills/<feature-name>/`, for example `agent-engineer-skills/invoice-csv-export/what-to-build.md`).
    - **Custom:** the operator types a repo-relative **folder** name; create that directory and put docs in `<that-folder>/<feature-name>/`.
    Do not skip this question. Do not pick a path for them. Reject and re-ask if a custom path has `..`, is absolute, starts with `~`, or is exactly `skills`, `.cursor`, `.agents`, `.agent`, `evals`, or `docs`.
-5. Create the chosen path as a **directory**. Default directory name is `agent-engineer-skills`. Never write a file at the repo root for this choice. If a file named `aes-write-up-root` exists, delete it and create the directory instead.
-6. Set the Feature-folder write-ups line in the **app's** `AGENTS.md` and `.cursor/rules/agent-engineer-skills.mdc` to that directory: `Feature-folder write-ups live under <folder>/<name>/`. If the app has no `AGENTS.md`, copy this pack's `AGENTS.md` and then set that line. If the app already has `AGENTS.md`, add or replace only that write-ups line; do not overwrite the rest of the file.
-7. If this pack has `agent-engineer-skills/README.md` and the chosen folder has no README yet, copy it into that folder. If this pack has no such README, skip this step.
+4. Create the chosen path as a **directory**. Default directory name is `agent-engineer-skills`. Never write a file at the repo root for this choice. If a file named `aes-write-up-root` exists, delete it and create the directory instead.
+5. Set the Feature-folder write-ups line in the **app's** `AGENTS.md` and `.cursor/rules/agent-engineer-skills.mdc` to that directory: `Feature-folder write-ups live under <folder>/<name>/`. If the app has no `AGENTS.md`, copy this pack's `AGENTS.md` and then set that line. If the app already has `AGENTS.md`, add or replace only that write-ups line; do not overwrite the rest of the file.
+6. If this pack has `agent-engineer-skills/README.md` and the chosen folder has no README yet, copy it into that folder. If this pack has no such README, skip this step.
 
 Do not copy `docs/` or `evals/` into the app. Do not copy `skills/**/evals/`. Do not replace the app's existing `.cursor/rules/` folder. Do not rewrite copied `SKILL.md` files to hardcode the path. Do not create `aes-write-up-root`.
 

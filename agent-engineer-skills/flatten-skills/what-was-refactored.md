@@ -14,10 +14,7 @@ In:
 - `skills/` (flatten `feature-builder/` and `mvp-builder/` wrappers)
 - `.cursor/rules/agent-engineer-skills.mdc`
 - `.cursor/rules/<id>.mdc` (removed)
-- `.cursor/skills/<id>/`
-- `.agents/skills/<id>/`
 - `AGENTS.md`
-- `scripts/sync-host-skills.ps1`
 - `README.md`
 - `docs/GUIDE.md`
 - `docs/ARCHITECTURE.md`
@@ -47,24 +44,22 @@ Out:
 - Moved each skill leaf from `skills/<family>/<id>/` to `skills/<id>/`.
 - Stored family as `metadata.family` and README grouping instead of a filesystem layer.
 - Pointed write-up root at `AGENTS.md` first, then the Cursor dispatcher, then the default folder.
-- Copied `SKILL.md` plus `assets/` (no `evals/`) into `.cursor/skills/<id>/` and `.agents/skills/<id>/` so Cursor and Antigravity discover the same packages.
 - Dropped per-skill `.mdc` stubs. Kept one always-on dispatcher.
-- Install now copies flattened leaves into `skills/`, `.cursor/skills/`, and `.agents/skills/`, and writes the docs-folder line in `AGENTS.md`.
+- This pack stores each skill once under `skills/<id>/`. Install copies that leaf into the app's `.cursor/skills/<id>/` and `.agents/skills/<id>/` only.
 - Quality evals resolve `skills/<id>/` and still read old `skills/<family>/<id>/` snapshots from prior commits.
 
 ## Where
 
 | Path | Change |
 | --- | --- |
-| `skills/<id>/` | create -- canonical packages, flattened |
+| `skills/<id>/` | create -- the only skill packages in this pack |
 | `skills/feature-builder/`, `skills/mvp-builder/` | delete -- family wrappers |
-| `.cursor/skills/<id>/` | create -- Cursor discovery copies |
-| `.agents/skills/<id>/` | create -- Antigravity discovery copies |
+| `.cursor/skills/`, `.agents/` | delete -- were duplicate copies; install creates these in the app only |
 | `.cursor/rules/<id>.mdc` | delete -- seven per-skill stubs |
-| `.cursor/rules/agent-engineer-skills.mdc` | modify -- flat paths, host copies, AGENTS.md |
+| `.cursor/rules/agent-engineer-skills.mdc` | modify -- flat paths, first-existing SKILL.md lookup, AGENTS.md |
 | `AGENTS.md` | create -- host-neutral write-up root and skill map |
-| `scripts/sync-host-skills.ps1` | create -- copy canonical leaves to host folders |
-| `README.md` | modify -- install for Cursor and Antigravity |
+| `scripts/sync-host-skills.ps1` | delete -- was only to keep duplicate copies in sync |
+| `README.md` | modify -- install copies into host folders only |
 | `docs/GUIDE.md` | modify -- add a skill, Cursor, Antigravity |
 | `docs/ARCHITECTURE.md` | modify -- flat contracts |
 | `evals/lib/QualityEval.ps1` | modify -- flat skill path, host install, old-commit fallback |
@@ -82,4 +77,4 @@ Out:
 
 - Behavior unchanged: yes -- same skill ids, same jobs, same write-up filenames, same no-chain rule
 - Did not add: new skill ids, product features, test frameworks, CI
-- Stopped to ask: none -- flatten, dual-host copies, dispatcher slim, and AGENTS.md were locked in the prior turn
+- Stopped to ask: none -- flatten was locked earlier; duplicate host copies in this pack were removed after that

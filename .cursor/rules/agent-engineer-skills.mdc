@@ -1,5 +1,5 @@
 ---
-description: Dispatcher for Agent Engineer Skills. Maps feature-development work to one skill. Use skill: <id> runs only that skill. Lookup is skills/<id>/SKILL.md.
+description: Dispatcher for Agent Engineer Skills. Maps feature-development work to one skill. Use skill: <id> runs only that skill. Lookup is skills/<id>/SKILL.md in this pack, or the host skill folder after install.
 alwaysApply: true
 ---
 
@@ -7,9 +7,9 @@ alwaysApply: true
 
 This repo is a collection of skills for developing features. A skill is a structured instruction set and execution contract, not optional style advice.
 
-`Use skill: <id>` always selects that skill and **only** that skill. The **id** is the leaf folder name. Read `skills/<id>/SKILL.md` and execute that contract. Do not start the next skill unless the user named it. `SKILL.md` is authoritative if this rule and the skill file diverge.
+`Use skill: <id>` always selects that skill and **only** that skill. The **id** is the leaf folder name. Read that skill's `SKILL.md` from the first path that exists: `skills/<id>/SKILL.md` (this pack), else `.cursor/skills/<id>/SKILL.md` (Cursor app install), else `.agents/skills/<id>/SKILL.md` (Antigravity app install). Do not start the next skill unless the user named it. `SKILL.md` is authoritative if this rule and the skill file diverge.
 
-Cursor also discovers copies at `.cursor/skills/<id>/`. Antigravity discovers copies at `.agents/skills/<id>/`. Canonical source is `skills/<id>/` (includes author `evals/`). Host copies omit `evals/`. Family (`feature-builder` or `mvp-builder`) is grouping only, not a folder.
+This pack stores each skill once, at `skills/<id>/`. Family (`feature-builder` or `mvp-builder`) is grouping only, not a folder. Do not keep extra copies of the skill folders in this repo.
 
 There is no composer / harness skill in this collection. If the user asks for a harness, end-to-end path runner, or `feature-harness`, do not invent one. Tell them to name each skill they want (`feature-developer`, `feature-code-reviewer`, `feature-refactorer`, `feature-tester`).
 

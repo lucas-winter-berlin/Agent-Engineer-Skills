@@ -8,14 +8,14 @@ The agent announces `Using skill: <id>`, reads `skills/<id>/SKILL.md`, fills tha
 
 | Piece | Where |
 | --- | --- |
-| Job | `skills/<id>/SKILL.md` |
+| Job | `skills/<id>/SKILL.md` (this pack only) |
 | Required output content | The `Before you finish` list in that `SKILL.md` |
 | Write-up shape | `skills/<id>/assets/` |
 | Skill folder shape | [Add a skill](#add-a-skill) in this guide (authors). Not copied into the app. |
 | Trigger evals | `evals/queries/` in **this** repo (authors). Not copied into the app. |
 | Quality evals | `skills/<id>/evals/` plus `evals/fixtures/` and `evals/run-quality-eval.ps1` (authors). Not copied into the app. |
-| Cursor discovery | `.cursor/skills/<id>/` (copy of the leaf, no `evals/`) |
-| Antigravity discovery | `.agents/skills/<id>/` (copy of the leaf, no `evals/`) |
+| Cursor (after install) | `.cursor/skills/<id>/` |
+| Antigravity (after install) | `.agents/skills/<id>/` |
 | Write-up root | `AGENTS.md` (Feature-folder write-ups line) |
 | Cursor dispatcher | `.cursor/rules/agent-engineer-skills.mdc` |
 | Gemini | Custom Gem or system prompt (fallback) |
@@ -43,19 +43,20 @@ Same contract as [README.md](../README.md) (How to install). MUST stop and ask (
 
 ### Cursor
 
-Native skills live at `.cursor/skills/<id>/` (copied from `skills/<id>/` without `evals/`). `agent-engineer-skills.mdc` always applies as the dispatcher (install, mapping, no-chain). There are no per-skill `.mdc` files. Canonical `SKILL.md` is `skills/<id>/SKILL.md`.
+This pack is driven by `skills/<id>/SKILL.md` plus the dispatcher. After install into an app, Cursor discovers `.cursor/skills/<id>/` (copied from the pack leaf, no `evals/`). `agent-engineer-skills.mdc` always applies as the dispatcher (install, mapping, no-chain). There are no per-skill `.mdc` files.
 
 | File | When | Role |
 | --- | --- | --- |
-| `.cursor/skills/<id>/SKILL.md` | Host discovery | Job contract (copy) |
+| `skills/<id>/SKILL.md` | This pack | Canonical job contract |
+| `.cursor/skills/<id>/SKILL.md` | App after install | Cursor discovery |
 | `.cursor/rules/agent-engineer-skills.mdc` | Always | Dispatcher |
 | `AGENTS.md` | Always | Write-up root pointer |
 
-After editing a canonical skill in this pack, run `scripts/sync-host-skills.ps1`.
+Do not commit host copies back into this pack.
 
 ### Antigravity
 
-Antigravity does not read `.cursor/rules/`. Native skills live at `.agents/skills/<id>/` (copied from `skills/<id>/` without `evals/`). It still accepts `.agent/skills/<id>/`. Follow `SKILL.md`. The docs folder is the **directory** named on the Feature-folder write-ups line in `AGENTS.md` (default `agent-engineer-skills/`). Do not look for a file named `aes-write-up-root`.
+Antigravity does not read `.cursor/rules/` or this pack's `skills/` folder. After install, native skills live at `.agents/skills/<id>/`. It still accepts `.agent/skills/<id>/`. Follow `SKILL.md`. The docs folder is the **directory** named on the Feature-folder write-ups line in `AGENTS.md` (default `agent-engineer-skills/`). Do not look for a file named `aes-write-up-root`.
 
 ### Gemini Custom Gems
 
@@ -100,7 +101,7 @@ New skills are additive. Each one must work alone via `Use skill: <id>`.
 1. Create `skills/<id>/` with kebab-case leaf `id` matching the skill id. Set `metadata.family` to `feature-builder` or `mvp-builder`. Family is not a folder.
 2. Add `SKILL.md` (YAML `name` + `description` that says what it does and when to use it, including when not to use it, plus `compatibility` when the skill needs a particular host, shell, or tool, plus `license: PolyForm Noncommercial License 1.0.0` and `metadata.author` / `metadata.version` / `metadata.family` as on the existing skills) and `assets/` holding the write-up templates. State the required output content as a `Before you finish` list of lines the agent can objectively fail, not as a separate schema file.
 3. Keep the folder shape: `name` in `SKILL.md` matches the leaf folder name, and `assets/` holds at least one Markdown template. Nothing else is required. Add `references/` only for material the skill loads on demand, and `scripts/` only for executables.
-4. Run `scripts/sync-host-skills.ps1` so `.cursor/skills/<id>/` and `.agents/skills/<id>/` match (no `evals/`). Do not add a per-skill `.mdc` file. Do not rename existing skill ids.
+4. Do not add a per-skill `.mdc` file. Do not add copies under `.cursor/skills/` or `.agents/skills/` in this pack. Do not rename existing skill ids.
 5. Add a row to the matching family table in [README.md](../README.md), a mapping row (only if the skill should auto-pick), and a path row in `.cursor/rules/agent-engineer-skills.mdc` (Where SKILL.md lives).
 6. If the skill writes a feature-folder file, name that file in the write-up root README (default `agent-engineer-skills/README.md`). If it does not, do not force a write-up folder onto it.
 7. Add `evals/queries/<id>.json` with about twenty labelled prompts, half of which should not trigger the skill. See [evals/README.md](../evals/README.md). The near-miss prompts matter most: they are what keep a new skill from stealing another skill's work.
