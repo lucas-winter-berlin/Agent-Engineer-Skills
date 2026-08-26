@@ -13,8 +13,10 @@
     The agent command is environment-specific, so you supply it. Its contract:
       1. It reads the prompt from the AES_EVAL_QUERY environment variable.
       2. It writes the agent's transcript, including which skills were loaded, to stdout.
-    Detection is a plain substring match for the skill name in that output, so the
-    command must print enough for the skill name to appear when it triggers.
+    Detection is asymmetric. should-trigger queries match the skill id anywhere in
+    the transcript (ask-mode often skips "Using skill:"). should-not-trigger queries
+    only match an explicit selection (Using skill: <id>, a JSON skill field, or
+    "maps to / follow `id`") so sibling "do not use" mentions are not false triggers.
 
 .PARAMETER QueriesFile
     Path to a queries JSON file, for example evals/queries/feature-tester.json.
@@ -40,8 +42,7 @@
     Optional path to write the full results as JSON.
 
 .EXAMPLE
-    ./run-trigger-eval.ps1 -QueriesFile ./queries/feature-tester.json `
-        -AgentCommand 'cursor-agent -p $env:AES_EVAL_QUERY' -Split train
+    ./run-one-trigger.ps1 -Skill feature-tester -Split train
 #>
 [CmdletBinding()]
 param(
@@ -86,7 +87,25 @@ if ($queries.Count -eq 0) {
     throw "No queries matched split '$Split' in $QueriesFile."
 }
 
-$pattern = [regex]::Escape($SkillName)
+# should-trigger: name in the transcript is enough (ask-mode often skips the
+# announce). should-not-trigger: only count an explicit selection, so sibling
+# "do not use feature-X" lines are not false triggers.
+function Test-SkillTriggered {
+    param(
+        [string]$Output,
+        [string]$Name,
+        [bool]$RequireSelected
+    )
+    $esc = [regex]::Escape($Name)
+    $selected = $false
+    if ($Output -match ('(?i)Using skill:\s*' + $esc + '\b')) { $selected = $true }
+    elseif ($Output -match ('(?i)["'']skill["'']\s*:\s*["'']' + $esc + '["'']')) { $selected = $true }
+    elseif ($Output -match ('(?i)(?:maps to|follow(?:ing)?)\s+`' + $esc + '`')) { $selected = $true }
+    if ($RequireSelected) { return $selected }
+    if ($selected) { return $true }
+    return [bool]($Output -match $esc)
+}
+
 $results = New-Object System.Collections.ArrayList
 
 Write-Host "Skill:     $SkillName"
@@ -108,7 +127,8 @@ foreach ($q in $queries) {
         catch {
             Write-Warning "Run $run errored for query $index. Counting as no trigger. $($_.Exception.Message)"
         }
-        if ($output -match $pattern) {
+        $requireSelected = -not [bool]$q.should_trigger
+        if (Test-SkillTriggered -Output $output -Name $SkillName -RequireSelected $requireSelected) {
             $triggers++
         }
     }

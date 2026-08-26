@@ -31,11 +31,7 @@ Input: `what-to-build.md` and the implementation, plus `what-was-implemented.md`
 
 Output: tests in the project's existing style, a test run, and `what-was-verified.md` from [assets/what-was-verified.md](assets/what-was-verified.md).
 
-## When to use
-
-After `feature-code-reviewer` on the daily path (or after `feature-developer` if review was skipped), or when the user asks to test, verify, or security-check a feature.
-
-Do not use to invent the product (`feature-specifier`), to write the feature (`feature-developer`), to review cleanliness (`feature-code-reviewer`), to restructure a messy module (`feature-refactorer`), or to stand up CI.
+On the daily path this runs after `feature-code-reviewer` (or after `feature-developer` if review was skipped).
 
 ## Gotchas
 

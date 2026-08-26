@@ -34,12 +34,6 @@ Do not write code. Do not produce a multi-file PRD pack.
 
 Output: `<root>/<feature-name>/what-to-build.md` from [assets/what-to-build.md](assets/what-to-build.md). Resolve `<root>` as in Gotchas.
 
-## When to use
-
-The request is an idea, a problem, or a feature, and "done" is not specified.
-
-Do not use when the change is a defect to root-cause (`feature-bug-analyst`), already exact and trusted as a one-line edit, the user only wants code, review, or tests on an existing specification, or the request is a behavior-preserving cleanup of existing code (`feature-refactorer`).
-
 ## Gotchas
 
 - **Write-up root.** `<root>` is the docs **directory** named on the Feature-folder write-ups line in the repo's `AGENTS.md`. If that line is missing, use the same line in `.cursor/rules/agent-engineer-skills.mdc`. If both are missing, `<root>` is `agent-engineer-skills`. Create `<root>` as a folder if needed. Never create or read a file named `aes-write-up-root`. Write `<root>/<kebab-name>/what-to-build.md`. If `docs/features/<kebab-name>/` already exists for that name and `<root>/<kebab-name>/` does not, write there instead. Never create both trees for one name.

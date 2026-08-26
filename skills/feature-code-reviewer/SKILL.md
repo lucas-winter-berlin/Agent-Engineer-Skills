@@ -31,15 +31,7 @@ Input: `what-to-build.md`, the diff, and nearby existing code.
 
 Output: safe refactors if needed, and `what-was-reviewed.md` from [assets/what-was-reviewed.md](assets/what-was-reviewed.md).
 
-Run **after** `feature-developer` and **before** `feature-tester`.
-
-## When to use
-
-A feature was just implemented and you care that it is not throwaway.
-
-Skip only for a tiny, obvious one-line fix the user already trusts.
-
-Do not use to invent product (`feature-specifier`), to write the first implementation (`feature-developer`), to replace tests (`feature-tester`), or to restructure a messy module that has no feature spec (`feature-refactorer`).
+Run **after** `feature-developer` and **before** `feature-tester`. Skip only for a tiny, obvious one-line fix the user already trusts.
 
 ## Gotchas
 

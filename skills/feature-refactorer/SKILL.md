@@ -34,12 +34,6 @@ Output: a feature branch with the restructure committed on it, and `what-was-ref
 
 Do **not** write `what-to-build.md`. That filename is the product or defect specification.
 
-## When to use
-
-Existing code is hard to live with, and the user wants the same behavior with a clearer structure.
-
-Do not use when they want new capability (`feature-specifier`), a defect pinned (`feature-bug-analyst`), a specification built (`feature-developer`), a just-built feature judged (`feature-code-reviewer`), tests against a spec (`feature-tester`), or a new project (`mvp-specifier`). Do not use to reformat the whole tree.
-
 ## Gotchas
 
 - **Write-up root.** `<root>` is the docs **directory** named on the Feature-folder write-ups line in the repo's `AGENTS.md`. If that line is missing, use the same line in `.cursor/rules/agent-engineer-skills.mdc`. If both are missing, `<root>` is `agent-engineer-skills`. That path must be a folder. Never create or read a file named `aes-write-up-root`. Write `<root>/<kebab-name>/what-was-refactored.md`. If `docs/features/<kebab-name>/` already exists for that name and `<root>/<kebab-name>/` does not, write there instead. Never create both trees for one name.

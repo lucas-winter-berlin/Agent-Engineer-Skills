@@ -80,4 +80,4 @@ If the specification is missing or the idea is fuzzy: a feature in an existing a
 - Invent extra spec packs, CI, or a threat-model essay as part of these skills.
 - Log secrets in skill artifacts.
 
-Quick start: `README.md`. Operator guide: `docs/GUIDE.md`. Control plane: `docs/ARCHITECTURE.md`. Feature folders: `agent-engineer-skills/README.md`. Write-up root pointer: `AGENTS.md`. Add a skill: `docs/GUIDE.md` (Add a skill).
+Quick start: `README.md`. Feature folders: `agent-engineer-skills/README.md`. Write-up root pointer: `AGENTS.md`. Add a skill: `README.md` (Add a skill).

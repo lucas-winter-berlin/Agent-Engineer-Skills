@@ -34,15 +34,7 @@ Do not write application code. Do not scaffold. Do not produce a multi-file PRD 
 
 Output: `<root>/<feature-name>/what-to-build.md` from [assets/what-to-build.md](assets/what-to-build.md). Resolve `<root>` as in Gotchas.
 
-This is **not** `feature-specifier`. Specifier is a thin feature spec for an existing app. This skill is a full v1 design for a new MVP, prototype, or demo.
-
-## When to use
-
-The operator names `Use skill: mvp-specifier` (or the old name `pitch-to-spec`), or the request is an MVP, prototype, demo, or new project, and "done" is not specified.
-
-Do not use for a **feature in an existing app**. That job is `feature-specifier`. Refuse and name that skill.
-
-Do not use when they only want code, review, or tests on an existing specification, or a behavior-preserving cleanup of existing code (`feature-refactorer`).
+This is **not** `feature-specifier`. Specifier is a thin feature spec for an existing app. This skill is a full v1 design for a new MVP, prototype, or demo. If the request is a feature in an existing app, refuse and name `feature-specifier`.
 
 ## Gotchas
 

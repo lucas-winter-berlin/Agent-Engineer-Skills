@@ -35,6 +35,9 @@ About 20 short prompts per skill in `evals/queries/`. Each prompt is labelled "t
 | --- | --- |
 | `queries/<skill>.json` | 20 labelled prompts for one skill |
 | `run-trigger-eval.ps1` | Runner. Reports a trigger rate per query |
+| `invoke-trigger-agent.ps1` | Windows `cursor-agent` wrapper (ask mode, 90s kill) |
+| `run-one-trigger.ps1` | One skill: copies leaves into a sandbox host, then runs the runner |
+| `run-trigger-all-sequential.ps1` | All seven skills, one after another. Set `AES_TRIGGER_TAG` for the result suffix |
 
 Each query carries `should_trigger` and a fixed `split`:
 
@@ -47,7 +50,7 @@ Keep the split fixed across iterations, or you lose the ability to tell improvem
 
 1. You pick a skill, for example `feature-tester`.
 2. The script feeds one prompt at a time to an agent.
-3. It looks at the transcript for the skill name.
+3. It grades the transcript (asymmetric: id anywhere for should-trigger; explicit selection only for should-not).
 4. It counts how often the skill loaded (the **trigger rate**).
 5. A "should fire" prompt **passes** if that rate is high. A "should not fire" prompt **passes** if that rate is low.
 
@@ -64,21 +67,20 @@ The runner needs an agent command, because how you invoke an agent and see which
 1. Read the prompt from the `AES_EVAL_QUERY` environment variable.
 2. Print the agent's transcript, including loaded skills, to stdout.
 
-Detection is a substring match for the skill name in that output, so the command has to print enough for the name to appear.
+Detection is asymmetric. A should-trigger query passes if the skill id appears in the transcript. A should-not-trigger query passes unless the agent explicitly selected that skill (`Using skill: <id>`, a JSON `"skill"` field, or "maps to / follow" plus the id in backticks). Bare mentions in "do not use" lines do not count as a false trigger.
+
+On Windows, do not pass `cursor-agent -p` as `-AgentCommand` (PowerShell eats `-p`). Use the wrappers, which also copy `SKILL.md` + `assets/` into `evals/workspaces/_trigger-host` with no dispatcher:
 
 ```powershell
-cd evals
+./evals/run-one-trigger.ps1 -Skill feature-bug-analyst -Split train
 
-./run-trigger-eval.ps1 `
-    -QueriesFile ./queries/feature-bug-analyst.json `
-    -AgentCommand 'cursor-agent -p $env:AES_EVAL_QUERY' `
-    -Split train `
-    -OutFile ./results/feature-bug-analyst-train.json
+$env:AES_TRIGGER_TAG = 'final2'
+./evals/run-trigger-all-sequential.ps1
 ```
 
-Wrap `-AgentCommand` in single quotes so `$env:AES_EVAL_QUERY` is expanded when the runner invokes it, not when you type it. Verify the command on its own once before running 60 invocations through it.
+Output is under `evals/results/` (gitignored).
 
-If your client emits structured output, pipe it through a filter that prints the skill names, for example a `jq` expression over a JSON transcript. Anything that puts the skill name on stdout when the skill loads will work.
+If your client emits structured output, pipe it through a filter that prints `Using skill: <id>` when the skill loads.
 
 ### The loop
 

@@ -57,11 +57,43 @@ The agent must:
 5. Set the Feature-folder write-ups line in the **app's** `AGENTS.md` and `.cursor/rules/agent-engineer-skills.mdc` to that directory: `Feature-folder write-ups live under <folder>/<name>/`. If the app has no `AGENTS.md`, copy this pack's `AGENTS.md` and then set that line. If the app already has `AGENTS.md`, add or replace only that write-ups line; do not overwrite the rest of the file.
 6. If this pack has `agent-engineer-skills/README.md` and the chosen folder has no README yet, copy it into that folder. If this pack has no such README, skip this step.
 
-Do not copy `docs/` or `evals/` into the app. Do not copy `skills/**/evals/`. Do not replace the app's existing `.cursor/rules/` folder. Do not rewrite copied `SKILL.md` files to hardcode the path. Do not create `aes-write-up-root`.
+Do not copy `evals/` into the app. Do not copy `skills/**/evals/`. Do not replace the app's existing `.cursor/rules/` folder. Do not rewrite copied `SKILL.md` files to hardcode the path. Do not create `aes-write-up-root`.
 
 Then start a **new Agent chat** in the app.
 
-Antigravity uses `.agents/skills/<id>/` (no Cursor rules required). Gemini Custom Gems remain a fallback: [docs/GUIDE.md](docs/GUIDE.md).
+## Hosts
+
+### Cursor
+
+This pack is driven by `skills/<id>/SKILL.md`. Cursor also loads `.cursor/rules/agent-engineer-skills.mdc` (always on): it maps vague prompts to one skill, forbids chaining, and points at `SKILL.md`. After install, Cursor discovers `.cursor/skills/<id>/`. There are no per-skill `.mdc` files.
+
+### Antigravity
+
+Antigravity does not read `.cursor/rules/` or this pack's `skills/` folder. After install it discovers `.agents/skills/<id>/` (legacy `.agent/skills/<id>/` also accepted). Follow `SKILL.md`. The docs folder is the Feature-folder write-ups line in `AGENTS.md`.
+
+### Gemini Custom Gems
+
+Gemini does not read `.cursor/rules/` or `.agents/skills/`. One Gem per skill.
+
+1. Name the Gem after the skill, for example `feature-developer`.
+2. Paste this preamble, then the full `SKILL.md`:
+
+```text
+You are executing an Agent Engineer Skill. The skill text that follows is an execution contract, not optional style guidance.
+
+Rules:
+1. Follow the steps in SKILL.md in order. Do not skip, merge, or reorder them.
+2. Fill only the templates that skill names. Do not invent extra documents.
+3. Before handing over, check the finished write-up against that skill's `Before you finish` list. Fix what fails.
+4. Stop when SKILL.md says to wait for the user (questions, a missing specification, a product landmine).
+5. Do not use icons or emojis in any artifact.
+6. If this request belongs to a different skill in the collection, refuse and name that skill. Do not start a second skill unless the user named it.
+```
+
+3. Attach every file in that skill's `assets/` folder.
+4. Start a chat. Point at the feature folder and the repo.
+
+Optional dispatcher Gem: name it `agent-engineer-skills`, pick one primary skill, follow that `SKILL.md`, attach every `SKILL.md` in `skills/`. For the Gemini API, system instruction is `SKILL.md`. Do not start coding if `what-to-build.md` is missing or still fuzzy.
 
 ## How to use
 
@@ -113,10 +145,30 @@ Skip specify only if `what-to-build.md` already exists and is clear. If the idea
 
 The paths above are the default docs folder (`agent-engineer-skills/<feature-name>/`). If install created a custom directory, substitute that folder. Each feature still gets its own `<feature-name>` subfolder.
 
+## Add a skill
+
+New skills are additive. Each one must work alone via `Use skill: <id>`. Adding an id is a minor change. Removing or renaming an id or a required write-up is a major change. `feature-verifier` is now `feature-tester`. `pitch-to-spec` is now `mvp-specifier`. There is no `feature-harness`.
+
+1. Create `skills/<id>/` with kebab-case leaf `id` matching the skill id. Set `metadata.family` to `feature-builder` or `mvp-builder`. Family is not a folder.
+2. Add `SKILL.md` (YAML `name` + `description` that says what it does and when to use it, including when not to use it, plus `compatibility` when needed, plus `license: PolyForm Noncommercial License 1.0.0` and `metadata.author` / `metadata.version` / `metadata.family`) and `assets/` holding the write-up templates. Required output content is a `Before you finish` list the agent can fail, not a separate schema file.
+3. `name` in `SKILL.md` matches the leaf folder. `assets/` holds at least one Markdown template. Add `references/` only for on-demand docs, and `scripts/` only for executables.
+4. Do not add a per-skill `.mdc` file. Do not add copies under `.cursor/skills/` or `.agents/skills/` in this pack. Do not rename existing skill ids.
+5. Add a row to the matching family table above, a mapping row in `.cursor/rules/agent-engineer-skills.mdc` if the skill should auto-pick, and a path row in that file (Where SKILL.md lives).
+6. If the skill writes a feature-folder file, name that file in `agent-engineer-skills/README.md`. If it does not, do not force a write-up folder onto it.
+7. Add `evals/queries/<id>.json` with about twenty labelled prompts, half of which should not trigger the skill. See [evals/README.md](evals/README.md).
+8. Add `skills/<id>/evals/evals.json` with 2-3 quality cases. Reuse [evals/fixtures/](evals/fixtures/) when the skill needs a toy app.
+
+## Guardrails
+
+1. Fill the template. Do not invent a new document shape.
+2. Match the consuming repo. Do not add a test runner, CI, or library the specification did not require.
+3. Out-of-scope in `what-to-build.md` is a wall, not a stretch goal.
+4. Unknown tools are `unknown` or `absent`. Do not imply them.
+5. No icons or emojis in skill files.
+6. Do not write secrets into skill files.
+
 ## More
 
-- Operator guide (Cursor, Antigravity, Gemini, add a skill): [docs/GUIDE.md](docs/GUIDE.md)
-- How the skills connect: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 - Write-up root pointer: [AGENTS.md](AGENTS.md)
 - Where write-ups live: [agent-engineer-skills/README.md](agent-engineer-skills/README.md)
 - Trigger and quality evals (authors, not installed): [evals/README.md](evals/README.md)
