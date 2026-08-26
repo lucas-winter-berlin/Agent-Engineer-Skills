@@ -10,7 +10,7 @@ Tell the agent which job, by its name. The names are in the tables below (`featu
 Use skill: feature-specifier
 ```
 
-`feature-builder/` and `mvp-builder/` are only folders in this repo. Do not type those. Type the skill name.
+`feature-builder` and `mvp-builder` are family labels in the tables below (`metadata.family`). They are not folders. Type the skill name.
 
 ## What skills are included?
 
@@ -45,29 +45,23 @@ Point an agent at **this** repo and at the **app** repo. Tell it to install Agen
 
 The agent must:
 
-1. Copy `skills/` into the app repo (keep `feature-builder/` and `mvp-builder/` inside it). Do not copy any `evals/` directory inside a skill folder.
-2. Copy only these Cursor rules into the app's `.cursor/rules/` (create that folder if needed). Do not delete or overwrite the app's other rules:
-   - `agent-engineer-skills.mdc`
-   - `feature-specifier.mdc`
-   - `feature-bug-analyst.mdc`
-   - `feature-developer.mdc`
-   - `feature-code-reviewer.mdc`
-   - `feature-refactorer.mdc`
-   - `feature-tester.mdc`
-   - `mvp-specifier.mdc`
+1. Copy each `skills/<id>/` folder (no `evals/`) into the app's host discovery paths only. Do not also copy them into the app's `skills/` folder. Do not create `feature-builder/` or `mvp-builder/` wrappers.
+   - Cursor: `.cursor/skills/<id>/`
+   - Antigravity: `.agents/skills/<id>/` (if the app already uses `.agent/skills/`, copy there instead)
+2. Copy only `.cursor/rules/agent-engineer-skills.mdc` into the app's `.cursor/rules/` (create that folder if needed). Do not delete or overwrite the app's other rules. Do not copy per-skill `.mdc` files; those no longer exist.
 3. MUST stop and ask the operator where markdown docs should be saved, before creating that folder. Use the host's clickable choice UI (`AskQuestion`) when it exists. Two options only:
    - **Default:** keep the folder `agent-engineer-skills/` (docs go in `agent-engineer-skills/<feature-name>/`, for example `agent-engineer-skills/invoice-csv-export/what-to-build.md`).
    - **Custom:** the operator types a repo-relative **folder** name; create that directory and put docs in `<that-folder>/<feature-name>/`.
-   Do not skip this question. Do not pick a path for them. Reject and re-ask if a custom path has `..`, is absolute, starts with `~`, or is exactly `skills`, `.cursor`, `evals`, or `docs`.
+   Do not skip this question. Do not pick a path for them. Reject and re-ask if a custom path has `..`, is absolute, starts with `~`, or is exactly `skills`, `.cursor`, `.agents`, `.agent`, `evals`, or `docs`.
 4. Create the chosen path as a **directory**. Default directory name is `agent-engineer-skills`. Never write a file at the repo root for this choice. If a file named `aes-write-up-root` exists, delete it and create the directory instead.
-5. Set the Feature-folder write-ups line in the **app's** `.cursor/rules/agent-engineer-skills.mdc` to that directory: `Feature-folder write-ups live under <folder>/<name>/`.
+5. Set the Feature-folder write-ups line in the **app's** `AGENTS.md` and `.cursor/rules/agent-engineer-skills.mdc` to that directory: `Feature-folder write-ups live under <folder>/<name>/`. If the app has no `AGENTS.md`, copy this pack's `AGENTS.md` and then set that line. If the app already has `AGENTS.md`, add or replace only that write-ups line; do not overwrite the rest of the file.
 6. If this pack has `agent-engineer-skills/README.md` and the chosen folder has no README yet, copy it into that folder. If this pack has no such README, skip this step.
 
 Do not copy `docs/` or `evals/` into the app. Do not copy `skills/**/evals/`. Do not replace the app's existing `.cursor/rules/` folder. Do not rewrite copied `SKILL.md` files to hardcode the path. Do not create `aes-write-up-root`.
 
 Then start a **new Agent chat** in the app.
 
-Gemini: one Custom Gem per skill. Details: [docs/GUIDE.md](docs/GUIDE.md).
+Antigravity uses `.agents/skills/<id>/` (no Cursor rules required). Gemini Custom Gems remain a fallback: [docs/GUIDE.md](docs/GUIDE.md).
 
 ## How to use
 
@@ -121,8 +115,9 @@ The paths above are the default docs folder (`agent-engineer-skills/<feature-nam
 
 ## More
 
-- Operator guide (Gemini, add a skill): [docs/GUIDE.md](docs/GUIDE.md)
+- Operator guide (Cursor, Antigravity, Gemini, add a skill): [docs/GUIDE.md](docs/GUIDE.md)
 - How the skills connect: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+- Write-up root pointer: [AGENTS.md](AGENTS.md)
 - Where write-ups live: [agent-engineer-skills/README.md](agent-engineer-skills/README.md)
 - Trigger and quality evals (authors, not installed): [evals/README.md](evals/README.md)
 

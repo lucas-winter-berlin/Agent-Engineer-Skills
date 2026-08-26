@@ -38,16 +38,32 @@ $script:ExtraPrdNames = @(
 
 function Get-SkillRelPath {
     param([string]$SkillName)
-    switch ($SkillName) {
-        'feature-specifier' { return 'skills/feature-builder/feature-specifier' }
-        'feature-bug-analyst' { return 'skills/feature-builder/feature-bug-analyst' }
-        'feature-developer' { return 'skills/feature-builder/feature-developer' }
-        'feature-code-reviewer' { return 'skills/feature-builder/feature-code-reviewer' }
-        'feature-tester' { return 'skills/feature-builder/feature-tester' }
-        'feature-refactorer' { return 'skills/feature-builder/feature-refactorer' }
-        'mvp-specifier' { return 'skills/mvp-builder/mvp-specifier' }
-        default { throw "Unknown skill: $SkillName" }
+    $known = Get-AllQualitySkillNames
+    if ($known -notcontains $SkillName) { throw "Unknown skill: $SkillName" }
+    return "skills/$SkillName"
+}
+
+function Get-SkillRelPathAtCommit {
+    param(
+        [string]$Repo,
+        [string]$Commit,
+        [string]$SkillName
+    )
+    $flat = Get-SkillRelPath $SkillName
+    $nested = if ($SkillName -eq 'mvp-specifier') {
+        "skills/mvp-builder/$SkillName"
     }
+    else {
+        "skills/feature-builder/$SkillName"
+    }
+    foreach ($rel in @($flat, $nested)) {
+        $posix = ($rel -replace '\\', '/')
+        $files = @(git -C $Repo ls-tree -r --name-only $Commit -- $posix 2>$null)
+        if ($LASTEXITCODE -eq 0 -and $files.Count -gt 0) {
+            return $posix
+        }
+    }
+    return $flat
 }
 
 function Get-AllQualitySkillNames {
@@ -91,7 +107,7 @@ function Get-RelativePosix {
 function Test-EvalRelExcluded {
     param([string]$Rel)
     $posix = ($Rel -replace '\\', '/')
-    return [bool]($posix -match '^(skills|\.cursor|\.git)(/|$)')
+    return [bool]($posix -match '^(skills|\.cursor|\.agents|\.agent|\.git)(/|$)')
 }
 
 function Resolve-EvalGlob {
@@ -391,17 +407,15 @@ function Install-SkillIntoWorkspace {
         [string]$SkillName,
         [string]$SkillSourceDir
     )
-    $rel = Get-SkillRelPath $SkillName
-    $dest = Join-Path $WorkDir ($rel -replace '/', [IO.Path]::DirectorySeparatorChar)
-    Copy-SkillTree -From $SkillSourceDir -To $dest
+    Copy-SkillTree -From $SkillSourceDir -To (Join-Path $WorkDir ".cursor\skills\$SkillName")
+    Copy-SkillTree -From $SkillSourceDir -To (Join-Path $WorkDir ".agents\skills\$SkillName")
 
     $rulesDir = Join-Path $WorkDir '.cursor\rules'
     New-Item -ItemType Directory -Force -Path $rulesDir | Out-Null
     Copy-Item -LiteralPath (Join-Path $PackRoot '.cursor\rules\agent-engineer-skills.mdc') -Destination $rulesDir -Force
-    $mdcName = "$SkillName.mdc"
-    $mdcSrc = Join-Path $PackRoot ".cursor\rules\$mdcName"
-    if (Test-Path -LiteralPath $mdcSrc) {
-        Copy-Item -LiteralPath $mdcSrc -Destination $rulesDir -Force
+    $agentsSrc = Join-Path $PackRoot 'AGENTS.md'
+    if (Test-Path -LiteralPath $agentsSrc) {
+        Copy-Item -LiteralPath $agentsSrc -Destination (Join-Path $WorkDir 'AGENTS.md') -Force
     }
 }
 

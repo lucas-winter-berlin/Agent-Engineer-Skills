@@ -20,6 +20,7 @@ license: PolyForm Noncommercial License 1.0.0
 metadata:
   author: Lucas Winter
   version: "1.0"
+  family: feature-builder
 ---
 
 # feature-code-reviewer
@@ -43,7 +44,7 @@ Do not use to invent product (`feature-specifier`), to write the first implement
 ## Gotchas
 
 - `feature-developer` commits on its feature branch, so the diff is `git diff <base>...HEAD`. `what-was-implemented.md` names the branch, the base, and the commit. If the user told the developer not to commit, the work sits in the working tree instead: use `git diff`, `git diff --cached`, and the untracked files from `git status --porcelain`. If neither yields files, stop and ask. Never review from the write-up alone.
-- **Write-up root.** `<root>` is the docs **directory** named on the Feature-folder write-ups line in the app's `.cursor/rules/agent-engineer-skills.mdc`. If that line is missing, `<root>` is `agent-engineer-skills`. That path must be a folder. Never create or read a file named `aes-write-up-root`. The specification lives at `<root>/<feature-name>/what-to-build.md`. If that tree is missing but `docs/features/<feature-name>/` exists, use the old folder. Never create both trees for one name. `concept.md` is the old filename for the same artifact. Write `what-was-reviewed.md` next to whichever one you used.
+- **Write-up root.** `<root>` is the docs **directory** named on the Feature-folder write-ups line in the repo's `AGENTS.md`. If that line is missing, use the same line in `.cursor/rules/agent-engineer-skills.mdc`. If both are missing, `<root>` is `agent-engineer-skills`. That path must be a folder. Never create or read a file named `aes-write-up-root`. The specification lives at `<root>/<feature-name>/what-to-build.md`. If that tree is missing but `docs/features/<feature-name>/` exists, use the old folder. Never create both trees for one name. `concept.md` is the old filename for the same artifact. Write `what-was-reviewed.md` next to whichever one you used.
 - A must-fix that cannot be fixed without changing what the user gets is still a `fail`. Record the finding as `blocked-specifier` and send them to `feature-specifier`. Blocked is a property of the finding, not a third verdict.
 - Windows PowerShell 5.1 has no `&&` operator, so joined commands fail there. PowerShell 7 and POSIX shells accept it. When the shell is unknown, run git commands one per call.
 - Refactoring is allowed; redesigning is not. If a fix would change behavior, an interface the specification named, or a wall, it is out of bounds no matter how much better it would be.

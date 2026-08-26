@@ -21,6 +21,7 @@ license: PolyForm Noncommercial License 1.0.0
 metadata:
   author: Lucas Winter
   version: "1.0"
+  family: feature-builder
 ---
 
 # feature-refactorer
@@ -41,7 +42,7 @@ Do not use when they want new capability (`feature-specifier`), a defect pinned 
 
 ## Gotchas
 
-- **Write-up root.** `<root>` is the docs **directory** named on the Feature-folder write-ups line in the app's `.cursor/rules/agent-engineer-skills.mdc`. If that line is missing, `<root>` is `agent-engineer-skills`. That path must be a folder. Never create or read a file named `aes-write-up-root`. Write `<root>/<kebab-name>/what-was-refactored.md`. If `docs/features/<kebab-name>/` already exists for that name and `<root>/<kebab-name>/` does not, write there instead. Never create both trees for one name.
+- **Write-up root.** `<root>` is the docs **directory** named on the Feature-folder write-ups line in the repo's `AGENTS.md`. If that line is missing, use the same line in `.cursor/rules/agent-engineer-skills.mdc`. If both are missing, `<root>` is `agent-engineer-skills`. That path must be a folder. Never create or read a file named `aes-write-up-root`. Write `<root>/<kebab-name>/what-was-refactored.md`. If `docs/features/<kebab-name>/` already exists for that name and `<root>/<kebab-name>/` does not, write there instead. Never create both trees for one name.
 - **Folder name.** Kebab-case from the primary scoped path's basename without extension: `src/api/orders.ts` → `orders`. If that folder already exists, prefix `refactor-`.
 - Commit your work on the feature branch. Never push, never commit to the default branch, never amend or rebase. If the user explicitly told you not to commit, say so in the handoff.
 - Windows PowerShell 5.1 has no `&&` operator, so joined commands fail there. PowerShell 7 and POSIX shells accept it. When the shell is unknown, run git commands one per call.

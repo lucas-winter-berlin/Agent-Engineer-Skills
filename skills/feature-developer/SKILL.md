@@ -22,6 +22,7 @@ license: PolyForm Noncommercial License 1.0.0
 metadata:
   author: Lucas Winter
   version: "1.0"
+  family: feature-builder
 ---
 
 # feature-developer
@@ -40,7 +41,7 @@ Do not use when the idea is still fuzzy (`feature-specifier`), when a defect sti
 
 ## Gotchas
 
-- **Write-up root.** `<root>` is the docs **directory** named on the Feature-folder write-ups line in the app's `.cursor/rules/agent-engineer-skills.mdc`. If that line is missing, `<root>` is `agent-engineer-skills`. That path must be a folder. Never create or read a file named `aes-write-up-root`. The specification lives at `<root>/<feature-name>/what-to-build.md`. If that tree is missing but `docs/features/<feature-name>/` exists, use the old folder and write your write-up next to it. Never create both trees for one name. `concept.md` is the old filename for the same artifact; treat it as `what-to-build.md`. When Origin is `feature-bug-analyst`, write the proposed failing test first, confirm it fails, then apply the minimal fix.
+- **Write-up root.** `<root>` is the docs **directory** named on the Feature-folder write-ups line in the repo's `AGENTS.md`. If that line is missing, use the same line in `.cursor/rules/agent-engineer-skills.mdc`. If both are missing, `<root>` is `agent-engineer-skills`. That path must be a folder. Never create or read a file named `aes-write-up-root`. The specification lives at `<root>/<feature-name>/what-to-build.md`. If that tree is missing but `docs/features/<feature-name>/` exists, use the old folder and write your write-up next to it. Never create both trees for one name. `concept.md` is the old filename for the same artifact; treat it as `what-to-build.md`. When Origin is `feature-bug-analyst`, write the proposed failing test first, confirm it fails, then apply the minimal fix.
 - Commit your work on the feature branch. That commit is what `feature-code-reviewer` diffs against the base, so leaving it uncommitted hides the change. Never push, never commit to the default branch, never amend or rebase. If the user explicitly told you not to commit, say so in the handoff so the reviewer knows to read the working tree instead.
 - Windows PowerShell 5.1 has no `&&` operator, so joined commands fail there. PowerShell 7 and POSIX shells accept it. When the shell is unknown, run git commands one per call.
 - Repos routinely have tests that were already failing before you touched anything. Record those as pre-existing and own only the failures your diff caused. Never delete, skip, or weaken a test to get a green run.

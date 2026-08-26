@@ -23,6 +23,7 @@ license: PolyForm Noncommercial License 1.0.0
 metadata:
   author: Lucas Winter
   version: "1.0"
+  family: feature-builder
 ---
 
 # feature-specifier
@@ -41,7 +42,7 @@ Do not use when the change is a defect to root-cause (`feature-bug-analyst`), al
 
 ## Gotchas
 
-- **Write-up root.** `<root>` is the docs **directory** named on the Feature-folder write-ups line in the app's `.cursor/rules/agent-engineer-skills.mdc`. If that line is missing, `<root>` is `agent-engineer-skills`. Create `<root>` as a folder if needed. Never create or read a file named `aes-write-up-root`. Write `<root>/<kebab-name>/what-to-build.md`. If `docs/features/<kebab-name>/` already exists for that name and `<root>/<kebab-name>/` does not, write there instead. Never create both trees for one name.
+- **Write-up root.** `<root>` is the docs **directory** named on the Feature-folder write-ups line in the repo's `AGENTS.md`. If that line is missing, use the same line in `.cursor/rules/agent-engineer-skills.mdc`. If both are missing, `<root>` is `agent-engineer-skills`. Create `<root>` as a folder if needed. Never create or read a file named `aes-write-up-root`. Write `<root>/<kebab-name>/what-to-build.md`. If `docs/features/<kebab-name>/` already exists for that name and `<root>/<kebab-name>/` does not, write there instead. Never create both trees for one name.
 - `concept.md` is the old filename for this artifact, and the downstream skills still read it. Always write `what-to-build.md`. Never create a `concept.md`.
 - `locked-default` binds the developer. Writing one means you decided on the user's behalf and the developer may not choose otherwise. Use it only after the user declined to answer, never to save a round of questions.
 - A new project, prototype, MVP, or pitch belongs to `mvp-specifier`, even when the user phrases it as a feature. `pitch-to-spec` is that skill's old name, not this one's.

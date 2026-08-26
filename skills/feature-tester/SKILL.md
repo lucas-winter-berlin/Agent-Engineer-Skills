@@ -20,6 +20,7 @@ license: PolyForm Noncommercial License 1.0.0
 metadata:
   author: Lucas Winter
   version: "1.0"
+  family: feature-builder
 ---
 
 # feature-tester
@@ -41,7 +42,7 @@ Do not use to invent the product (`feature-specifier`), to write the feature (`f
 - Find the test commands in this order: `package.json` scripts, `Makefile`, `pyproject.toml` / `tox.ini` / `noxfile.py`, the CI workflow files, then the README. Only write `absent` for a layer after that search comes up empty. `absent` must mean the layer does not exist, never that you did not look hard enough.
 - e2e usually needs a dev server already running and browsers installed (`npx playwright install`), and can take minutes without printing anything. A red e2e run caused by a missing precondition is not a feature failure. Fix the precondition, or record that layer as `not-run` with the reason. Reporting `fail` for a setup problem is the worst error this skill can make.
 - Verdicts are spelled `pass`, `fail`, `not-run`, with the hyphen, exactly as the template writes them. `absent` is for a layer this repo does not have, and is not a verdict.
-- **Write-up root.** `<root>` is the docs **directory** named on the Feature-folder write-ups line in the app's `.cursor/rules/agent-engineer-skills.mdc`. If that line is missing, `<root>` is `agent-engineer-skills`. That path must be a folder. Never create or read a file named `aes-write-up-root`. The specification lives at `<root>/<feature-name>/what-to-build.md`. If that tree is missing but `docs/features/<feature-name>/` exists, use the old folder. Never create both trees for one name. `concept.md` is the old filename for the same artifact. Write `what-was-verified.md` next to whichever one you used.
+- **Write-up root.** `<root>` is the docs **directory** named on the Feature-folder write-ups line in the repo's `AGENTS.md`. If that line is missing, use the same line in `.cursor/rules/agent-engineer-skills.mdc`. If both are missing, `<root>` is `agent-engineer-skills`. That path must be a folder. Never create or read a file named `aes-write-up-root`. The specification lives at `<root>/<feature-name>/what-to-build.md`. If that tree is missing but `docs/features/<feature-name>/` exists, use the old folder. Never create both trees for one name. `concept.md` is the old filename for the same artifact. Write `what-was-verified.md` next to whichever one you used.
 - Windows PowerShell 5.1 has no `&&` operator, so joined commands fail there. PowerShell 7 and POSIX shells accept it. When the shell is unknown, run commands one per call.
 
 ## How (mandatory order)
