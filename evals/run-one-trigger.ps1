@@ -17,6 +17,7 @@ $ids = @(
     'feature-code-reviewer',
     'feature-refactorer',
     'feature-tester',
+    'cursor-setup',
     'mvp-specifier'
 )
 if ($ids -notcontains $Skill) {
