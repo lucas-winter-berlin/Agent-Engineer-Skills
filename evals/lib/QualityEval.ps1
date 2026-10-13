@@ -74,6 +74,7 @@ function Get-AllQualitySkillNames {
         'feature-code-reviewer',
         'feature-tester',
         'feature-refactorer',
+        'cursor-setup',
         'mvp-specifier'
     )
 }

@@ -34,6 +34,7 @@ Do not skip the question. Do not choose a path for them. Create that path as a *
 | `feature-code-reviewer` | `skills/feature-code-reviewer/SKILL.md` |
 | `feature-refactorer` | `skills/feature-refactorer/SKILL.md` |
 | `feature-tester` | `skills/feature-tester/SKILL.md` |
+| `cursor-setup` | `skills/cursor-setup/SKILL.md` |
 | `mvp-specifier` | `skills/mvp-specifier/SKILL.md` |
 
 Templates live in `assets/` next to that `SKILL.md`. Feature-folder write-ups live under `agent-engineer-skills/<name>/`. After a custom install, the **app** `AGENTS.md` and this dispatcher name that docs folder instead. That path is a directory, not a file.
@@ -51,6 +52,7 @@ When the user did not name a skill id:
 | Review this feature folder, or review against `what-to-build.md` | `feature-code-reviewer` |
 | Messy existing module / refactor / extract / split, no new product | `feature-refactorer` |
 | Test or verify this feature folder against `what-to-build.md` | `feature-tester` |
+| Set up Cursor, generate or optimize `.cursorrules` or `.cursorignore`, or cut token use from a noisy index | `cursor-setup` |
 | Install this pack into an app | Not a skill. Follow README How to install. Ask once for the docs folder. |
 
 If they named one skill, run only that skill. `Use skill: feature-verifier` is the old name for `feature-tester`. `Use skill: pitch-to-spec` is the old name for `mvp-specifier`.
@@ -77,6 +79,7 @@ If the specification is missing or the idea is fuzzy: a feature in an existing a
 - Run `mvp-specifier` for a feature in an existing repo (use `feature-specifier`). Do not start `feature-developer` in the same chat as `mvp-specifier`.
 - Run `feature-specifier` for a defect that already has expected vs actual (use `feature-bug-analyst`).
 - Run `feature-code-reviewer` for a messy module with no feature spec (use `feature-refactorer`).
+- Chain `cursor-setup` into specifier, developer, reviewer, tester, or refactorer unless the user named that skill.
 - Invent extra spec packs, CI, or a threat-model essay as part of these skills.
 - Log secrets in skill artifacts.
 

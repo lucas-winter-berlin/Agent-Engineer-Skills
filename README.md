@@ -28,6 +28,7 @@ Use this when you already have an app and want to add or change a feature.
 | `feature-code-reviewer` | The change works now but will be hard to maintain. | Strict review against this repo: duplication, unclear names, hidden control flow, coupling, layout, secrets. May refactor internals. Must not change what the user gets. Writes a review log in `what-was-reviewed.md`. |
 | `feature-refactorer` | Existing code is a mess, and there is no feature spec. | Locks scope and invariants, restructures named files without changing behavior, commits on a feature branch. Never pushes. Writes `what-was-refactored.md`. |
 | `feature-tester` | Nothing was tested against the spec. It may be slop. | Writes cases from the spec, runs this repo's tests, and reports `pass`, `fail`, or `not-run`. Writes `what-was-verified.md`. |
+| `cursor-setup` | Cursor is indexing junk, so prompts burn tokens and wander. | Inspects the stack and writes a short `.cursorrules` plus `.cursorignore`. Does not change product code. |
 
 ### MVP builder
 
@@ -127,6 +128,11 @@ Test agent-engineer-skills/invoice-csv-export/ against what-to-build.md
 ```text
 Use skill: feature-refactorer
 Refactor src/api/orders.ts. It is a mess. Do not change behavior.
+```
+
+```text
+Use skill: cursor-setup
+Set up this project for Cursor. Cut noise from the index.
 ```
 
 A prototype or new project. Spec first, then a **new** chat to build:

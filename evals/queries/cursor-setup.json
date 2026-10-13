@@ -1,0 +1,106 @@
+{
+  "skill": "cursor-setup",
+  "notes": "Positives ask to set up Cursor, generate or tighten .cursorrules/.cursorignore, or cut token use from a noisy index. Negatives are near-misses: fuzzy product (feature-specifier), defects (feature-bug-analyst), implement/review/test/refactor, greenfield (mvp-specifier), pack install, and .gitignore edits.",
+  "queries": [
+    {
+      "query": "set up this repo for Cursor",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "our prompts are eating too many tokens, the index is full of junk",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "generate a .cursorignore for this project",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "write .cursorrules that match our stack",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "cursor keeps reading node_modules and dist, fix the context",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "optimize cursor rules so the model stops wandering into build output",
+      "should_trigger": true,
+      "split": "train"
+    },
+    {
+      "query": "init cursor on this codebase",
+      "should_trigger": true,
+      "split": "validation"
+    },
+    {
+      "query": "can you add ignore rules so lockfiles and coverage aren't in context",
+      "should_trigger": true,
+      "split": "validation"
+    },
+    {
+      "query": "token usage in cursor is high, narrow what the agent sees",
+      "should_trigger": true,
+      "split": "validation"
+    },
+    {
+      "query": "project setup: cursorrules plus ignore, keep it short",
+      "should_trigger": true,
+      "split": "validation"
+    },
+    {
+      "query": "I want users to export invoices as CSV but I haven't decided the columns",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "checkout throws when the cart is empty. expected empty state, actual 500",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "implement agent-engineer-skills/invoice-csv-export/what-to-build.md",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "review agent-engineer-skills/invoice-csv-export/",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "refactor src/orders.js, it's a mess, don't change behavior",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "add node_modules to .gitignore",
+      "should_trigger": false,
+      "split": "train"
+    },
+    {
+      "query": "test agent-engineer-skills/invoice-csv-export/ against what-to-build.md",
+      "should_trigger": false,
+      "split": "validation"
+    },
+    {
+      "query": "prototype a small app where teams log standup notes",
+      "should_trigger": false,
+      "split": "validation"
+    },
+    {
+      "query": "install Agent Engineer Skills into this app",
+      "should_trigger": false,
+      "split": "validation"
+    },
+    {
+      "query": "clean this up, it works but it feels wrong",
+      "should_trigger": false,
+      "split": "validation"
+    }
+  ]
+}

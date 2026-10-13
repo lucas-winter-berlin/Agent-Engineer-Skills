@@ -29,15 +29,14 @@ metadata:
 
 Core job: implement `what-to-build.md`. Do not invent product. Do not run testing, documentation, or CI/CD as separate programs.
 
-Input: `<root>/<feature-name>/what-to-build.md` from `feature-specifier`, `feature-bug-analyst`, or `mvp-specifier`. Resolve `<root>` as in Gotchas.
+Input: `<root>/<feature-name>/what-to-build.md` from `feature-specifier`, `feature-bug-analyst`, or `mvp-specifier`. For root path resolution, shell behavior, and global standards, see `AGENTS.md`.
 
 Output: a feature branch with the change committed on it, and `what-was-implemented.md` from [assets/what-was-implemented.md](assets/what-was-implemented.md).
 
 ## Gotchas
 
-- **Write-up root.** `<root>` is the docs **directory** named on the Feature-folder write-ups line in the repo's `AGENTS.md`. If that line is missing, use the same line in `.cursor/rules/agent-engineer-skills.mdc`. If both are missing, `<root>` is `agent-engineer-skills`. That path must be a folder. Never create or read a file named `aes-write-up-root`. The specification lives at `<root>/<feature-name>/what-to-build.md`. If that tree is missing but `docs/features/<feature-name>/` exists, use the old folder and write your write-up next to it. Never create both trees for one name. `concept.md` is the old filename for the same artifact; treat it as `what-to-build.md`. When Origin is `feature-bug-analyst`, write the proposed failing test first, confirm it fails, then apply the minimal fix.
+- When Origin is `feature-bug-analyst`, write the proposed failing test first, confirm it fails, then apply the minimal fix.
 - Commit your work on the feature branch. That commit is what `feature-code-reviewer` diffs against the base, so leaving it uncommitted hides the change. Never push, never commit to the default branch, never amend or rebase. If the user explicitly told you not to commit, say so in the handoff so the reviewer knows to read the working tree instead.
-- Windows PowerShell 5.1 has no `&&` operator, so joined commands fail there. PowerShell 7 and POSIX shells accept it. When the shell is unknown, run git commands one per call.
 - Repos routinely have tests that were already failing before you touched anything. Record those as pre-existing and own only the failures your diff caused. Never delete, skip, or weaken a test to get a green run.
 - If the repo has no test runner, that is a fact to report, not a gap to fill.
 

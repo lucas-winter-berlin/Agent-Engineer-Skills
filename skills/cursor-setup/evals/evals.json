@@ -1,0 +1,82 @@
+{
+  "skill_name": "cursor-setup",
+  "family": "feature-builder",
+  "evals": [
+    {
+      "id": 1,
+      "name": "toy-web-setup",
+      "prompt": "Use skill: cursor-setup\n\nSet up this project for Cursor. Generate .cursorrules and .cursorignore so the agent stops indexing junk.",
+      "expected_output": ".cursorrules and .cursorignore at the repo root. Ignore lists the standard exclusions. Rules have the four required sections and match the Node storefront. Source is unchanged.",
+      "fixture": "toy-web",
+      "files": [],
+      "replies": [],
+      "checks": [
+        { "id": "announces-skill", "type": "transcript_contains", "pattern": "Using skill: cursor-setup", "must": true },
+        { "id": "ignore-exists", "type": "file_exists", "path": ".cursorignore", "must": true },
+        { "id": "rules-exist", "type": "file_exists", "path": ".cursorrules", "must": true },
+        { "id": "no-mdc", "type": "no_file", "path": ".cursor/rules/project.mdc", "must": true },
+        { "id": "ignore-node-modules", "type": "file_contains", "path": ".cursorignore", "pattern": "(?m)^node_modules/$", "must": true },
+        { "id": "ignore-vendor", "type": "file_contains", "path": ".cursorignore", "pattern": "(?m)^vendor/$", "must": true },
+        { "id": "ignore-venv", "type": "file_contains", "path": ".cursorignore", "pattern": "(?m)^\\.venv/$", "must": true },
+        { "id": "ignore-dist", "type": "file_contains", "path": ".cursorignore", "pattern": "(?m)^dist/$", "must": true },
+        { "id": "ignore-next", "type": "file_contains", "path": ".cursorignore", "pattern": "(?m)^\\.next/$", "must": true },
+        { "id": "ignore-target", "type": "file_contains", "path": ".cursorignore", "pattern": "(?m)^target/$", "must": true },
+        { "id": "ignore-pycache", "type": "file_contains", "path": ".cursorignore", "pattern": "(?m)^__pycache__/$", "must": true },
+        { "id": "ignore-lock", "type": "file_contains", "path": ".cursorignore", "pattern": "(?m)^package-lock\\.json$", "must": true },
+        { "id": "ignore-png", "type": "file_contains", "path": ".cursorignore", "pattern": "(?m)^\\*\\.png$", "must": true },
+        { "id": "ignore-coverage", "type": "file_contains", "path": ".cursorignore", "pattern": "(?m)^coverage/$", "must": true },
+        { "id": "heading-stack", "type": "heading_present", "path": ".cursorrules", "heading": "## Tech Stack & Environment", "must": true },
+        { "id": "heading-arch", "type": "heading_present", "path": ".cursorrules", "heading": "## Architecture & Conventions", "must": true },
+        { "id": "heading-style", "type": "heading_present", "path": ".cursorrules", "heading": "## Code Style & Guardrails", "must": true },
+        { "id": "heading-token", "type": "heading_present", "path": ".cursorrules", "heading": "## Token & File Operations", "must": true },
+        { "id": "confirm-files", "type": "file_contains", "path": ".cursorrules", "pattern": "Confirm before creating new files", "must": true },
+        { "id": "focus-edits", "type": "file_contains", "path": ".cursorrules", "pattern": "Focus edits strictly on specified files", "must": true },
+        { "id": "stack-js", "type": "file_contains", "path": ".cursorrules", "pattern": "(?i)javascript|node", "must": true },
+        { "id": "no-placeholders-rules", "type": "no_placeholder", "path": ".cursorrules", "must": true },
+        { "id": "no-placeholders-ignore", "type": "no_placeholder", "path": ".cursorignore", "must": true },
+        { "id": "no-emoji-rules", "type": "no_emoji", "path": ".cursorrules", "must": true },
+        { "id": "no-emoji-ignore", "type": "no_emoji", "path": ".cursorignore", "must": true },
+        { "id": "source-untouched", "type": "paths_unchanged", "paths": ["src", "public", "package.json"], "must": true },
+        { "id": "no-what-to-build", "type": "no_file", "path": "**/what-to-build.md", "must": true },
+        { "id": "no-extra-prd", "type": "no_extra_prd", "must": true }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "refuse-implement",
+      "prompt": "Use skill: cursor-setup\n\nSet up Cursor ignore and rules, and implement CSV export of orders while you are here.",
+      "expected_output": "Cursor files are written. The agent names feature-developer, does not start it, and does not add CSV export code.",
+      "fixture": "toy-web",
+      "files": [],
+      "replies": [],
+      "checks": [
+        { "id": "announces-skill", "type": "transcript_contains", "pattern": "Using skill: cursor-setup", "must": true },
+        { "id": "names-developer", "type": "transcript_contains", "pattern": "feature-developer", "must": true },
+        { "id": "did-not-chain", "type": "transcript_not_contains", "pattern": "Using skill: feature-developer", "must": true },
+        { "id": "ignore-exists", "type": "file_exists", "path": ".cursorignore", "must": true },
+        { "id": "rules-exist", "type": "file_exists", "path": ".cursorrules", "must": true },
+        { "id": "no-csv-source", "type": "file_not_contains", "path": "src/**/*.js", "pattern": "(?i)csv", "must": true },
+        { "id": "source-untouched", "type": "paths_unchanged", "paths": ["src", "public", "package.json"], "must": true },
+        { "id": "no-extra-prd", "type": "no_extra_prd", "must": true }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "refuse-defect",
+      "prompt": "Use skill: cursor-setup\n\nCheckout throws when the cart is empty. Expected: empty-state message. Actual: 500. Pin the root cause.",
+      "expected_output": "The agent names feature-bug-analyst, does not start that skill, and does not write Cursor config or change source.",
+      "fixture": "toy-web",
+      "files": [],
+      "replies": [],
+      "checks": [
+        { "id": "announces-skill", "type": "transcript_contains", "pattern": "Using skill: cursor-setup", "must": true },
+        { "id": "names-analyst", "type": "transcript_contains", "pattern": "feature-bug-analyst", "must": true },
+        { "id": "did-not-chain", "type": "transcript_not_contains", "pattern": "Using skill: feature-bug-analyst", "must": true },
+        { "id": "no-ignore", "type": "no_file", "path": ".cursorignore", "must": true },
+        { "id": "no-rules", "type": "no_file", "path": ".cursorrules", "must": true },
+        { "id": "source-untouched", "type": "paths_unchanged", "paths": ["src", "public", "package.json"], "must": true },
+        { "id": "no-extra-prd", "type": "no_extra_prd", "must": true }
+      ]
+    }
+  ]
+}

@@ -30,16 +30,14 @@ Core job: restructure named existing code without changing behavior. Lock scope 
 
 Input: a messy module, file, or small set of files in this repo. There is no `what-to-build.md` for this work.
 
-Output: a feature branch with the restructure committed on it, and `what-was-refactored.md` from [assets/what-was-refactored.md](assets/what-was-refactored.md).
+Output: a feature branch with the restructure committed on it, and `what-was-refactored.md` from [assets/what-was-refactored.md](assets/what-was-refactored.md). For root path resolution, shell behavior, and global standards, see `AGENTS.md`.
 
 Do **not** write `what-to-build.md`. That filename is the product or defect specification.
 
 ## Gotchas
 
-- **Write-up root.** `<root>` is the docs **directory** named on the Feature-folder write-ups line in the repo's `AGENTS.md`. If that line is missing, use the same line in `.cursor/rules/agent-engineer-skills.mdc`. If both are missing, `<root>` is `agent-engineer-skills`. That path must be a folder. Never create or read a file named `aes-write-up-root`. Write `<root>/<kebab-name>/what-was-refactored.md`. If `docs/features/<kebab-name>/` already exists for that name and `<root>/<kebab-name>/` does not, write there instead. Never create both trees for one name.
 - **Folder name.** Kebab-case from the primary scoped path's basename without extension: `src/api/orders.ts` → `orders`. If that folder already exists, prefix `refactor-`.
 - Commit your work on the feature branch. Never push, never commit to the default branch, never amend or rebase. If the user explicitly told you not to commit, say so in the handoff.
-- Windows PowerShell 5.1 has no `&&` operator, so joined commands fail there. PowerShell 7 and POSIX shells accept it. When the shell is unknown, run git commands one per call.
 - If the repo has no test runner, that is a fact to report, not a gap to fill. Do not add tests unless the user asked.
 - A stack rewrite, new public behavior, or "while you are here add X" is product. Stop and name `feature-specifier`.
 

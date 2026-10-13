@@ -29,7 +29,7 @@ Core job: make sure the new work is not AI slop. That means test cases that matc
 
 Input: `what-to-build.md` and the implementation, plus `what-was-implemented.md` and `what-was-reviewed.md` when they exist.
 
-Output: tests in the project's existing style, a test run, and `what-was-verified.md` from [assets/what-was-verified.md](assets/what-was-verified.md).
+Output: tests in the project's existing style, a test run, and `what-was-verified.md` from [assets/what-was-verified.md](assets/what-was-verified.md). For root path resolution, shell behavior, and global standards, see `AGENTS.md`.
 
 On the daily path this runs after `feature-code-reviewer` (or after `feature-developer` if review was skipped).
 
@@ -38,8 +38,6 @@ On the daily path this runs after `feature-code-reviewer` (or after `feature-dev
 - Find the test commands in this order: `package.json` scripts, `Makefile`, `pyproject.toml` / `tox.ini` / `noxfile.py`, the CI workflow files, then the README. Only write `absent` for a layer after that search comes up empty. `absent` must mean the layer does not exist, never that you did not look hard enough.
 - e2e usually needs a dev server already running and browsers installed (`npx playwright install`), and can take minutes without printing anything. A red e2e run caused by a missing precondition is not a feature failure. Fix the precondition, or record that layer as `not-run` with the reason. Reporting `fail` for a setup problem is the worst error this skill can make.
 - Verdicts are spelled `pass`, `fail`, `not-run`, with the hyphen, exactly as the template writes them. `absent` is for a layer this repo does not have, and is not a verdict.
-- **Write-up root.** `<root>` is the docs **directory** named on the Feature-folder write-ups line in the repo's `AGENTS.md`. If that line is missing, use the same line in `.cursor/rules/agent-engineer-skills.mdc`. If both are missing, `<root>` is `agent-engineer-skills`. That path must be a folder. Never create or read a file named `aes-write-up-root`. The specification lives at `<root>/<feature-name>/what-to-build.md`. If that tree is missing but `docs/features/<feature-name>/` exists, use the old folder. Never create both trees for one name. `concept.md` is the old filename for the same artifact. Write `what-was-verified.md` next to whichever one you used.
-- Windows PowerShell 5.1 has no `&&` operator, so joined commands fail there. PowerShell 7 and POSIX shells accept it. When the shell is unknown, run commands one per call.
 
 ## How (mandatory order)
 

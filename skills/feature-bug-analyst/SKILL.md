@@ -30,19 +30,16 @@ Core job: turn a reported defect into a locked fix specification. Pin expected v
 
 Do not write product code. Do not add or edit tests on disk. Do not produce a multi-file investigation pack.
 
-Output: `<root>/<feature-name>/what-to-build.md` from [assets/what-to-build.md](assets/what-to-build.md). Resolve `<root>` as in Gotchas.
+Output: `<root>/<feature-name>/what-to-build.md` from [assets/what-to-build.md](assets/what-to-build.md). For root path resolution, shell behavior, and global standards, see `AGENTS.md`.
 
 ## Gotchas
 
-- **Write-up root.** `<root>` is the docs **directory** named on the Feature-folder write-ups line in the repo's `AGENTS.md`. If that line is missing, use the same line in `.cursor/rules/agent-engineer-skills.mdc`. If both are missing, `<root>` is `agent-engineer-skills`. Create `<root>` as a folder if needed. Never create or read a file named `aes-write-up-root`. Write `<root>/<kebab-name>/what-to-build.md`. If `docs/features/<kebab-name>/` already exists for that name and `<root>/<kebab-name>/` does not, write there instead. Never create both trees for one name.
-- `concept.md` is the old filename for this artifact. Always write `what-to-build.md`. Never create a `concept.md`.
 - If the behavior was never promised (no existing contract, no prior done-when, no clear Expected), stop and name `feature-specifier`. This skill does not invent product.
 - Exact reports already naming path, lines or symbol, Expected, and Actual skip the question batch. Go straight to code analysis and the write-up.
 - Ask only landmines that still matter. The repo usually answers app type, stack, and folder layout. Do not ask GPU, viewport, OS, or lifecycle unless the symptom could depend on them.
 - Root cause needs evidence paths. Prefer `confirmed` only with `path:line` (or an equivalent log/test fact). Use `likely` when the best hypothesis remains, and say what would disprove it. Use `blocked-need-evidence` and stop when logs or repro are missing.
 - Edge cases in Fix approach are only cases already in Reproduction or Done when. If none, write `none`. Do not invent DST folds, leap seconds, null trees, or other textbook edges the report never showed.
 - Affected code lists paths the developer must change or must read to apply the fix. Put neighbors that might break under Regression risks, not as a second inventory of the call graph.
-- Windows PowerShell 5.1 has no `&&` operator, so joined commands fail there. PowerShell 7 and POSIX shells accept it. When the shell is unknown, run commands one per call.
 
 ## How (mandatory order)
 
