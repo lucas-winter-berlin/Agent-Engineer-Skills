@@ -4,8 +4,6 @@ Public. License: MIT.
 
 Named agent jobs for spec, build, review, and test. One skill at a time.
 
-GitHub folder name is still `Agent-Engineer-Skills`. Intended Forgejo name is `lib-agent-skills`.
-
 ## Start
 
 Tell the agent `Use skill: <id>`. Skill folders live in `skills/<id>/`.
