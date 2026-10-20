@@ -1,3 +1,25 @@
+# lib-agent-skills
+
+Public. License: MIT.
+
+Named agent jobs for spec, build, review, and test. One skill at a time.
+
+GitHub folder name is still `Agent-Engineer-Skills`. Intended Forgejo name is `lib-agent-skills`.
+
+## Start
+
+Tell the agent `Use skill: <id>`. Skill folders live in `skills/<id>/`.
+
+## Docs
+
+| Doc | Content |
+|-----|---------|
+| [docs/README.md](docs/README.md) | Index |
+| [evals/README.md](evals/README.md) | Eval harness |
+| [AGENTS.md](AGENTS.md) | How skills are installed |
+
+---
+
 # Agent Engineer Skills
 
 Agents write code faster than you can check it. The pain is not speed. It is that they skip a concept, do not follow your idea, hallucinate what is not there, skip tests, or build overhead you never asked for. You get something that looks finished and is not.

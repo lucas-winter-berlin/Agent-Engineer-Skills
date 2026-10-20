@@ -1,0 +1,11 @@
+name: lib-agent-skills
+kind: lib
+visibility: public
+description: Named agent jobs for spec, build, review, and test. One skill at a time.
+languages: [markdown]
+status: active
+owner: baxx
+license: MIT
+product: Agent Engineer Skills
+former: Agent-Engineer-Skills
+github: lucas-winter-berlin/Agent-Engineer-Skills

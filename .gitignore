@@ -1,41 +1,49 @@
-# Operating system
-.DS_Store
-Thumbs.db
-Desktop.ini
-
-# Editors
-.idea/
-.vscode/
-*.swp
-*.swo
-*~
-
-# Environment and secrets
+# Secrets
+.secrets.env
 .env
 .env.*
 !.env.example
+**/.env
+!**/.env.example
+*.pem
+*.key
 
-# Dependencies and build artifacts
+# Dependencies
 node_modules/
-dist/
-build/
-coverage/
-*.log
-
-# Python
-__pycache__/
-*.py[cod]
+vendor/
 .venv/
 venv/
 
-# Generated validation caches
-.schema-cache/
+# Build
+dist/
+build/
+.next/
+.out/
+target/
 
-# Eval run output
+# Caches, logs, coverage
+.cache/
+*.log
+__pycache__/
+*.pyc
+.pytest_cache/
+coverage/
+.coverage
+*.sqlite
+*.sqlite-*
+
+# Runtime data
+data/
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+
+# Project-specific
+.schema-cache/
 evals/results/
 evals/workspaces/
-
-# Host discovery copies (generated at app install, not stored in this pack)
 .cursor/skills/
 .agents/
 .agent/
